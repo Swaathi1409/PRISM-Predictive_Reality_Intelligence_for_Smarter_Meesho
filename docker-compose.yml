@@ -1,0 +1,75 @@
+# docker-compose.yml
+# WHY Docker Compose (Apache 2.0):
+# Guarantees PRISM runs identically on every judge's machine regardless of OS or
+# installed software. One command starts the full stack: backend, Redis, and Nginx.
+#
+# Services:
+#   backend  — FastAPI + Uvicorn (port 8000 internal, exposed via Nginx on 80)
+#   redis    — Result cache (optional; backend degrades gracefully if down)
+#   nginx    — Reverse proxy serving frontend and proxying /api to backend (port 80)
+
+version: "3.9"
+
+services:
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    env_file:
+      - .env
+    environment:
+      - REDIS_HOST=redis
+      - REDIS_PORT=6379
+      - DATABASE_URL=sqlite:///./prism_dev.db
+      - ENVIRONMENT=production
+    volumes:
+      - ./backend:/app
+      - prism_db:/app/prism_dev.db
+    depends_on:
+      - redis
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/api/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 15s
+    restart: unless-stopped
+    networks:
+      - prism-net
+
+  redis:
+    image: redis:7-alpine
+    # Redis (BSD License) — chosen for result caching
+    command: redis-server --maxmemory 128mb --maxmemory-policy allkeys-lru
+    volumes:
+      - redis_data:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    restart: unless-stopped
+    networks:
+      - prism-net
+
+  nginx:
+    image: nginx:alpine
+    # Nginx (BSD-2) — reverse proxy, static file server
+    ports:
+      - "80:80"
+    volumes:
+      - ./nginx/nginx.conf:/etc/nginx/nginx.conf:ro
+      - ./frontend/dist:/usr/share/nginx/html:ro
+    depends_on:
+      - backend
+    restart: unless-stopped
+    networks:
+      - prism-net
+
+volumes:
+  prism_db:
+  redis_data:
+
+networks:
+  prism-net:
+    driver: bridge

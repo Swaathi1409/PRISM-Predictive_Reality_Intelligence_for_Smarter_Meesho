@@ -1,0 +1,117 @@
+"""
+main.py — FastAPI application factory for PRISM.
+
+WHY FastAPI (MIT License):
+Native async support, automatic OpenAPI docs at /docs that let judges test every
+endpoint interactively without Postman, and Pydantic integration for strict input
+validation. Chosen over Flask for these specific capabilities.
+
+Startup sequence:
+1. Load .env (local dev) or use injected env vars (Docker)
+2. Validate all environment variables — fail fast if ANTHROPIC_API_KEY is missing
+3. Initialise database tables
+4. Register CORS middleware
+5. Register all routers under /api prefix
+"""
+
+from dotenv import load_dotenv
+
+load_dotenv()  # loads .env in local dev; no-op in Docker where env is injected
+
+from fastapi import FastAPI
+from fastapi.middleware.cors import CORSMiddleware
+
+from app.config import settings
+from app.models.database import init_db
+from app.routes import health, prism, sessions
+from app.utils.logger import get_logger
+
+logger = get_logger(__name__)
+
+# ── App factory ───────────────────────────────────────────────────────────────
+app = FastAPI(
+    title="PRISM API",
+    description="""
+## PRISM — Predictive Reality Intelligence for Smarter Meesho
+
+An Agentic AI Commerce Brain that detects life events, runs a multi-agent debate,
+computes a decomposed confidence score, and generates a culturally-aware purchase
+plan for India's next 500 million internet users.
+
+### 6 PRISM Pillars
+1. **Life Event Detection** — Understands the human moment behind every purchase
+2. **Multi-Agent Debate** — Kismat (trust), Paisa (budget), Samay (time), Soch (synthesis)
+3. **Confidence Genome** — Decomposes every score into auditable factors
+4. **Temporal Simulator** — Buy Now / Wait / Split strategies with real pricing
+5. **Emotional Layer** — Register-switched warm opening messages
+6. **Bharat Context** — Institution constraints, state climate, government schemes
+
+### Open Source Attributions
+FastAPI (MIT) · LangChain (MIT) · Anthropic SDK (Anthropic Terms) ·
+SQLAlchemy (MIT) · Alembic (MIT) · Redis-py (BSD) · Pydantic (MIT) · Uvicorn (BSD)
+""",
+    version="1.0.0",
+    docs_url="/docs",
+    redoc_url="/redoc",
+    contact={
+        "name": "ScriptedBy{Her} 2.0",
+        "url": "https://github.com/Swaathi1409",
+    },
+)
+
+# ── CORS ──────────────────────────────────────────────────────────────────────
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=[
+        settings.frontend_url,
+        "http://localhost:5173",
+        "http://localhost:3000",
+        "http://127.0.0.1:5173",
+    ],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
+
+# ── Routers ───────────────────────────────────────────────────────────────────
+app.include_router(health.router, prefix="/api")
+app.include_router(prism.router, prefix="/api")
+app.include_router(sessions.router, prefix="/api")
+
+
+# ── Lifecycle events ──────────────────────────────────────────────────────────
+@app.on_event("startup")
+def on_startup():
+    # ── Validate API key on startup ───────────────────────────────────────────
+    if (
+        not settings.groq_api_key
+        or settings.groq_api_key in ("not_set", "your_key_here")
+        or len(settings.groq_api_key) < 10
+    ):
+        logger.error(
+            "GROQ_API_KEY is not set or invalid. "
+            "Set it in .env and restart. Analyze endpoint will not work."
+        )
+    else:
+        logger.info(f"GROQ_API_KEY configured. Model: {settings.llm_model}")
+
+    logger.info("PRISM API starting up")
+    init_db()
+    logger.info(f"Database initialised at {settings.database_url}")
+    logger.info(f"Environment: {settings.environment}")
+    logger.info("API docs available at http://localhost:8000/docs")
+
+
+@app.get("/", tags=["root"])
+def root():
+    """API root — returns service info and links to docs."""
+    return {
+        "service": "PRISM API",
+        "version": "1.0.0",
+        "description": "Predictive Reality Intelligence for Smarter Meesho",
+        "docs": "/docs",
+        "redoc": "/redoc",
+        "health": "/api/health",
+        "analyze": "/api/prism/analyze",
+        "history": "/api/sessions/history",
+    }

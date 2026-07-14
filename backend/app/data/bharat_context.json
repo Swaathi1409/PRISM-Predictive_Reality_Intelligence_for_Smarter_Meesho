@@ -1,0 +1,353 @@
+{
+  "states": {
+    "tamil_nadu": {
+      "display_name": "Tamil Nadu",
+      "capital": "Chennai",
+      "dominant_language": "Tamil",
+      "climate": "tropical_hot_humid",
+      "festivals": ["Pongal", "Karthigai Deepam", "Diwali", "Navaratri", "Tamil New Year", "Aadi Perukku"],
+      "agricultural_cycle": {
+        "harvest_months": [1, 2, 3, 10],
+        "sowing_months": [6, 7, 8]
+      },
+      "regional_preferences": {
+        "fabric": ["cotton", "silk", "kancheevaram_silk"],
+        "cookware": ["pressure_cooker", "clay_pot", "idli_vessel"],
+        "pressure_cooker_size": "5L",
+        "bedding": ["thin_cotton_sheets"]
+      },
+      "notes": {
+        "water_quality": "hard_water_coastal",
+        "humidity": "high_coastal_humidity",
+        "dust_resistance_priority": false,
+        "cooling_priority": true
+      }
+    },
+    "kerala": {
+      "display_name": "Kerala",
+      "capital": "Thiruvananthapuram",
+      "dominant_language": "Malayalam",
+      "climate": "tropical_very_humid",
+      "festivals": ["Onam", "Vishu", "Thrissur Pooram", "Christmas", "Bakrid"],
+      "agricultural_cycle": {
+        "harvest_months": [9, 10, 11],
+        "sowing_months": [5, 6]
+      },
+      "regional_preferences": {
+        "fabric": ["cotton", "kasavu_silk", "mundu_fabric"],
+        "cookware": ["appam_pan", "pressure_cooker", "clay_pot"],
+        "pressure_cooker_size": "3L",
+        "bedding": ["thin_cotton_sheets"]
+      },
+      "notes": {
+        "water_quality": "soft_water",
+        "humidity": "very_high_coastal",
+        "dust_resistance_priority": false,
+        "cooling_priority": false,
+        "mould_resistance_priority": true
+      }
+    },
+    "rajasthan": {
+      "display_name": "Rajasthan",
+      "capital": "Jaipur",
+      "dominant_language": "Rajasthani/Hindi",
+      "climate": "hot_arid_desert",
+      "festivals": ["Teej", "Gangaur", "Diwali", "Holi", "Pushkar Fair"],
+      "agricultural_cycle": {
+        "harvest_months": [3, 4, 10, 11],
+        "sowing_months": [6, 7, 10]
+      },
+      "regional_preferences": {
+        "fabric": ["cotton_light", "silk", "bandhani"],
+        "cookware": ["brass_utensils", "pressure_cooker", "tandoor_accessories"],
+        "pressure_cooker_size": "7.5L",
+        "bedding": ["lightweight_razai", "cotton"]
+      },
+      "notes": {
+        "water_quality": "hard_water_high_tds",
+        "humidity": "very_low_dry",
+        "dust_resistance_priority": true,
+        "cooling_priority": true,
+        "water_filter_priority": true
+      }
+    },
+    "punjab": {
+      "display_name": "Punjab",
+      "capital": "Chandigarh",
+      "dominant_language": "Punjabi",
+      "climate": "semi_arid_continental",
+      "festivals": ["Lohri", "Baisakhi", "Diwali", "Gurpurab", "Hola Mohalla"],
+      "agricultural_cycle": {
+        "harvest_months": [4, 5, 10, 11],
+        "sowing_months": [6, 7, 11]
+      },
+      "regional_preferences": {
+        "fabric": ["phulkari_cotton", "silk", "woolen_winters"],
+        "cookware": ["kadhai", "pressure_cooker", "tandoor"],
+        "pressure_cooker_size": "7.5L",
+        "bedding": ["warm_razai", "cotton_summer"]
+      },
+      "notes": {
+        "water_quality": "moderate",
+        "humidity": "moderate_seasonal",
+        "dust_resistance_priority": false,
+        "cooling_priority": true,
+        "heating_priority": true
+      }
+    },
+    "maharashtra": {
+      "display_name": "Maharashtra",
+      "capital": "Mumbai",
+      "dominant_language": "Marathi",
+      "climate": "tropical_coastal_to_semi_arid_inland",
+      "festivals": ["Ganesh Chaturthi", "Gudi Padwa", "Diwali", "Holi", "Navratri"],
+      "agricultural_cycle": {
+        "harvest_months": [10, 11, 2, 3],
+        "sowing_months": [6, 7]
+      },
+      "regional_preferences": {
+        "fabric": ["cotton", "nauvari_silk", "paithani_silk"],
+        "cookware": ["pressure_cooker", "kadhai", "puran_poli_press"],
+        "pressure_cooker_size": "5L",
+        "bedding": ["cotton_sheets_summer", "light_blanket_winter"]
+      },
+      "notes": {
+        "water_quality": "moderate_mumbai",
+        "humidity": "high_coastal_mumbai",
+        "dust_resistance_priority": false,
+        "cooling_priority": true
+      }
+    },
+    "karnataka": {
+      "display_name": "Karnataka",
+      "capital": "Bengaluru",
+      "dominant_language": "Kannada",
+      "climate": "tropical_to_semi_arid",
+      "festivals": ["Dasara (Mysuru)", "Ugadi", "Ganesh Chaturthi", "Rajyotsava"],
+      "agricultural_cycle": {
+        "harvest_months": [9, 10, 11, 4],
+        "sowing_months": [6, 7, 11]
+      },
+      "regional_preferences": {
+        "fabric": ["cotton", "ilkal_silk", "bangalore_silk"],
+        "cookware": ["pressure_cooker", "dosa_pan", "clay_pot"],
+        "pressure_cooker_size": "5L",
+        "bedding": ["cotton_sheets", "light_blanket_bengaluru_winter"]
+      },
+      "notes": {
+        "water_quality": "moderate",
+        "humidity": "moderate",
+        "dust_resistance_priority": false,
+        "cooling_priority": false,
+        "tech_hub": true
+      }
+    },
+    "west_bengal": {
+      "display_name": "West Bengal",
+      "capital": "Kolkata",
+      "dominant_language": "Bengali",
+      "climate": "tropical_humid",
+      "festivals": ["Durga Puja", "Kali Puja", "Poila Boishakh", "Saraswati Puja", "Eid"],
+      "agricultural_cycle": {
+        "harvest_months": [11, 12, 1, 5],
+        "sowing_months": [6, 7, 8]
+      },
+      "regional_preferences": {
+        "fabric": ["muslin", "tant_cotton", "silk_baluchari"],
+        "cookware": ["kadhai", "pressure_cooker", "clay_pot"],
+        "pressure_cooker_size": "5L",
+        "bedding": ["cotton_summer", "warm_quilt_winter"]
+      },
+      "notes": {
+        "water_quality": "soft_water",
+        "humidity": "high_humid",
+        "dust_resistance_priority": false,
+        "cooling_priority": true,
+        "mould_resistance_priority": true
+      }
+    },
+    "uttar_pradesh": {
+      "display_name": "Uttar Pradesh",
+      "capital": "Lucknow",
+      "dominant_language": "Hindi",
+      "climate": "humid_subtropical",
+      "festivals": ["Diwali", "Holi", "Chhath Puja", "Eid", "Ram Navami"],
+      "agricultural_cycle": {
+        "harvest_months": [3, 4, 10, 11],
+        "sowing_months": [6, 7, 11]
+      },
+      "regional_preferences": {
+        "fabric": ["chikankari", "cotton", "silk"],
+        "cookware": ["pressure_cooker", "kadhai", "brass_utensils"],
+        "pressure_cooker_size": "7.5L",
+        "bedding": ["cotton_summer", "heavy_razai_winter"]
+      },
+      "notes": {
+        "water_quality": "hard_water",
+        "humidity": "moderate_to_high",
+        "dust_resistance_priority": true,
+        "cooling_priority": true,
+        "heating_priority": true,
+        "water_filter_priority": true
+      }
+    },
+    "gujarat": {
+      "display_name": "Gujarat",
+      "capital": "Gandhinagar",
+      "dominant_language": "Gujarati",
+      "climate": "hot_semi_arid",
+      "festivals": ["Navratri", "Diwali", "Uttarayan (Makar Sankranti)", "Janmashtami", "Holi"],
+      "agricultural_cycle": {
+        "harvest_months": [2, 3, 10, 11],
+        "sowing_months": [6, 7, 10]
+      },
+      "regional_preferences": {
+        "fabric": ["patola_silk", "cotton", "bandhani"],
+        "cookware": ["pressure_cooker", "dhokla_vessel", "kadhai"],
+        "pressure_cooker_size": "5L",
+        "bedding": ["cotton_light"]
+      },
+      "notes": {
+        "water_quality": "hard_water_high_tds",
+        "humidity": "low_to_moderate",
+        "dust_resistance_priority": true,
+        "cooling_priority": true,
+        "water_filter_priority": true
+      }
+    },
+    "andhra_pradesh": {
+      "display_name": "Andhra Pradesh",
+      "capital": "Amaravati",
+      "dominant_language": "Telugu",
+      "climate": "tropical_hot_semi_arid",
+      "festivals": ["Ugadi", "Sankranti", "Diwali", "Dasara"],
+      "agricultural_cycle": {
+        "harvest_months": [1, 2, 9, 10],
+        "sowing_months": [6, 7, 11]
+      },
+      "regional_preferences": {
+        "fabric": ["cotton", "venkatagiri_cotton", "uppada_silk"],
+        "cookware": ["pressure_cooker", "clay_pot", "kadhai"],
+        "pressure_cooker_size": "5L",
+        "bedding": ["thin_cotton_sheets"]
+      },
+      "notes": {
+        "water_quality": "moderate",
+        "humidity": "moderate_to_high_coastal",
+        "dust_resistance_priority": false,
+        "cooling_priority": true
+      }
+    }
+  },
+  "government_schemes": {
+    "pm_kisan": {
+      "name": "PM Kisan Samman Nidhi",
+      "description": "Direct income support of Rs 6000/year to farmer families",
+      "payment_months": [4, 8, 12],
+      "average_amount_per_instalment": 2000,
+      "beneficiary_type": "farmers",
+      "eligibility_note": "Small and marginal farmer families with combined landholding up to 2 hectares"
+    },
+    "pm_awas_yojana": {
+      "name": "PM Awas Yojana",
+      "description": "Housing subsidy for low income families",
+      "payment_months": [3, 9],
+      "average_amount_per_instalment": 150000,
+      "beneficiary_type": "low_income_households",
+      "eligibility_note": "Families without pucca house"
+    }
+  },
+  "institutions": {
+    "nit_trichy": {
+      "display_name": "NIT Tiruchirappalli",
+      "city": "Tiruchirappalli",
+      "state": "tamil_nadu",
+      "pincode": "620015",
+      "type": "nit",
+      "keywords": ["nit trichy", "nit tiruchirappalli", "nit trichirappalli", "national institute of technology tiruchirappalli"],
+      "appliance_wattage_limit": 750,
+      "cold_months": [12, 1],
+      "hostel_room_size_sqft": 100,
+      "prohibited_items": ["induction_cooktop", "electric_kettle_above_1000w"],
+      "notes": "Hot climate, cotton preferred. Hard water from Cauvery river."
+    },
+    "iit_bombay": {
+      "display_name": "IIT Bombay",
+      "city": "Mumbai",
+      "state": "maharashtra",
+      "pincode": "400076",
+      "type": "iit",
+      "keywords": ["iit bombay", "iit mumbai", "indian institute of technology bombay", "iitb"],
+      "appliance_wattage_limit": 1000,
+      "cold_months": [12, 1],
+      "hostel_room_size_sqft": 120,
+      "prohibited_items": [],
+      "notes": "Coastal humidity. Good delivery connectivity."
+    },
+    "bits_pilani": {
+      "display_name": "BITS Pilani",
+      "city": "Pilani",
+      "state": "rajasthan",
+      "pincode": "333031",
+      "type": "deemed_university",
+      "keywords": ["bits pilani", "bits", "birla institute pilani", "birla institute of technology pilani"],
+      "appliance_wattage_limit": 500,
+      "cold_months": [11, 12, 1, 2],
+      "hostel_room_size_sqft": 90,
+      "prohibited_items": ["alcohol", "non_veg_cooking"],
+      "notes": "Dry campus. Desert climate — very hot summers, cold winters. Dust storms common. Remote location — delivery delays."
+    },
+    "nit_surathkal": {
+      "display_name": "NIT Karnataka (Surathkal)",
+      "city": "Surathkal",
+      "state": "karnataka",
+      "pincode": "575025",
+      "type": "nit",
+      "keywords": ["nit surathkal", "nit karnataka", "nitk", "national institute of technology karnataka"],
+      "appliance_wattage_limit": 750,
+      "cold_months": [],
+      "hostel_room_size_sqft": 100,
+      "prohibited_items": [],
+      "notes": "Coastal Karnataka. Very high humidity. Rust-resistant items recommended."
+    },
+    "iit_madras": {
+      "display_name": "IIT Madras",
+      "city": "Chennai",
+      "state": "tamil_nadu",
+      "pincode": "600036",
+      "type": "iit",
+      "keywords": ["iit madras", "iit chennai", "indian institute of technology madras", "iitm"],
+      "appliance_wattage_limit": 1000,
+      "cold_months": [12, 1],
+      "hostel_room_size_sqft": 110,
+      "prohibited_items": [],
+      "notes": "Hot climate, inside a forest campus. Good delivery connectivity."
+    },
+    "iit_delhi": {
+      "display_name": "IIT Delhi",
+      "city": "New Delhi",
+      "state": "delhi",
+      "pincode": "110016",
+      "type": "iit",
+      "keywords": ["iit delhi", "iit d", "indian institute of technology delhi", "iitd", "hauz khas"],
+      "appliance_wattage_limit": 1000,
+      "cold_months": [11, 12, 1, 2],
+      "hostel_room_size_sqft": 110,
+      "prohibited_items": [],
+      "notes": "Continental climate. Cold winters, hot summers. Dust common in March-April."
+    },
+    "nit_warangal": {
+      "display_name": "NIT Warangal",
+      "city": "Warangal",
+      "state": "andhra_pradesh",
+      "pincode": "506004",
+      "type": "nit",
+      "keywords": ["nit warangal", "nitw", "national institute of technology warangal"],
+      "appliance_wattage_limit": 750,
+      "cold_months": [12, 1],
+      "hostel_room_size_sqft": 100,
+      "prohibited_items": [],
+      "notes": "Telangana region. Hot climate."
+    }
+  }
+}

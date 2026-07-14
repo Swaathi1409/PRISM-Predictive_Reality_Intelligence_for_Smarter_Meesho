@@ -1,0 +1,55 @@
+/* index.css — PRISM Global Styles */
+/* Tailwind CSS (MIT License) — directive imports */
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ── Base reset & body ──────────────────────────────────────────────────── */
+@layer base {
+  *, *::before, *::after { box-sizing: border-box; }
+
+  html {
+    scroll-behavior: smooth;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  body {
+    background-color: #0f0a1e;
+    color: white;
+    font-family: 'Inter', system-ui, sans-serif;
+    min-height: 100vh;
+  }
+
+  /* Custom scrollbar */
+  ::-webkit-scrollbar { width: 6px; height: 6px; }
+  ::-webkit-scrollbar-track { background: #0f0a1e; }
+  ::-webkit-scrollbar-thumb { background: #2d2050; border-radius: 3px; }
+  ::-webkit-scrollbar-thumb:hover { background: #6C2BD9; }
+
+  /* Selection */
+  ::selection { background: rgba(108, 43, 217, 0.3); color: white; }
+}
+
+/* ── Animations ─────────────────────────────────────────────────────────── */
+@layer utilities {
+  .text-balance { text-wrap: balance; }
+
+  .animate-fade-in {
+    animation: fadeIn 0.5s ease-out forwards;
+  }
+  .animate-slide-up {
+    animation: slideUp 0.5s ease-out forwards;
+  }
+
+  @keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+  }
+
+  @keyframes slideUp {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+}

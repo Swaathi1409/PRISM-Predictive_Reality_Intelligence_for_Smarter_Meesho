@@ -1,0 +1,282 @@
+{
+  "hostel_move": {
+    "label": "Moving to Hostel / College",
+    "keywords": [
+      "hostel", "college", "university", "iit", "nit", "bits", "campus", "dorm", "dormitory",
+      "room", "got admission", "got selected", "engineering", "btech", "joined college",
+      "moving away", "leaving home", "student life", "first year", "fresher"
+    ],
+    "timeline_days": 30,
+    "emotion_level": "high",
+    "family_significance": "very_high",
+    "suggested_budget_range": {"min": 5000, "max": 50000},
+    "purchase_phases": [
+      {
+        "phase_name": "Essential Setup (Week 1)",
+        "days_from_now": 0,
+        "categories": ["bedding", "study_accessories", "personal_care"],
+        "priority": "must_have",
+        "note": "These items must arrive before the student leaves home."
+      },
+      {
+        "phase_name": "Comfort Layer (Week 2)",
+        "days_from_now": 7,
+        "categories": ["bags_luggage", "study_accessories"],
+        "priority": "should_have",
+        "note": "Can be ordered once the student is settled and knows the room setup."
+      },
+      {
+        "phase_name": "Long-term Needs (Month 2)",
+        "days_from_now": 30,
+        "categories": ["personal_care", "kitchen_essentials"],
+        "priority": "nice_to_have",
+        "note": "Assess what the hostel provides before buying these."
+      }
+    ]
+  },
+  "wedding": {
+    "label": "Wedding Preparation",
+    "keywords": [
+      "wedding", "marriage", "shaadi", "vivah", "barat", "bride", "groom", "engagement",
+      "sagai", "ring ceremony", "shadi", "dulhan", "dulha", "getting married", "married",
+      "reception", "mehendi", "sangeet", "haldi"
+    ],
+    "timeline_days": 90,
+    "emotion_level": "very_high",
+    "family_significance": "extremely_high",
+    "suggested_budget_range": {"min": 20000, "max": 500000},
+    "purchase_phases": [
+      {
+        "phase_name": "Outfit & Jewellery (3 months before)",
+        "days_from_now": 0,
+        "categories": ["formal_wear", "festival_decor"],
+        "priority": "must_have",
+        "note": "Outfit alterations take time. Order early to allow multiple fittings."
+      },
+      {
+        "phase_name": "Home & Kitchen Gifts (6 weeks before)",
+        "days_from_now": 45,
+        "categories": ["kitchen_essentials", "bedding"],
+        "priority": "should_have",
+        "note": "Traditional gift items for the new household."
+      },
+      {
+        "phase_name": "Last-Minute Essentials (1 week before)",
+        "days_from_now": 83,
+        "categories": ["personal_care", "bags_luggage"],
+        "priority": "nice_to_have",
+        "note": "Travel and personal care for the honeymoon."
+      }
+    ]
+  },
+  "new_baby": {
+    "label": "New Baby Arrival",
+    "keywords": [
+      "baby", "newborn", "infant", "pregnant", "pregnancy", "expecting", "due date",
+      "delivery", "maternity", "baby shower", "new born", "baby coming", "soon to be parent",
+      "nappy", "diaper", "cradle", "crib", "formula", "baby food"
+    ],
+    "timeline_days": 60,
+    "emotion_level": "very_high",
+    "family_significance": "extremely_high",
+    "suggested_budget_range": {"min": 10000, "max": 80000},
+    "purchase_phases": [
+      {
+        "phase_name": "Before Baby Arrives (Weeks 1-2)",
+        "days_from_now": 0,
+        "categories": ["baby_products", "bedding"],
+        "priority": "must_have",
+        "note": "Safety-critical items. Do not compromise on quality for these."
+      },
+      {
+        "phase_name": "First Month Comfort (Week 3-4)",
+        "days_from_now": 14,
+        "categories": ["baby_products", "personal_care"],
+        "priority": "should_have",
+        "note": "Adjust based on what the hospital provides and what the baby needs."
+      },
+      {
+        "phase_name": "Growth Stage Prep (Month 2)",
+        "days_from_now": 45,
+        "categories": ["baby_products", "kitchen_essentials"],
+        "priority": "nice_to_have",
+        "note": "Wait to buy larger sizes as baby growth varies."
+      }
+    ]
+  },
+  "first_job": {
+    "label": "Starting First Job",
+    "keywords": [
+      "job", "first job", "new job", "office", "joining", "placement", "campus placement",
+      "corporate", "work from office", "wfo", "internship", "career", "interview",
+      "joining date", "professional", "salary", "workplace", "colleague"
+    ],
+    "timeline_days": 21,
+    "emotion_level": "high",
+    "family_significance": "high",
+    "suggested_budget_range": {"min": 8000, "max": 30000},
+    "purchase_phases": [
+      {
+        "phase_name": "Professional Wardrobe (Week 1)",
+        "days_from_now": 0,
+        "categories": ["formal_wear", "bags_luggage"],
+        "priority": "must_have",
+        "note": "Formal attire for the first week creates a strong first impression."
+      },
+      {
+        "phase_name": "Daily Essentials (Week 2)",
+        "days_from_now": 7,
+        "categories": ["study_accessories", "personal_care"],
+        "priority": "should_have",
+        "note": "Work accessories and grooming for a polished professional image."
+      },
+      {
+        "phase_name": "Comfort Upgrades (Week 3)",
+        "days_from_now": 14,
+        "categories": ["study_accessories", "personal_care"],
+        "priority": "nice_to_have",
+        "note": "After first paycheck — upgrade to personal comfort items."
+      }
+    ]
+  },
+  "festival_prep": {
+    "label": "Festival Preparation",
+    "keywords": [
+      "diwali", "dussehra", "navratri", "eid", "holi", "pongal", "onam", "christmas",
+      "baisakhi", "durga puja", "ganesh chaturthi", "raksha bandhan", "festival", "puja",
+      "celebration", "decorations", "gifting", "sweets", "festive", "pooja"
+    ],
+    "timeline_days": 14,
+    "emotion_level": "high",
+    "family_significance": "very_high",
+    "suggested_budget_range": {"min": 2000, "max": 25000},
+    "purchase_phases": [
+      {
+        "phase_name": "Decor & Lighting (Week 1)",
+        "days_from_now": 0,
+        "categories": ["festival_decor"],
+        "priority": "must_have",
+        "note": "Order early — festival items sell out fast and delivery delays are common."
+      },
+      {
+        "phase_name": "Gifts & New Clothes (Week 1-2)",
+        "days_from_now": 3,
+        "categories": ["formal_wear", "personal_care", "kitchen_essentials"],
+        "priority": "should_have",
+        "note": "Gifting to family and friends is a core festival tradition."
+      },
+      {
+        "phase_name": "Last-Minute Additions",
+        "days_from_now": 10,
+        "categories": ["festival_decor", "kitchen_essentials"],
+        "priority": "nice_to_have",
+        "note": "Replenish supplies mid-festival if needed."
+      }
+    ]
+  },
+  "new_home": {
+    "label": "Moving to a New Home",
+    "keywords": [
+      "new home", "new house", "moving", "shifted", "flat", "apartment", "renting",
+      "house warming", "griha pravesh", "housewarming", "new flat", "shifted flat",
+      "relocated", "moving in", "new place", "new accommodation"
+    ],
+    "timeline_days": 45,
+    "emotion_level": "high",
+    "family_significance": "high",
+    "suggested_budget_range": {"min": 15000, "max": 200000},
+    "purchase_phases": [
+      {
+        "phase_name": "Day 1 Essentials (Move-in Day)",
+        "days_from_now": 0,
+        "categories": ["bedding", "kitchen_essentials", "personal_care"],
+        "priority": "must_have",
+        "note": "You need these items on the very first night. Pre-order them."
+      },
+      {
+        "phase_name": "Kitchen Setup (Week 2)",
+        "days_from_now": 7,
+        "categories": ["kitchen_essentials", "festival_decor"],
+        "priority": "should_have",
+        "note": "Set up the kitchen properly in the first week."
+      },
+      {
+        "phase_name": "Comfort & Aesthetics (Month 1-2)",
+        "days_from_now": 21,
+        "categories": ["festival_decor", "bedding"],
+        "priority": "nice_to_have",
+        "note": "Take time to understand your space before buying decor."
+      }
+    ]
+  },
+  "government_exam": {
+    "label": "Government Exam Preparation",
+    "keywords": [
+      "upsc", "ssc", "bank exam", "ias", "ips", "government exam", "civil services",
+      "competitive exam", "entrance exam", "jee", "neet", "cat", "mat", "gate",
+      "ibps", "rrb", "preparation", "coaching", "study", "exam", "appeared"
+    ],
+    "timeline_days": 180,
+    "emotion_level": "very_high",
+    "family_significance": "very_high",
+    "suggested_budget_range": {"min": 3000, "max": 20000},
+    "purchase_phases": [
+      {
+        "phase_name": "Study Setup (Week 1)",
+        "days_from_now": 0,
+        "categories": ["study_accessories", "personal_care"],
+        "priority": "must_have",
+        "note": "Comfortable study environment directly impacts exam performance."
+      },
+      {
+        "phase_name": "Comfort Upgrade (Month 1)",
+        "days_from_now": 30,
+        "categories": ["bedding", "personal_care"],
+        "priority": "should_have",
+        "note": "Good sleep quality is critical for retention during long preparation periods."
+      },
+      {
+        "phase_name": "Exam Day Ready (1 week before exam)",
+        "days_from_now": 173,
+        "categories": ["bags_luggage", "personal_care"],
+        "priority": "nice_to_have",
+        "note": "Exam day bag, stationery, and travel essentials."
+      }
+    ]
+  },
+  "shop_opening": {
+    "label": "Opening a New Shop / Business",
+    "keywords": [
+      "shop", "store", "business", "starting business", "opening shop", "dukan",
+      "enterprise", "startup", "new venture", "meesho seller", "reseller", "reselling",
+      "kirana", "boutique", "salon", "parlour", "wholesale", "retail"
+    ],
+    "timeline_days": 30,
+    "emotion_level": "high",
+    "family_significance": "high",
+    "suggested_budget_range": {"min": 10000, "max": 150000},
+    "purchase_phases": [
+      {
+        "phase_name": "Setup & Supplies (Week 1)",
+        "days_from_now": 0,
+        "categories": ["study_accessories", "bags_luggage", "kitchen_essentials"],
+        "priority": "must_have",
+        "note": "Operational items needed on day one of business."
+      },
+      {
+        "phase_name": "Display & Aesthetics (Week 2)",
+        "days_from_now": 7,
+        "categories": ["festival_decor"],
+        "priority": "should_have",
+        "note": "An attractive shop front drives walk-in customers."
+      },
+      {
+        "phase_name": "Restock & Upgrade (Month 1)",
+        "days_from_now": 21,
+        "categories": ["kitchen_essentials", "personal_care"],
+        "priority": "nice_to_have",
+        "note": "Restock after first sales cycle based on what moved fastest."
+      }
+    ]
+  }
+}

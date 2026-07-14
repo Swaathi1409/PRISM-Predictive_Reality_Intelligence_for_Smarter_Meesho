@@ -1,0 +1,32 @@
+{
+  "name": "prism-frontend",
+  "version": "1.0.0",
+  "type": "module",
+  "description": "PRISM — Predictive Reality Intelligence for Smarter Meesho. Frontend built with React 18 (MIT), Vite (MIT), Tailwind CSS (MIT), Framer Motion (MIT), React Query (MIT), Axios (MIT), Lucide React (ISC).",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview",
+    "lint": "eslint src --ext .js,.jsx"
+  },
+  "dependencies": {
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "react-router-dom": "^6.23.0",
+    "axios": "^1.6.8",
+    "@tanstack/react-query": "^5.37.1",
+    "framer-motion": "^11.1.9",
+    "lucide-react": "^0.383.0",
+    "clsx": "^2.1.1"
+  },
+  "devDependencies": {
+    "@vitejs/plugin-react": "^4.2.1",
+    "vite": "^5.2.11",
+    "tailwindcss": "^3.4.3",
+    "autoprefixer": "^10.4.19",
+    "postcss": "^8.4.38",
+    "eslint": "^8.57.0",
+    "eslint-plugin-react": "^7.34.1",
+    "eslint-plugin-react-hooks": "^4.6.2"
+  }
+}

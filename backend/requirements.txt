@@ -1,0 +1,30 @@
+# Web framework — FastAPI (MIT), Uvicorn ASGI server (BSD)
+fastapi==0.111.0
+uvicorn[standard]==0.29.0
+
+# LLM and Agent Orchestration — Groq SDK (Apache 2.0), LangChain (MIT)
+groq==0.9.0
+langchain==0.1.20
+langchain-groq==0.1.6
+
+# Configuration and Validation — Pydantic (MIT), pydantic-settings (MIT)
+pydantic==2.7.1
+pydantic-settings==2.2.1
+
+# Database — SQLAlchemy ORM (MIT), Alembic migrations (MIT)
+sqlalchemy==2.0.30
+alembic==1.13.1
+
+# Caching — Redis (BSD)
+redis==5.0.4
+
+# Environment — python-dotenv (BSD)
+python-dotenv==1.0.1
+
+# HTTP client — httpx (BSD)
+httpx==0.27.0
+
+# Testing — pytest (MIT), pytest-asyncio (Apache 2.0)
+pytest==8.2.0
+pytest-asyncio==0.23.6
+httpx==0.27.0
