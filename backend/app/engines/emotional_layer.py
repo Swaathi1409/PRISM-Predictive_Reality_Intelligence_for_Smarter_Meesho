@@ -130,7 +130,7 @@ Write 2 to 3 sentences ONLY. Rules:
 3. DO NOT start with "I". Start with the emotion or the moment.
 4. Acknowledge the life event specifically — not generically.
 5. End with a natural transition to the shopping plan (one brief sentence).
-6. Write in warm, simple Indian English. Code-switch only if it adds warmth (e.g. "Bahut bahut badhai!" for a wedding).
+6. Write in warm, simple Indian English. Use ONLY English, absolutely no Hindi or other language mixed in.
 7. Maximum 60 words total."""
 
         response = _client.chat.completions.create(

@@ -25,7 +25,7 @@ export default function AgentCard({ agent, index }) {
       initial={{ opacity: 0, y: 20, scale: 0.97 }}
       animate={{ opacity: 1, y: 0, scale: 1 }}
       transition={{ delay: index * 0.12, duration: 0.4, ease: 'easeOut' }}
-      className={`rounded-xl border ${agentConfig.accent} bg-surface-card p-4 hover:bg-surface-elevated transition-colors`}
+      className={`min-w-0 rounded-xl border ${agentConfig.accent} bg-surface-card p-4 hover:bg-surface-elevated transition-colors`}
     >
       {/* Header */}
       <div className="flex items-start justify-between mb-3">

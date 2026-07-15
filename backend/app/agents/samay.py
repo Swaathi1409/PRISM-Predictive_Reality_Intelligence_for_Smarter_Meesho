@@ -1,100 +1,84 @@
 """
 samay.py — Samay Time Agent for PRISM.
 
-ROLE: Evaluates whether the product can be delivered in time for the user's
-life event, given delivery_days, available_pincodes, and event urgency.
+WHAT CHANGED FROM v1:
+Now uses urgency_days from the LLM-parsed event (instead of a hardcoded field)
+and factors in whether the pincode is reachable from the product's available areas.
 
-WHY DETERMINISTIC (no LLM):
-Delivery feasibility is a date arithmetic problem — days available minus
-delivery days. Deterministic and exact.
-
-All thresholds come from app.config (imported from .env). Zero magic numbers
-in this file.
-
-Library: app.config (internal), app.agents.base_agent (internal).
+Libraries: app.config (internal), app.agents.base_agent (internal).
 """
 
 from app.agents.base_agent import BaseAgent
 from app.config import settings
-from typing import Dict, Any, List
+from typing import Dict, Any
 
 
 class SamayTimeAgent(BaseAgent):
     name = "Samay"
     role = "Time Agent"
-    personality = (
-        "Precise and urgent. Samay knows that the right product at the wrong "
-        "time is the wrong product. Delivery windows are non-negotiable."
-    )
+    personality = "Precise. Cares about whether the product actually arrives in time."
 
     def evaluate(self, product: Dict[str, Any], context: Dict[str, Any]) -> Dict[str, Any]:
-        delivery_days: int = product.get("delivery_days", 5)
-        available_pincodes: List[str] = product.get("available_pincodes", [])
-        user_pincode: str = context.get("user_pincode", "600001")
-        urgency_days: int = context.get("urgency_days", 30)
-        event_label: str = context.get("detected_event", "your event")
+        delivery_days = product.get("delivery_days", 5)
+        urgency_days = context.get("urgency_days")  # from LLM parser
+        pincode = context.get("user_pincode", "")
+        available_pincodes = product.get("available_pincodes", [])
 
-        score = 0.0
-        flags = []
-        verdict = "approve"
+        score = 0
+        message_parts = []
 
-        # ── Pincode reachability ──────────────────────────────────────────
-        if available_pincodes and user_pincode not in available_pincodes:
+        # Pincode reachability
+        pincode_ok = not available_pincodes or pincode in available_pincodes
+        if not pincode_ok:
             score += settings.time_score_unreachable
-            pincode_note = (
-                f"This seller does not deliver to pincode {user_pincode}. "
-                f"You may need to use a nearby pickup point or choose a different seller."
-            )
-            flags.append(f"no delivery to {user_pincode}")
-            verdict = "reject"
+            message_parts.append(f"delivery not confirmed for pincode {pincode}")
         else:
-            pincode_note = f"Delivery confirmed to pincode {user_pincode}."
+            score += 3
+            message_parts.append(f"delivery confirmed for your pincode")
 
-        # ── Delivery speed ────────────────────────────────────────────────
-        if delivery_days <= settings.time_delivery_fast_days:
-            score += settings.time_score_fast
-            speed_note = f"Fast delivery in {delivery_days} day(s)."
-            if verdict == "approve":
-                verdict = "strong_approve"
-        elif delivery_days <= urgency_days:
-            score += settings.time_score_normal
+        # Delivery speed vs urgency
+        if urgency_days is not None:
             buffer = urgency_days - delivery_days
-            speed_note = (
-                f"Delivery in {delivery_days} days — arrives {buffer} day(s) before "
-                f"your deadline for {event_label}."
-            )
+            if buffer < 0:
+                score += settings.time_score_late
+                message_parts.append(f"arrives in {delivery_days}d but event is in {urgency_days}d — too late")
+            elif buffer < 2:
+                score += 0
+                message_parts.append(f"tight window — {delivery_days}d delivery, event in {urgency_days}d")
+            elif delivery_days <= settings.time_delivery_fast_days:
+                score += settings.time_score_fast
+                message_parts.append(f"fast {delivery_days}d delivery, {buffer}d buffer before event")
+            else:
+                score += settings.time_score_normal
+                message_parts.append(f"{delivery_days}d delivery with {buffer}d to spare")
         else:
-            score += settings.time_score_late
-            overrun = delivery_days - urgency_days
-            speed_note = (
-                f"Delivery in {delivery_days} days will arrive {overrun} day(s) AFTER "
-                f"your deadline for {event_label}. This may not be suitable."
-            )
-            flags.append(f"arrives {overrun}d late for {event_label}")
-            if verdict == "approve":
-                verdict = "flag"
-            # If delivery misses deadline by more than a week, reject
-            if overrun > 7:
-                verdict = "reject"
-                score += settings.time_score_unreachable
+            # No urgency known — just score on raw speed
+            if delivery_days <= settings.time_delivery_fast_days:
+                score += settings.time_score_fast
+                message_parts.append(f"fast {delivery_days}d delivery")
+            else:
+                score += settings.time_score_normal
+                message_parts.append(f"standard {delivery_days}d delivery")
 
-        # ── Build message ─────────────────────────────────────────────────
-        if flags:
-            flag_text = f" Time concerns: {'; '.join(flags)}."
+        message = f"Samay check: {'; '.join(message_parts)}."
+
+        if score >= settings.time_score_fast:
+            verdict = "approve"
+        elif score >= 0:
+            verdict = "caution"
+        elif score >= settings.time_score_late:
+            verdict = "flag"
         else:
-            flag_text = " No delivery timing issues."
-
-        message = f"{pincode_note} {speed_note}{flag_text}"
+            verdict = "reject"
 
         return self._build_result(
             message=message,
-            score=score,
+            score=float(score),
             verdict=verdict,
             data={
                 "delivery_days": delivery_days,
-                "user_pincode": user_pincode,
                 "urgency_days": urgency_days,
-                "pincode_reachable": (user_pincode in available_pincodes) if available_pincodes else True,
-                "flags": flags,
-            },
+                "pincode": pincode,
+                "pincode_reachable": pincode_ok
+            }
         )

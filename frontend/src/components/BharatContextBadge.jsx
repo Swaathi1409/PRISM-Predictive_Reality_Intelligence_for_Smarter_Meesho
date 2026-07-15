@@ -21,7 +21,25 @@ export default function BharatContextBadge({ context, stateDetected, institution
     context.government_scheme_note ||
     (context.contextual_notes?.length > 0)
 
-  if (!hasContent) return null
+  if (!hasContent) {
+    return (
+      <motion.section
+        initial={{ opacity: 0, y: 15 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.4 }}
+        id="bharat-context-section"
+        aria-label="Bharat Cultural Context"
+      >
+        <div className="rounded-2xl border border-gray-500/30 bg-gray-500/5 p-5 h-full min-h-[250px] flex flex-col items-center justify-center text-center">
+          <div className="w-12 h-12 rounded-2xl bg-gray-500/10 border border-gray-500/20 flex items-center justify-center mb-4 shadow-sm">
+             <MapPin className="w-5 h-5 text-gray-400" />
+          </div>
+          <h2 className="font-display font-bold text-gray-300 text-lg mb-2">Pan-India Context Applied</h2>
+          <p className="text-sm text-gray-500 max-w-[240px] leading-relaxed">No specific regional or institutional constraints detected. PRISM is applying baseline Bharat shopping patterns.</p>
+        </div>
+      </motion.section>
+    )
+  }
 
   return (
     <motion.section
@@ -31,7 +49,7 @@ export default function BharatContextBadge({ context, stateDetected, institution
       id="bharat-context-section"
       aria-label="Bharat Cultural Context"
     >
-      <div className="rounded-2xl border border-amber-500/30 bg-amber-500/5 p-5">
+      <div className="rounded-2xl border border-amber-500/30 bg-amber-500/5 p-5 h-full flex flex-col">
         {/* Header */}
         <div className="flex items-center gap-3 mb-4">
           <div className="w-8 h-8 rounded-lg bg-amber-500/20 border border-amber-500/30 flex items-center justify-center">
@@ -43,7 +61,7 @@ export default function BharatContextBadge({ context, stateDetected, institution
           </div>
         </div>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-4">
           {/* Institution */}
           {context.institution_name && (
             <ContextItem
@@ -87,21 +105,21 @@ export default function BharatContextBadge({ context, stateDetected, institution
 
         {/* Government scheme note */}
         {context.government_scheme_note && (
-          <div className="mt-3 p-3 rounded-xl bg-emerald-500/10 border border-emerald-500/20">
+          <div className="mb-3 p-3 rounded-xl bg-emerald-500/10 border border-emerald-500/20">
             <div className="flex items-start gap-2">
               <AlertTriangle className="w-4 h-4 text-emerald-400 mt-0.5 flex-shrink-0" />
-              <p className="text-sm text-emerald-300">{context.government_scheme_note}</p>
+              <p className="text-sm text-emerald-300 break-words min-w-0">{context.government_scheme_note}</p>
             </div>
           </div>
         )}
 
         {/* Contextual notes */}
         {context.contextual_notes?.length > 0 && (
-          <div className="mt-3 space-y-1.5">
+          <div className="space-y-2 mt-auto">
             {context.contextual_notes.map((note, i) => (
               <div key={i} className="flex items-start gap-2">
                 <Thermometer className="w-3.5 h-3.5 text-amber-400 mt-0.5 flex-shrink-0" />
-                <p className="text-xs text-gray-400">{note}</p>
+                <p className="text-xs text-gray-400 break-words min-w-0 leading-relaxed">{note}</p>
               </div>
             ))}
           </div>

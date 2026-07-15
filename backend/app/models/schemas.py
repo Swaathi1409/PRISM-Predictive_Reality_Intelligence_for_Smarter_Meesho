@@ -41,6 +41,11 @@ class PrismRequest(BaseModel):
         default=None,
         description="Optional state name hint if the user's state is known from their profile. E.g. 'tamil_nadu'.",
     )
+    target_date: Optional[str] = Field(
+        default=None,
+        description="Optional target date for the event. E.g. '2026-08-15'.",
+        pattern=r"^\d{4}-\d{2}-\d{2}$",
+    )
 
 
 # ─────────────────────────────────────────────
@@ -129,6 +134,7 @@ class PrismResponse(BaseModel):
     purchase_timeline: List[PurchasePhase] = Field(..., description="Phased purchase plan for the detected event.")
     agent_debate: List[AgentMessage] = Field(..., description="Messages from all 4 agents (Kismat, Paisa, Samay, Soch) with their verdicts.")
     top_recommendation: dict = Field(..., description="The top recommended product with all its details.")
+    all_products: List[dict] = Field(default=[], description="List of all products considered, useful for mapping to purchase phases.")
     confidence: ConfidenceBreakdown = Field(..., description="Decomposed confidence score with per-factor breakdown.")
     temporal_strategies: List[TemporalStrategy] = Field(..., description="Three purchase timing strategies: Buy Now, Wait for Sale, Split Purchase.")
     bharat_context: BharatContextDisplay = Field(..., description="Cultural and institutional context detected from the user's input.")

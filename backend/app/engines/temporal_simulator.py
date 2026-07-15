@@ -95,7 +95,15 @@ def generate(
     scheme_note = _check_upcoming_scheme(current_month)
 
     # ── Recommendation logic ──────────────────────────────────────────────
-    if urgency_days < 5:
+    user_input = context.get("user_input", "").lower()
+    finance_constraint = any(k in user_input for k in ["limited", "tight", "credit", "emi", "pay later", "short on cash", "budget constraint", "amount"])
+
+    if finance_constraint:
+        buy_now_recommended = False
+        wait_recommended = False
+        split_recommended = True
+        urgency_override = False
+    elif urgency_days < 5:
         # No time to wait — Buy Now wins
         buy_now_recommended = True
         wait_recommended = False
@@ -143,6 +151,44 @@ def generate(
         f"then Rs {split_later:,} later using a buy-now-pay-later option. "
         f"Useful if your budget is tight this month."
     )
+
+    # ── Stock Status Override ─────────────────────────────────────────────
+    if product.get("stock_status") == "out_of_stock":
+        buy_now_recommended = False
+        wait_recommended = True
+        split_recommended = False
+        
+        # Override the "Wait" strategy completely for Restock
+        wait_label = (today + timedelta(days=5)).strftime("%d %b")
+        return [
+            {
+                "strategy_name": "Buy Now (Unavailable)",
+                "strategy_key": "buy_now",
+                "price": base_price,
+                "savings_vs_now": 0,
+                "recommended": False,
+                "note": "This product is currently out of stock and cannot be ordered.",
+                "action_date": "Currently Unavailable",
+            },
+            {
+                "strategy_name": "Wait for Restock",
+                "strategy_key": "wait",
+                "price": base_price,
+                "savings_vs_now": 0,
+                "recommended": True,
+                "note": f"This item is out of stock but expected to return by {wait_label}. You can wait and we will notify you.",
+                "action_date": f"Expected by {wait_label}",
+            },
+            {
+                "strategy_name": "Split Purchase",
+                "strategy_key": "split",
+                "price": base_price,
+                "savings_vs_now": 0,
+                "recommended": False,
+                "note": "Split payment is unavailable for out of stock items.",
+                "action_date": "Currently Unavailable",
+            },
+        ]
 
     strategies = [
         {

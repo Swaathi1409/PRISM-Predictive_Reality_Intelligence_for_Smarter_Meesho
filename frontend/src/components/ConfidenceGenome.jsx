@@ -22,8 +22,8 @@ export default function ConfidenceGenome({ confidence }) {
   const dashOffset = RING_CIRCUMFERENCE * (1 - total_score / 100)
 
   return (
-    <section id="confidence-genome-section" aria-label="Confidence Genome">
-      <div className="rounded-2xl border border-surface-border bg-surface-card p-5">
+    <section id="confidence-genome-section" aria-label="Confidence Genome" className="h-full">
+      <div className="rounded-2xl border border-surface-border bg-surface-card p-5 h-full flex flex-col">
         {/* Header */}
         <div className="flex items-center gap-3 mb-5">
           <div className="w-8 h-8 rounded-lg bg-prism-500/20 border border-prism-500/30 flex items-center justify-center">
@@ -35,7 +35,7 @@ export default function ConfidenceGenome({ confidence }) {
           </div>
         </div>
 
-        <div className="flex flex-col sm:flex-row gap-6 items-start">
+        <div className="flex flex-col gap-6 items-center flex-1">
           {/* Animated SVG ring */}
           <div className="flex-shrink-0 flex flex-col items-center gap-2">
             <div className="relative">
@@ -68,11 +68,13 @@ export default function ConfidenceGenome({ confidence }) {
           </div>
 
           {/* Factor list */}
-          <div className="flex-1 space-y-2 w-full">
-            <p className="text-sm text-gray-400 italic mb-3">"{interpretation}"</p>
-            {factors.map((factor, i) => (
-              <FactorRow key={i} factor={factor} index={i} maxContribution={Math.abs(factors[0]?.contribution || 1)} />
-            ))}
+          <div className="flex-1 space-y-3 w-full min-w-0 max-w-full flex flex-col justify-center">
+            <p className="text-sm text-gray-400 italic mb-4 text-center break-words">"{interpretation}"</p>
+            <div className="space-y-2 w-full max-w-[300px] mx-auto">
+              {factors.map((factor, i) => (
+                <FactorRow key={i} factor={factor} index={i} maxContribution={Math.abs(factors[0]?.contribution || 1)} />
+              ))}
+            </div>
           </div>
         </div>
       </div>
@@ -98,7 +100,7 @@ function FactorRow({ factor, index, maxContribution }) {
       }
 
       {/* Factor label */}
-      <span className="text-xs text-gray-400 w-36 flex-shrink-0 truncate">{factor.factor_label}</span>
+      <span className="text-xs text-gray-400 w-24 sm:w-36 flex-shrink-0 truncate" title={factor.factor_label}>{factor.factor_label}</span>
 
       {/* Bar */}
       <div className="flex-1 h-1.5 rounded-full bg-surface-elevated overflow-hidden">

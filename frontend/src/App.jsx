@@ -28,7 +28,6 @@ export default function App() {
       <QueryClientProvider client={queryClient}>
         <PrismProvider>
           <BrowserRouter>
-            <Navbar />
             <Routes>
               <Route path="/" element={<Home />} />
               <Route path="/demo" element={<Demo />} />

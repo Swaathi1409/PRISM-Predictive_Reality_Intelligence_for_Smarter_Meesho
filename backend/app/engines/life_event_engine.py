@@ -1,220 +1,224 @@
 """
-life_event_engine.py — Detects life events and Bharat context from user input.
+life_event_engine.py — LLM-powered event detection and purchase timeline generator.
 
-WHY THIS MODULE EXISTS:
-The central intelligence of PRISM. By detecting the life event before product
-matching, we ensure every product recommendation is contextually relevant. A
-bedsheet recommendation for a hostel move is very different from a bedsheet
-recommendation for a wedding — this engine makes that distinction.
+WHAT CHANGED FROM v1:
+The previous version used keyword scanning across life_event_templates.json to detect
+events. This failed for natural language ("going trekking to Kashmir", "daughter just
+got married") because users never write the exact keywords we anticipated.
 
-DETECTION STRATEGY:
-- All 8 event templates and ALL their keywords are loaded once at module load.
-- detect_event() scores each template by keyword hit count, returns the winner.
-- detect_location() scans institution keywords and state names dynamically from JSON.
-- generate_llm_roadmap() calls Claude ONLY for high-confidence events to produce
-  a personalised 2-sentence purchase plan intro.
+This version makes a single LLM call with a structured extraction prompt. Claude reads
+the user's full natural language input and returns a JSON object with event_key,
+location, season, cultural context, urgency, and emotion — all in one pass.
 
-Library: json (stdlib), re (stdlib), groq (Apache 2.0), app.config (internal).
-Chosen: groq over LangChain for the LLM roadmap call because this is a single,
-simple prompt with no chain — LangChain overhead is not justified here.
+This is more accurate, handles synonyms naturally, understands regional phrasing,
+and requires zero keyword maintenance.
+
+Libraries: anthropic (Anthropic Terms), json (stdlib), app.config (internal).
 """
 
 import json
 import os
-import re
-from typing import Dict, Any, Optional, Tuple
-
-from groq import Groq
+from typing import Optional
+from anthropic import Anthropic
 from app.config import settings
 
-_client = Groq(api_key=settings.groq_api_key)
+client = Anthropic(api_key=settings.anthropic_api_key)
 
+# Load static data once at module level — not on every request
 _TEMPLATES_PATH = os.path.join(os.path.dirname(__file__), "../data/life_event_templates.json")
-_CONTEXT_PATH = os.path.join(os.path.dirname(__file__), "../data/bharat_context.json")
+_BHARAT_PATH = os.path.join(os.path.dirname(__file__), "../data/bharat_context.json")
 
-# Module-level cache — loaded once, reused for every request
-_templates: Optional[Dict] = None
-_context: Optional[Dict] = None
+with open(_TEMPLATES_PATH, encoding="utf-8") as f:
+    _TEMPLATES = json.load(f)
+
+with open(_BHARAT_PATH, encoding="utf-8") as f:
+    _BHARAT = json.load(f)
+
+# Build valid event keys from templates file — no hardcoding
+VALID_EVENT_KEYS = list(_TEMPLATES.keys()) + ["travel_adventure", "religious_pilgrimage", "general"]
+
+PARSE_PROMPT = """You are a context extraction engine for PRISM, an AI commerce assistant built for India.
+
+A user has described their situation in natural language. Extract structured information and return ONLY a valid JSON object — no explanation, no markdown, no preamble.
+
+Valid event_key values: {valid_keys}
+
+Extract:
+{{
+  "event_key": "the best matching event key from the valid list above",
+  "confidence": float between 0.0 and 1.0,
+  "detected_location": "city or region name, or null",
+  "detected_state": "Indian state name in snake_case (e.g. tamil_nadu, jammu_and_kashmir), or null",
+  "season": "summer | monsoon | winter | spring | null",
+  "cultural_context": ["list of relevant cultural notes, e.g. kashmir_muslim_majority, high_altitude, coastal_region, joint_family, first_generation_college"],
+  "travel_purpose": "trek | pilgrimage | tourism | work | null",
+  "urgency_days": "integer estimate of days until the event, or null if unclear",
+  "budget_mentioned": "integer in rupees, or null if not mentioned",
+  "emotion_level": "very_high | high | medium | low",
+  "family_significance": "first_in_family | milestone | routine | null",
+  "institution_mentioned": "exact name of college, hospital, or government body, or null"
+}}
+
+Examples of correct extraction:
+- "going trekking to Kashmir next month, want to dress right for local culture" →
+  event_key: travel_adventure, detected_state: jammu_and_kashmir, season: depends on month, cultural_context: [kashmir_muslim_majority, high_altitude], travel_purpose: trek
+
+- "daughter got into NIT Trichy starting August" →
+  event_key: hostel_move, detected_state: tamil_nadu, institution_mentioned: NIT Trichy, urgency_days: estimate from today to August
+
+- "Diwali shopping for the family, budget around 5000" →
+  event_key: festival_prep, season: autumn, budget_mentioned: 5000, emotion_level: high
+
+- "son got into IIT Bombay, first in our family to go to IIT" →
+  event_key: hostel_move, institution_mentioned: IIT Bombay, detected_state: maharashtra, family_significance: first_in_family, emotion_level: very_high
+
+User input: "{user_input}"
+
+Return ONLY the JSON object."""
 
 
-def _load_templates() -> Dict:
-    global _templates
-    if _templates is None:
-        with open(_TEMPLATES_PATH, encoding="utf-8") as f:
-            _templates = json.load(f)
-    return _templates
+ROADMAP_PROMPT = """You are PRISM, an AI commerce brain built for India's next 500 million internet users.
 
+A user is going through this life event: {event_key_label}
+Their location: {location}
+Season: {season}
+Cultural context: {cultural_notes}
+Detected institution: {institution}
 
-def _load_context() -> Dict:
-    global _context
-    if _context is None:
-        with open(_CONTEXT_PATH, encoding="utf-8") as f:
-            _context = json.load(f)
-    return _context
+Write a warm, specific 2-sentence purchase roadmap introduction in simple Indian English.
+- Sentence 1: Acknowledge what is happening and what makes this situation unique (mention specific location/institution if detected)
+- Sentence 2: Set up what the purchase plan will cover
+
+Do NOT list products. Do NOT use corporate language. Write like a thoughtful older friend who knows India well.
+Keep it under 60 words total."""
 
 
 class LifeEventEngine:
-    """Detects life events and geographic/institutional context from free text."""
 
-    def detect_event(self, user_input: str) -> Dict[str, Any]:
+    def detect_event(self, user_input: str) -> dict:
         """
-        Scans all 8 templates and their keywords. Returns the template with the
-        most keyword matches. Falls back to 'festival_prep' if nothing matches.
-
-        Returns a dict with: event_key, label, timeline_days, purchase_phases,
-        emotion_level, family_significance, suggested_budget_range, confidence, matched_keywords
+        Uses Claude to extract structured event data from raw user input.
+        Returns a dict with event_key, location, cultural context, urgency, etc.
+        Falls back to a safe default if the LLM call fails or returns unparseable JSON.
         """
-        templates = _load_templates()
-        text = user_input.lower()
-
-        best_key = None
-        best_score = 0
-        best_template = None
-        best_matched = []
-
-        for event_key, template in templates.items():
-            keywords = template.get("keywords", [])
-            matched = [kw for kw in keywords if kw.lower() in text]
-            score = len(matched)
-            if score > best_score:
-                best_score = score
-                best_key = event_key
-                best_template = template
-                best_matched = matched
-
-        # Fallback if no keyword matched
-        if not best_key or best_score == 0:
-            best_key = "festival_prep"
-            best_template = templates["festival_prep"]
-            best_matched = []
-
-        confidence = min(1.0, best_score / max(3, 1))
-
-        return {
-            "event_key": best_key,
-            "label": best_template["label"],
-            "timeline_days": best_template["timeline_days"],
-            "purchase_phases": best_template["purchase_phases"],
-            "emotion_level": best_template["emotion_level"],
-            "family_significance": best_template["family_significance"],
-            "suggested_budget_range": best_template["suggested_budget_range"],
-            "confidence": confidence,
-            "matched_keywords": best_matched,
-        }
-
-    def detect_location(self, user_input: str) -> Tuple[Optional[str], Optional[Dict], Optional[str], Optional[Dict]]:
-        """
-        Scans for institution names and state names from bharat_context.json.
-        All strings are loaded from JSON — nothing is hardcoded in this function.
-
-        Returns: (institution_key, institution_data, state_key, state_data)
-        """
-        context = _load_context()
-        text = user_input.lower()
-
-        institution_key = None
-        institution_data = None
-
-        for key, inst in context.get("institutions", {}).items():
-            for keyword in inst.get("keywords", []):
-                if keyword.lower() in text:
-                    institution_key = key
-                    institution_data = inst
-                    break
-            if institution_key:
-                break
-
-        state_key = None
-        state_data = None
-
-        # Check if institution tells us the state
-        if institution_data:
-            inst_state = institution_data.get("state")
-            if inst_state and inst_state in context.get("states", {}):
-                state_key = inst_state
-                state_data = context["states"][inst_state]
-
-        # Also scan state display names and keys directly
-        if not state_key:
-            for key, state in context.get("states", {}).items():
-                display = state.get("display_name", "").lower()
-                dominant_lang = state.get("dominant_language", "").lower()
-                if display in text or key.replace("_", " ") in text:
-                    state_key = key
-                    state_data = state
-                    break
-
-        return institution_key, institution_data, state_key, state_data
-
-    def enrich_with_context(
-        self,
-        purchase_phases: list,
-        institution_data: Optional[Dict],
-        state_data: Optional[Dict],
-    ) -> list:
-        """
-        Applies institution constraints and climate notes to purchase phase notes.
-        Returns enriched phases with contextual additions.
-        """
-        enriched = []
-        for phase in purchase_phases:
-            note = phase.get("note", "")
-            additions = []
-
-            if institution_data:
-                wattage = institution_data.get("appliance_wattage_limit")
-                if wattage and "kitchen" in " ".join(phase.get("categories", [])).lower():
-                    additions.append(
-                        f"Note: {institution_data.get('display_name', 'Your institution')} "
-                        f"limits appliances to {wattage}W — check before buying electrical items."
+        try:
+            response = client.messages.create(
+                model=settings.llm_model,
+                max_tokens=400,
+                temperature=0,  # deterministic — we want consistent JSON parsing
+                messages=[{
+                    "role": "user",
+                    "content": PARSE_PROMPT.format(
+                        valid_keys=", ".join(VALID_EVENT_KEYS),
+                        user_input=user_input
                     )
+                }]
+            )
+            raw = response.content[0].text.strip()
+            # Strip markdown fences if model adds them despite instructions
+            if raw.startswith("```"):
+                raw = raw.split("```")[1]
+                if raw.startswith("json"):
+                    raw = raw[4:]
+            parsed = json.loads(raw.strip())
+            # Validate event_key falls in known set
+            if parsed.get("event_key") not in VALID_EVENT_KEYS:
+                parsed["event_key"] = "general"
+            return parsed
+        except Exception as e:
+            # Safe fallback — system still works, just less personalised
+            return {
+                "event_key": "general",
+                "confidence": 0.2,
+                "detected_location": None,
+                "detected_state": None,
+                "season": None,
+                "cultural_context": [],
+                "travel_purpose": None,
+                "urgency_days": None,
+                "budget_mentioned": None,
+                "emotion_level": "medium",
+                "family_significance": None,
+                "institution_mentioned": None,
+                "_parse_error": str(e)
+            }
 
-            if state_data:
-                climate = state_data.get("climate", "")
-                if "humid" in climate and "bedding" in " ".join(phase.get("categories", [])).lower():
-                    additions.append("Choose breathable fabrics — the local climate is humid.")
-                if "desert" in climate or "arid" in climate:
-                    additions.append("Dust-resistant and cooling items are priority in this climate.")
+    def get_template(self, event_key: str) -> dict:
+        """Returns the purchase timeline template for a detected event."""
+        return _TEMPLATES.get(event_key, _TEMPLATES.get("general", {}))
 
-            enriched_note = note + (" " + " ".join(additions) if additions else "")
-            enriched.append({**phase, "note": enriched_note.strip()})
+    def get_bharat_context(self, state: Optional[str]) -> dict:
+        """Returns regional context for a detected state."""
+        if not state:
+            return {}
+        states = _BHARAT.get("states", {})
+        return states.get(state, {})
 
+    def get_institution_data(self, institution_name: Optional[str]) -> dict:
+        """Returns institution-specific constraints (wattage limits, prohibited items)."""
+        if not institution_name:
+            return {}
+        institutions = _BHARAT.get("institutions", {})
+        # Case-insensitive match
+        name_lower = institution_name.lower().replace(" ", "_")
+        for key, data in institutions.items():
+            if key.lower() in name_lower or name_lower in key.lower():
+                return data
+        return {}
+
+    def enrich_timeline(self, template: dict, bharat_ctx: dict, institution_data: dict) -> list:
+        """
+        Takes the raw purchase phase template and enriches each phase with
+        context-specific notes (wattage limits, climate warnings, cultural notes).
+        Returns a list of enriched phase dicts.
+        """
+        phases = template.get("purchase_phases", [])
+        enriched = []
+        wattage_limit = institution_data.get("appliance_wattage_limit")
+        climate = bharat_ctx.get("climate", "")
+        hard_water = bharat_ctx.get("hard_water", False)
+
+        for phase in phases:
+            enriched_phase = dict(phase)
+            notes = []
+            if wattage_limit and enriched_phase.get("week_number", 0) == 1:
+                notes.append(f"Appliance limit: {wattage_limit}W — heavier items filtered out")
+            if hard_water and any("iron" in item.lower() or "kettle" in item.lower()
+                                   for item in enriched_phase.get("items", [])):
+                notes.append(f"Hard water area — consider scale-resistant kettle")
+            if climate and "cold" in climate.lower() and enriched_phase.get("priority") == "comfort":
+                notes.append(f"Climate: {climate} — prioritise warm layers")
+            enriched_phase["context_notes"] = notes
+            enriched.append(enriched_phase)
         return enriched
 
-    def generate_llm_roadmap(
-        self,
-        event_data: Dict,
-        location_summary: str,
-        user_input: str,
-    ) -> Optional[str]:
+    def generate_roadmap_intro(self, parsed_event: dict) -> str:
         """
-        Calls Claude to produce a warm, personalised 2-sentence intro to the
-        purchase plan. Only called for high-confidence event detections (score > 0).
-        Uses settings.llm_max_tokens_event.
+        Calls Claude to write a 2-sentence personalised purchase plan introduction.
+        Only called when confidence > 0.5 — for low-confidence events, returns a generic opener.
         """
-        if not event_data.get("matched_keywords"):
-            return None  # Skip LLM call for zero-confidence detections
+        if parsed_event.get("confidence", 0) < 0.5:
+            return "Here is a purchase plan based on your situation."
 
-        prompt = f"""You are a caring Indian shopping assistant helping someone with a major life event.
+        template = self.get_template(parsed_event["event_key"])
+        cultural_notes = ", ".join(parsed_event.get("cultural_context", [])) or "none detected"
 
-Write exactly 2 sentences that introduce their purchase plan. 
-
-Life event detected: {event_data['label']}
-Location context: {location_summary}
-What they said: "{user_input}"
-Days until the event: {event_data['timeline_days']}
-
-Rules:
-- Sentence 1: Acknowledge the life event warmly, as a close friend would.
-- Sentence 2: Briefly introduce that you've built a phased purchase plan for them.
-- Do NOT list products. Do NOT mention prices.
-- Write in simple, warm Indian English. Avoid corporate language.
-- Maximum 40 words total."""
-
-        response = _client.chat.completions.create(
-            model=settings.llm_model,
-            max_tokens=settings.llm_max_tokens_event,
-            temperature=settings.llm_temperature,
-            messages=[{"role": "user", "content": prompt}],
-        )
-        return response.choices[0].message.content.strip()
+        try:
+            response = client.messages.create(
+                model=settings.llm_model,
+                max_tokens=settings.llm_max_tokens_event,
+                temperature=0.4,
+                messages=[{
+                    "role": "user",
+                    "content": ROADMAP_PROMPT.format(
+                        event_key_label=template.get("label", parsed_event["event_key"]),
+                        location=parsed_event.get("detected_location") or parsed_event.get("detected_state") or "India",
+                        season=parsed_event.get("season") or "current season",
+                        cultural_notes=cultural_notes,
+                        institution=parsed_event.get("institution_mentioned") or "not specified"
+                    )
+                }]
+            )
+            return response.content[0].text.strip()
+        except Exception:
+            return f"Here is your personalised purchase plan for {template.get('label', 'this event')}."
