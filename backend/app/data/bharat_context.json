@@ -237,6 +237,616 @@
         "dust_resistance_priority": false,
         "cooling_priority": true
       }
+    },
+    "jammu_kashmir": {
+      "display_name": "Jammu & Kashmir",
+      "capital": "Srinagar",
+      "dominant_language": "Kashmiri/Urdu/Dogri",
+      "climate": "cold_mountain_alpine",
+      "festivals": ["Eid", "Milad-un-Nabi", "Navreh", "Herath", "Lohri"],
+      "agricultural_cycle": {
+        "harvest_months": [9, 10],
+        "sowing_months": [4, 5]
+      },
+      "regional_preferences": {
+        "fabric": ["pashm_wool", "kashmir_shawl", "cotton_summer", "silk"],
+        "cookware": ["pressure_cooker", "samovar", "wazwan_vessels"],
+        "pressure_cooker_size": "5L",
+        "bedding": ["razai_heavy", "woolen_blanket", "pashmina_shawl"]
+      },
+      "cultural_notes": "Predominantly Muslim region. Modest dress is important — full sleeves, covered legs, and headscarves for women are culturally appropriate. Kashmiri wazwan cuisine; halal food practices. World-famous pashmina wool and hand-embroidered shawls.",
+      "notes": {
+        "water_quality": "clean_mountain_spring",
+        "humidity": "low_mountain",
+        "dust_resistance_priority": false,
+        "cooling_priority": false,
+        "heating_priority": true,
+        "thermal_clothing_priority": true,
+        "modest_dress_priority": true
+      }
+    },
+    "himachal_pradesh": {
+      "display_name": "Himachal Pradesh",
+      "capital": "Shimla",
+      "dominant_language": "Hindi/Pahadi",
+      "climate": "cold_mountain_semi_alpine",
+      "festivals": ["Kullu Dussehra", "Minjar Fair", "Lohri", "Shivratri", "Diwali"],
+      "agricultural_cycle": {
+        "harvest_months": [9, 10, 4],
+        "sowing_months": [4, 5, 10]
+      },
+      "regional_preferences": {
+        "fabric": ["woolen", "cotton_summer", "himachali_cap_wool"],
+        "cookware": ["pressure_cooker", "kadhai"],
+        "pressure_cooker_size": "5L",
+        "bedding": ["heavy_woolen_blanket", "razai", "sleeping_bag"]
+      },
+      "cultural_notes": "Hindu-majority mountain state. Traditional Himachali dress includes woolen caps (topi) and shawls. Apple orchards and adventure tourism are key. Layered dressing essential for temperature swings.",
+      "notes": {
+        "water_quality": "clean_mountain",
+        "humidity": "low_mountain",
+        "dust_resistance_priority": false,
+        "cooling_priority": false,
+        "heating_priority": true,
+        "thermal_clothing_priority": true
+      }
+    },
+    "uttarakhand": {
+      "display_name": "Uttarakhand",
+      "capital": "Dehradun",
+      "dominant_language": "Hindi/Garhwali/Kumaoni",
+      "climate": "cold_mountain_himalayan",
+      "festivals": ["Kumbh Mela (Haridwar)", "Char Dham Yatra", "Diwali", "Nanda Devi Fair", "Makar Sankranti"],
+      "agricultural_cycle": {
+        "harvest_months": [10, 11, 4],
+        "sowing_months": [5, 6, 10]
+      },
+      "regional_preferences": {
+        "fabric": ["woolen", "cotton"],
+        "cookware": ["pressure_cooker", "kadhai"],
+        "pressure_cooker_size": "5L",
+        "bedding": ["woolen_blanket", "razai"]
+      },
+      "cultural_notes": "Gateway to major Hindu pilgrimage sites (Char Dham, Rishikesh, Haridwar). Modest, traditional attire preferred at religious sites. Yoga and wellness tourism is prominent. Cold nights even in summer.",
+      "notes": {
+        "water_quality": "clean_mountain",
+        "humidity": "moderate_mountain",
+        "dust_resistance_priority": false,
+        "cooling_priority": false,
+        "heating_priority": true,
+        "thermal_clothing_priority": true,
+        "water_filter_priority": false
+      }
+    },
+    "delhi": {
+      "display_name": "Delhi / NCR",
+      "capital": "New Delhi",
+      "dominant_language": "Hindi/Punjabi/Urdu",
+      "climate": "humid_subtropical_extreme_seasonal",
+      "festivals": ["Diwali", "Eid", "Holi", "Christmas", "Gurpurab", "Dussehra"],
+      "agricultural_cycle": {
+        "harvest_months": [3, 4, 10, 11],
+        "sowing_months": [6, 7, 11]
+      },
+      "regional_preferences": {
+        "fabric": ["cotton_summer", "woolen_winter", "silk"],
+        "cookware": ["pressure_cooker", "kadhai", "tandoor"],
+        "pressure_cooker_size": "5L",
+        "bedding": ["cotton_summer", "heavy_razai_winter"]
+      },
+      "notes": {
+        "water_quality": "hard_water",
+        "humidity": "moderate_to_high",
+        "dust_resistance_priority": true,
+        "cooling_priority": true,
+        "heating_priority": true,
+        "water_filter_priority": true,
+        "air_purifier_priority": true
+      }
+    },
+    "goa": {
+      "display_name": "Goa",
+      "capital": "Panaji",
+      "dominant_language": "Konkani/Portuguese-influenced",
+      "climate": "tropical_coastal_humid",
+      "festivals": ["Carnival", "Shigmo", "Christmas", "Diwali", "Feast of St. Francis Xavier"],
+      "agricultural_cycle": {
+        "harvest_months": [11, 12],
+        "sowing_months": [6, 7]
+      },
+      "regional_preferences": {
+        "fabric": ["cotton_light", "linen", "beachwear"],
+        "cookware": ["pressure_cooker", "clay_pot", "terracotta"],
+        "pressure_cooker_size": "3L",
+        "bedding": ["thin_cotton_sheets", "light_duvet"]
+      },
+      "cultural_notes": "Unique Indo-Portuguese culture. Beach and tourism destination. Casual, lightweight clothing preferred. Mix of Hindu and Catholic traditions.",
+      "notes": {
+        "water_quality": "soft_water",
+        "humidity": "very_high_coastal",
+        "dust_resistance_priority": false,
+        "cooling_priority": true,
+        "mould_resistance_priority": true
+      }
+    },
+    "assam": {
+      "display_name": "Assam",
+      "capital": "Dispur",
+      "dominant_language": "Assamese",
+      "climate": "subtropical_humid_heavy_monsoon",
+      "festivals": ["Bihu (Rongali, Kongali, Bhogali)", "Durga Puja", "Eid", "Christmas"],
+      "agricultural_cycle": {
+        "harvest_months": [4, 5, 10, 11],
+        "sowing_months": [5, 6, 11]
+      },
+      "regional_preferences": {
+        "fabric": ["muga_silk", "cotton", "eri_silk"],
+        "cookware": ["pressure_cooker", "bell_metal_utensils", "clay_pot"],
+        "pressure_cooker_size": "5L",
+        "bedding": ["cotton_sheets", "light_blanket"]
+      },
+      "cultural_notes": "Home of the famous Bihu dance festival. Muga silk and eri silk are Assam's pride. Tea gardens culture. Mekhela chador is traditional women's dress.",
+      "notes": {
+        "water_quality": "soft_water",
+        "humidity": "very_high",
+        "dust_resistance_priority": false,
+        "cooling_priority": true,
+        "mould_resistance_priority": true
+      }
+    },
+    "bihar": {
+      "display_name": "Bihar",
+      "capital": "Patna",
+      "dominant_language": "Hindi/Bhojpuri/Maithili",
+      "climate": "humid_subtropical_hot_summers",
+      "festivals": ["Chhath Puja", "Sonepur Mela", "Diwali", "Holi", "Sama-Chakeva"],
+      "agricultural_cycle": {"harvest_months": [3, 4, 10, 11], "sowing_months": [6, 7, 11]},
+      "regional_preferences": {
+        "fabric": ["cotton", "silk_bhagalpur", "tussar_silk"],
+        "cookware": ["pressure_cooker", "clay_pot", "brass_utensils"],
+        "pressure_cooker_size": "7.5L",
+        "bedding": ["cotton_summer", "heavy_razai_winter"]
+      },
+      "cultural_notes": "Chhath Puja is the most significant festival — bamboo basket and offerings are essential. Bhagalpuri silk (Tussar) is the regional pride. Strong agricultural economy.",
+      "notes": {
+        "water_quality": "hard_water",
+        "humidity": "moderate_to_high",
+        "dust_resistance_priority": true,
+        "cooling_priority": true,
+        "heating_priority": true,
+        "water_filter_priority": true
+      }
+    },
+    "chhattisgarh": {
+      "display_name": "Chhattisgarh",
+      "capital": "Raipur",
+      "dominant_language": "Hindi/Chhattisgarhi",
+      "climate": "tropical_hot_humid",
+      "festivals": ["Hareli", "Pola", "Diwali", "Chhath Puja", "Bastar Dussehra"],
+      "agricultural_cycle": {"harvest_months": [11, 12, 1], "sowing_months": [6, 7]},
+      "regional_preferences": {
+        "fabric": ["cotton", "kosa_silk"],
+        "cookware": ["pressure_cooker", "clay_pot", "bell_metal"],
+        "pressure_cooker_size": "5L",
+        "bedding": ["cotton_sheets", "light_blanket"]
+      },
+      "cultural_notes": "Tribal-rich state — Bastar Dussehra is 75 days long. Kosa (Tussar) silk is the state's pride. Forest produce and tribal handicrafts are significant. Conservative and traditional culture.",
+      "notes": {
+        "water_quality": "moderate",
+        "humidity": "high",
+        "dust_resistance_priority": false,
+        "cooling_priority": true,
+        "water_filter_priority": false
+      }
+    },
+    "haryana": {
+      "display_name": "Haryana",
+      "capital": "Chandigarh",
+      "dominant_language": "Hindi/Haryanvi",
+      "climate": "semi_arid_continental_extreme_seasonal",
+      "festivals": ["Teej", "Lohri", "Baisakhi", "Diwali", "Holi"],
+      "agricultural_cycle": {"harvest_months": [4, 5, 10, 11], "sowing_months": [6, 7, 11]},
+      "regional_preferences": {
+        "fabric": ["cotton", "woolen_winter", "phulkari"],
+        "cookware": ["pressure_cooker", "kadhai", "tandoor"],
+        "pressure_cooker_size": "7.5L",
+        "bedding": ["cotton_summer", "heavy_razai_winter"]
+      },
+      "cultural_notes": "Agricultural heartland of India. Dairy and cattle farming culture. Traditional values. Phulkari embroidery is the regional textile art.",
+      "notes": {
+        "water_quality": "hard_water",
+        "humidity": "low_to_moderate",
+        "dust_resistance_priority": true,
+        "cooling_priority": true,
+        "heating_priority": true,
+        "water_filter_priority": true
+      }
+    },
+    "jharkhand": {
+      "display_name": "Jharkhand",
+      "capital": "Ranchi",
+      "dominant_language": "Hindi/Santali/Mundari",
+      "climate": "tropical_hot_humid_forested",
+      "festivals": ["Sarhul", "Karma Puja", "Diwali", "Sohrai", "Tushu"],
+      "agricultural_cycle": {"harvest_months": [11, 12, 1, 4], "sowing_months": [6, 7]},
+      "regional_preferences": {
+        "fabric": ["cotton", "tussar_silk"],
+        "cookware": ["pressure_cooker", "clay_pot"],
+        "pressure_cooker_size": "5L",
+        "bedding": ["cotton_sheets", "light_blanket_winter"]
+      },
+      "cultural_notes": "Rich tribal culture — Santali, Munda, and Ho tribes. Sarhul (flower festival) is the most important tribal festival. Tassar silk from Bhagalpur. Forest-based economy.",
+      "notes": {
+        "water_quality": "moderate",
+        "humidity": "high",
+        "dust_resistance_priority": false,
+        "cooling_priority": true,
+        "mould_resistance_priority": true
+      }
+    },
+    "madhya_pradesh": {
+      "display_name": "Madhya Pradesh",
+      "capital": "Bhopal",
+      "dominant_language": "Hindi",
+      "climate": "subtropical_hot_dry_monsoon",
+      "festivals": ["Diwali", "Holi", "Navratri", "Eid", "Lokrang Festival"],
+      "agricultural_cycle": {"harvest_months": [3, 4, 10, 11], "sowing_months": [6, 7, 11]},
+      "regional_preferences": {
+        "fabric": ["cotton", "chanderi_silk", "maheshwari_silk"],
+        "cookware": ["pressure_cooker", "kadhai", "clay_pot"],
+        "pressure_cooker_size": "7.5L",
+        "bedding": ["cotton_summer", "razai_winter"]
+      },
+      "cultural_notes": "Chanderi and Maheshwari silks are MP's textile heritage. Rich tribal diversity — Gond, Bhil, Baiga tribes. Khajuraho, Sanchi, and Kanha are major landmarks. Central India culture.",
+      "notes": {
+        "water_quality": "hard_water",
+        "humidity": "moderate",
+        "dust_resistance_priority": true,
+        "cooling_priority": true,
+        "heating_priority": true,
+        "water_filter_priority": true
+      }
+    },
+    "manipur": {
+      "display_name": "Manipur",
+      "capital": "Imphal",
+      "dominant_language": "Meitei/Manipuri",
+      "climate": "subtropical_highland_humid",
+      "festivals": ["Lai Haraoba", "Yaoshang (Holi)", "Ningol Chakouba", "Christmas", "Eid"],
+      "agricultural_cycle": {"harvest_months": [10, 11, 4], "sowing_months": [5, 6]},
+      "regional_preferences": {
+        "fabric": ["moirangphee_silk", "cotton", "handloom_weave"],
+        "cookware": ["pressure_cooker", "traditional_bamboo_vessels"],
+        "pressure_cooker_size": "3L",
+        "bedding": ["cotton_sheets", "light_blanket"]
+      },
+      "cultural_notes": "Manipuri classical dance is world-famous. Moirangphee silk handloom is a GI-tagged product. Polo originated here. Northeast India's cultural jewel. Diverse ethnic communities — Meitei, Naga, Kuki.",
+      "notes": {
+        "water_quality": "clean_soft_water",
+        "humidity": "high",
+        "dust_resistance_priority": false,
+        "cooling_priority": false,
+        "mould_resistance_priority": true
+      }
+    },
+    "meghalaya": {
+      "display_name": "Meghalaya",
+      "capital": "Shillong",
+      "dominant_language": "Khasi/Garo/Bengali/English",
+      "climate": "subtropical_very_heavy_rainfall",
+      "festivals": ["Nongkrem Dance", "Wangala Festival", "Christmas", "Shad Suk Mynsiem"],
+      "agricultural_cycle": {"harvest_months": [10, 11, 3], "sowing_months": [4, 5, 9]},
+      "regional_preferences": {
+        "fabric": ["cotton", "silk_eri", "dhara_shawl"],
+        "cookware": ["pressure_cooker", "traditional_clay_pot"],
+        "pressure_cooker_size": "3L",
+        "bedding": ["cotton_sheets", "warm_blanket"]
+      },
+      "cultural_notes": "Wettest place on earth (Cherrapunji). Scotland of the East. Matrilineal society — unique in India. Tribal customs of Khasi and Garo people. Rain gear is absolutely essential year-round.",
+      "notes": {
+        "water_quality": "very_clean_rainwater",
+        "humidity": "extremely_high",
+        "dust_resistance_priority": false,
+        "cooling_priority": false,
+        "mould_resistance_priority": true,
+        "waterproof_gear_priority": true
+      }
+    },
+    "mizoram": {
+      "display_name": "Mizoram",
+      "capital": "Aizawl",
+      "dominant_language": "Mizo/English",
+      "climate": "subtropical_highland_humid_heavy_monsoon",
+      "festivals": ["Chapchar Kut", "Mim Kut", "Pawl Kut", "Christmas"],
+      "agricultural_cycle": {"harvest_months": [10, 11, 4], "sowing_months": [3, 4, 9]},
+      "regional_preferences": {
+        "fabric": ["puan_fabric", "cotton", "traditional_handloom"],
+        "cookware": ["pressure_cooker"],
+        "pressure_cooker_size": "3L",
+        "bedding": ["cotton_sheets", "light_blanket"]
+      },
+      "cultural_notes": "Predominantly Christian state. Highly literate. Traditional Mizo Puan fabric for women. Chapchar Kut is the biggest festival. Very peaceful, clean, and orderly state.",
+      "notes": {
+        "water_quality": "clean",
+        "humidity": "very_high",
+        "dust_resistance_priority": false,
+        "cooling_priority": false,
+        "mould_resistance_priority": true
+      }
+    },
+    "nagaland": {
+      "display_name": "Nagaland",
+      "capital": "Kohima",
+      "dominant_language": "English/Nagamese/tribal languages",
+      "climate": "subtropical_highland_humid",
+      "festivals": ["Hornbill Festival", "Christmas", "Moatsu Mong", "Sekrenyi"],
+      "agricultural_cycle": {"harvest_months": [10, 11], "sowing_months": [4, 5]},
+      "regional_preferences": {
+        "fabric": ["naga_shawl", "cotton"],
+        "cookware": ["pressure_cooker"],
+        "pressure_cooker_size": "3L",
+        "bedding": ["cotton_sheets", "warm_blanket"]
+      },
+      "cultural_notes": "Land of festivals — the Hornbill Festival showcases all 16 Naga tribes. Predominantly Christian. Naga shawls are culturally significant gifts. Warrior culture heritage. Traditional tribal crafts.",
+      "notes": {
+        "water_quality": "clean_mountain",
+        "humidity": "high",
+        "dust_resistance_priority": false,
+        "cooling_priority": false,
+        "mould_resistance_priority": true
+      }
+    },
+    "odisha": {
+      "display_name": "Odisha",
+      "capital": "Bhubaneswar",
+      "dominant_language": "Odia",
+      "climate": "tropical_hot_humid_cyclone_prone",
+      "festivals": ["Rath Yatra", "Durga Puja", "Diwali", "Raja Parba", "Nuakhai"],
+      "agricultural_cycle": {"harvest_months": [11, 12, 1, 5], "sowing_months": [6, 7, 8]},
+      "regional_preferences": {
+        "fabric": ["sambalpuri_silk", "tussar_silk", "cotton", "ikat_fabric"],
+        "cookware": ["pressure_cooker", "clay_pot", "bell_metal"],
+        "pressure_cooker_size": "5L",
+        "bedding": ["thin_cotton_sheets", "light_blanket"]
+      },
+      "cultural_notes": "Jagannath Puri Rath Yatra is one of India's greatest pilgrimages. Sambalpuri silk and Ikat weaving are world-famous GI products. Pattachitra art is iconic. Coastal cyclone risk — waterproof and rust-resistant items matter.",
+      "notes": {
+        "water_quality": "moderate_coastal",
+        "humidity": "high_coastal",
+        "dust_resistance_priority": false,
+        "cooling_priority": true,
+        "mould_resistance_priority": true,
+        "rust_resistance_priority": true,
+        "water_filter_priority": false
+      }
+    },
+    "sikkim": {
+      "display_name": "Sikkim",
+      "capital": "Gangtok",
+      "dominant_language": "Nepali/Sikkimese/Lepcha/Tibetan",
+      "climate": "cold_mountain_alpine_himalayan",
+      "festivals": ["Losar (Tibetan New Year)", "Saga Dawa", "Dashain", "Tihar", "Christmas"],
+      "agricultural_cycle": {"harvest_months": [9, 10, 3], "sowing_months": [4, 5]},
+      "regional_preferences": {
+        "fabric": ["woolen", "cotton", "silk_tibetan_style"],
+        "cookware": ["pressure_cooker", "traditional_clay"],
+        "pressure_cooker_size": "3L",
+        "bedding": ["heavy_woolen_blanket", "sleeping_bag", "razai"]
+      },
+      "cultural_notes": "Blend of Buddhist (Tibetan), Hindu (Nepali), and tribal (Lepcha) cultures. First fully organic state in India. Monastic culture — respectful, modest dress at monasteries. Cold throughout the year at altitude.",
+      "notes": {
+        "water_quality": "very_clean_mountain",
+        "humidity": "moderate_to_high_mountain",
+        "dust_resistance_priority": false,
+        "cooling_priority": false,
+        "heating_priority": true,
+        "thermal_clothing_priority": true
+      }
+    },
+    "telangana": {
+      "display_name": "Telangana",
+      "capital": "Hyderabad",
+      "dominant_language": "Telugu/Urdu",
+      "climate": "tropical_hot_semi_arid",
+      "festivals": ["Bathukamma", "Bonalu", "Ugadi", "Eid", "Diwali"],
+      "agricultural_cycle": {"harvest_months": [1, 2, 9, 10], "sowing_months": [6, 7, 11]},
+      "regional_preferences": {
+        "fabric": ["pochampally_ikat", "cotton", "venkatagiri_cotton", "uppada_silk"],
+        "cookware": ["pressure_cooker", "clay_pot", "dum_vessel"],
+        "pressure_cooker_size": "5L",
+        "bedding": ["thin_cotton_sheets", "light_cotton_blanket"]
+      },
+      "cultural_notes": "Hyderabad is the Nizami city — biryani, pearls, and Charminar. Pochampally Ikat weaving is a GI product. Bathukamma is the flower festival unique to Telangana. Strong Muslim cultural heritage in Hyderabad.",
+      "notes": {
+        "water_quality": "moderate",
+        "humidity": "moderate_to_high",
+        "dust_resistance_priority": true,
+        "cooling_priority": true,
+        "water_filter_priority": false
+      }
+    },
+    "tripura": {
+      "display_name": "Tripura",
+      "capital": "Agartala",
+      "dominant_language": "Bengali/Kokborok",
+      "climate": "tropical_humid_heavy_monsoon",
+      "festivals": ["Kharchi Puja", "Ker Puja", "Durga Puja", "Christmas", "Garia Puja"],
+      "agricultural_cycle": {"harvest_months": [11, 12, 4, 5], "sowing_months": [6, 7, 8]},
+      "regional_preferences": {
+        "fabric": ["rignai_fabric", "cotton", "silk_tripuri"],
+        "cookware": ["pressure_cooker", "clay_pot"],
+        "pressure_cooker_size": "3L",
+        "bedding": ["cotton_sheets", "light_blanket"]
+      },
+      "cultural_notes": "Tribal-majority state. Rignai (traditional dress) for Tripuri women. Bamboo handicrafts are significant. Surrounded by Bangladesh on three sides. Bengali and tribal cultures blend.",
+      "notes": {
+        "water_quality": "soft_water",
+        "humidity": "very_high",
+        "dust_resistance_priority": false,
+        "cooling_priority": true,
+        "mould_resistance_priority": true
+      }
+    },
+    "arunachal_pradesh": {
+      "display_name": "Arunachal Pradesh",
+      "capital": "Itanagar",
+      "dominant_language": "English/Hindi/tribal languages",
+      "climate": "subtropical_highland_to_alpine_varied",
+      "festivals": ["Losar", "Solung", "Ponung", "Dree Festival", "Christmas"],
+      "agricultural_cycle": {"harvest_months": [10, 11, 4], "sowing_months": [4, 5]},
+      "regional_preferences": {
+        "fabric": ["adi_woven_fabric", "woolen", "cotton"],
+        "cookware": ["pressure_cooker", "bamboo_vessels"],
+        "pressure_cooker_size": "3L",
+        "bedding": ["woolen_blanket", "cotton_sheets"]
+      },
+      "cultural_notes": "Land of the Rising Sun — first to see the sunrise in India. 26 major tribes. Tawang monastery is the largest in India after Lhasa. High altitude destinations require warm clothing. Inner Line Permit needed.",
+      "notes": {
+        "water_quality": "very_clean_mountain",
+        "humidity": "moderate_mountain",
+        "dust_resistance_priority": false,
+        "cooling_priority": false,
+        "heating_priority": true,
+        "thermal_clothing_priority": true
+      }
+    },
+    "ladakh": {
+      "display_name": "Ladakh",
+      "capital": "Leh",
+      "dominant_language": "Ladakhi/Hindi/Urdu",
+      "climate": "cold_high_altitude_desert_alpine",
+      "festivals": ["Losar (Ladakhi New Year)", "Hemis Festival", "Dosmoche", "Ladakh Festival"],
+      "agricultural_cycle": {"harvest_months": [9, 10], "sowing_months": [5, 6]},
+      "regional_preferences": {
+        "fabric": ["pashmina_wool", "woolen_heavy", "pulu_fabric"],
+        "cookware": ["pressure_cooker"],
+        "pressure_cooker_size": "3L",
+        "bedding": ["heavy_sleeping_bag", "pashmina_razai", "thermal_sheets"]
+      },
+      "cultural_notes": "High altitude UT (3500m+ average). Buddhist culture dominant. Pashmina wool is the prized local product. Extreme cold — UV radiation is very high. Altitude sickness precautions needed. Remote — delivery delays expected.",
+      "notes": {
+        "water_quality": "clean_mountain",
+        "humidity": "extremely_low_dry",
+        "dust_resistance_priority": true,
+        "cooling_priority": false,
+        "heating_priority": true,
+        "thermal_clothing_priority": true,
+        "sunscreen_priority": true
+      }
+    },
+    "chandigarh": {
+      "display_name": "Chandigarh",
+      "capital": "Chandigarh",
+      "dominant_language": "Hindi/Punjabi",
+      "climate": "semi_arid_continental",
+      "festivals": ["Lohri", "Baisakhi", "Diwali", "Holi", "Gurpurab"],
+      "agricultural_cycle": {"harvest_months": [4, 5, 10, 11], "sowing_months": [6, 7, 11]},
+      "regional_preferences": {
+        "fabric": ["cotton", "woolen_winter", "phulkari"],
+        "cookware": ["pressure_cooker", "kadhai"],
+        "pressure_cooker_size": "5L",
+        "bedding": ["cotton_summer", "razai_winter"]
+      },
+      "cultural_notes": "Planned city by Le Corbusier. Serves as capital of Punjab and Haryana. Modern, cosmopolitan, and affluent. Excellent delivery connectivity. Very high purchasing power.",
+      "notes": {
+        "water_quality": "good",
+        "humidity": "moderate_seasonal",
+        "dust_resistance_priority": false,
+        "cooling_priority": true,
+        "heating_priority": true,
+        "water_filter_priority": false
+      }
+    },
+    "puducherry": {
+      "display_name": "Puducherry (Pondicherry)",
+      "capital": "Puducherry",
+      "dominant_language": "Tamil/French/Telugu/Malayalam",
+      "climate": "tropical_hot_humid_coastal",
+      "festivals": ["Bastille Day (French Quarter)", "Diwali", "Pongal", "Christmas", "Masi Magam"],
+      "agricultural_cycle": {"harvest_months": [1, 2, 9, 10], "sowing_months": [6, 7, 11]},
+      "regional_preferences": {
+        "fabric": ["cotton", "handloom_cotton", "linen"],
+        "cookware": ["pressure_cooker", "clay_pot"],
+        "pressure_cooker_size": "3L",
+        "bedding": ["thin_cotton_sheets"]
+      },
+      "cultural_notes": "Former French colony — unique Indo-French culture. French Quarter has a distinct European charm. Auroville ashram attracts spiritual seekers. Coastal city with beach culture. Good delivery connectivity.",
+      "notes": {
+        "water_quality": "moderate_coastal",
+        "humidity": "high_coastal",
+        "dust_resistance_priority": false,
+        "cooling_priority": true,
+        "mould_resistance_priority": true
+      }
+    },
+    "andaman_nicobar": {
+      "display_name": "Andaman & Nicobar Islands",
+      "capital": "Port Blair",
+      "dominant_language": "Hindi/Bengali/Tamil/Telugu",
+      "climate": "tropical_island_hot_humid",
+      "festivals": ["Island Tourism Festival", "Subhash Mela", "Diwali", "Christmas"],
+      "agricultural_cycle": {"harvest_months": [11, 12, 4], "sowing_months": [6, 7]},
+      "regional_preferences": {
+        "fabric": ["cotton_light", "linen", "beachwear"],
+        "cookware": ["pressure_cooker", "clay_pot"],
+        "pressure_cooker_size": "3L",
+        "bedding": ["thin_cotton_sheets"]
+      },
+      "cultural_notes": "Remote island union territory. Restricted areas — some islands need permits. Historically settled by Andamanese, Onge, and Jarawa tribes (protected). Excellent marine biodiversity. Long delivery times — plan ahead.",
+      "notes": {
+        "water_quality": "moderate_island",
+        "humidity": "very_high_tropical",
+        "dust_resistance_priority": false,
+        "cooling_priority": true,
+        "mould_resistance_priority": true,
+        "remote_delivery_delays": true
+      }
+    },
+    "dadra_nagar_haveli_daman_diu": {
+      "display_name": "Dadra & NH / Daman & Diu",
+      "capital": "Daman",
+      "dominant_language": "Gujarati/Hindi/Marathi",
+      "climate": "tropical_coastal_hot_humid",
+      "festivals": ["Diwali", "Holi", "Christmas", "Navratri"],
+      "agricultural_cycle": {"harvest_months": [11, 12, 3], "sowing_months": [6, 7]},
+      "regional_preferences": {
+        "fabric": ["cotton", "synthetic"],
+        "cookware": ["pressure_cooker"],
+        "pressure_cooker_size": "5L",
+        "bedding": ["thin_cotton_sheets", "light_duvet"]
+      },
+      "cultural_notes": "Former Portuguese colony. Beach tourism destination. No prohibition (unlike Gujarat). Industrial hub in Dadra & NH. Gujarati cultural influence dominant.",
+      "notes": {
+        "water_quality": "moderate",
+        "humidity": "high_coastal",
+        "dust_resistance_priority": false,
+        "cooling_priority": true,
+        "mould_resistance_priority": true
+      }
+    },
+    "lakshadweep": {
+      "display_name": "Lakshadweep",
+      "capital": "Kavaratti",
+      "dominant_language": "Malayalam",
+      "climate": "tropical_island_equatorial_humid",
+      "festivals": ["Eid ul-Fitr", "Eid ul-Adha", "Muharram", "Milad-un-Nabi"],
+      "agricultural_cycle": {"harvest_months": [11, 12, 3], "sowing_months": [6, 7]},
+      "regional_preferences": {
+        "fabric": ["cotton_light", "muslim_wear", "linen"],
+        "cookware": ["pressure_cooker"],
+        "pressure_cooker_size": "3L",
+        "bedding": ["thin_cotton_sheets"]
+      },
+      "cultural_notes": "India's smallest UT by area. Predominantly Muslim coral island archipelago. Modest Islamic dress code strictly observed. No alcohol on most islands. Very remote — extremely long delivery times. Unique coral reef ecosystem. Entry requires permit.",
+      "notes": {
+        "water_quality": "good_island",
+        "humidity": "very_high_equatorial",
+        "dust_resistance_priority": false,
+        "cooling_priority": true,
+        "mould_resistance_priority": true,
+        "modest_dress_priority": true,
+        "remote_delivery_delays": true
+      }
     }
   },
   "government_schemes": {

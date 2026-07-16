@@ -22,7 +22,7 @@
     min-height: 100vh;
   }
 
-  /* Custom scrollbar */
+  /* Custom scrollbar — dark panels */
   ::-webkit-scrollbar { width: 6px; height: 6px; }
   ::-webkit-scrollbar-track { background: #0f0a1e; }
   ::-webkit-scrollbar-thumb { background: #2d2050; border-radius: 3px; }
@@ -35,6 +35,28 @@
 /* ── Animations ─────────────────────────────────────────────────────────── */
 @layer utilities {
   .text-balance { text-wrap: balance; }
+
+  /* Visible, friendly scrollbar for horizontal product rows (white panel) */
+  .scrollbar-product {
+    scrollbar-width: thin;
+    scrollbar-color: #F43397 #fce7f3;
+  }
+  .scrollbar-product::-webkit-scrollbar {
+    height: 5px;
+    border-radius: 999px;
+  }
+  .scrollbar-product::-webkit-scrollbar-track {
+    background: #fce7f3;
+    border-radius: 999px;
+    margin: 0 8px;
+  }
+  .scrollbar-product::-webkit-scrollbar-thumb {
+    background: #F43397;
+    border-radius: 999px;
+  }
+  .scrollbar-product::-webkit-scrollbar-thumb:hover {
+    background: #c5157a;
+  }
 
   .animate-fade-in {
     animation: fadeIn 0.5s ease-out forwards;

@@ -39,9 +39,9 @@ except Exception as e:
     logger.warning(f"Redis unavailable ({e}). Cache disabled — system will still work.")
 
 
-def cache_key(user_input: str, pincode: str, budget: str) -> str:
+def cache_key(user_input: str, pincode: str, budget: str, target_date: str = "") -> str:
     """Generates a deterministic cache key from the analysis inputs."""
-    raw = f"{user_input.lower().strip()}|{pincode}|{budget}"
+    raw = f"{user_input.lower().strip()}|{pincode}|{budget}|{target_date}"
     return f"prism:v1:{hashlib.md5(raw.encode()).hexdigest()}"
 
 

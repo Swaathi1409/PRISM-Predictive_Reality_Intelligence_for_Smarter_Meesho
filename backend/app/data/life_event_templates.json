@@ -278,5 +278,183 @@
         "note": "Restock after first sales cycle based on what moved fastest."
       }
     ]
+  },
+  "travel_adventure": {
+    "label": "Travel / Adventure / Trekking",
+    "keywords": [
+      "trek", "trekking", "hike", "hiking", "travel", "trip", "journey", "expedition",
+      "backpacking", "camping", "adventure", "mountain", "hill station", "kashmir",
+      "himachal", "uttarakhand", "sikkim", "leh", "ladakh", "manali", "mussoorie",
+      "darjeeling", "ooty", "kodaikanal", "safari", "road trip", "vacation", "holiday",
+      "tour", "going to", "visiting", "planning a trip", "travel plan", "packing for"
+    ],
+    "timeline_days": 14,
+    "emotion_level": "high",
+    "family_significance": "moderate",
+    "suggested_budget_range": {"min": 5000, "max": 40000},
+    "purchase_phases": [
+      {
+        "phase_name": "Gear & Packing Essentials (Days 1-3)",
+        "days_from_now": 0,
+        "categories": ["bags_luggage", "personal_care"],
+        "priority": "must_have",
+        "note": "Get your bag and travel essentials sorted first — these are non-negotiable for any journey."
+      },
+      {
+        "phase_name": "Climate-Appropriate Clothing (Days 3-7)",
+        "days_from_now": 3,
+        "categories": ["formal_wear", "bedding"],
+        "priority": "should_have",
+        "note": "Dress right for the climate and local culture. For cold destinations, layering is key."
+      },
+      {
+        "phase_name": "Comfort & Safety Additions (Week 2)",
+        "days_from_now": 7,
+        "categories": ["personal_care", "kitchen_essentials"],
+        "priority": "nice_to_have",
+        "note": "First aid, hydration, and portable food — especially for remote destinations."
+      }
+    ]
+  },
+  "religious_travel": {
+    "label": "Religious Travel / Pilgrimage",
+    "keywords": [
+      "temple", "mandir", "masjid", "mosque", "church", "gurudwara", "pilgrimage",
+      "yatra", "char dham", "vaishno devi", "tirupati", "shirdi", "amritsar",
+      "hajj", "umrah", "kashi", "varanasi", "mathura", "vrindavan", "puri",
+      "sabarimala", "rameswaram", "kedarnath", "badrinath", "gangotri", "yamunotri",
+      "darshan", "pooja", "puja", "religious", "spiritual journey", "dargah"
+    ],
+    "timeline_days": 21,
+    "emotion_level": "very_high",
+    "family_significance": "very_high",
+    "suggested_budget_range": {"min": 3000, "max": 30000},
+    "purchase_phases": [
+      {
+        "phase_name": "Religious Attire & Bags (Days 1-3)",
+        "days_from_now": 0,
+        "categories": ["formal_wear", "bags_luggage"],
+        "priority": "must_have",
+        "note": "Modest, traditional attire is required at most religious sites."
+      },
+      {
+        "phase_name": "Personal Care & Hygiene (Days 3-5)",
+        "days_from_now": 3,
+        "categories": ["personal_care"],
+        "priority": "should_have",
+        "note": "Compact personal care items — many pilgrimage routes have limited facilities."
+      },
+      {
+        "phase_name": "Offerings & Comfort (Week 2)",
+        "days_from_now": 7,
+        "categories": ["festival_decor", "kitchen_essentials"],
+        "priority": "nice_to_have",
+        "note": "Puja items, prasad containers, and travel food for multi-day pilgrimages."
+      }
+    ]
+  },
+  "cultural_event": {
+    "label": "Cultural Event / Local Tradition",
+    "keywords": [
+      "cultural", "folk", "tradition", "local festival", "mela", "fair", "carnival",
+      "garba", "bihu", "onam celebration", "pongal celebration", "goa carnival",
+      "pushkar mela", "surajkund mela", "kumbh", "ujjain", "haridwar",
+      "regional", "ethnic wear", "heritage", "artisan", "handicraft"
+    ],
+    "timeline_days": 14,
+    "emotion_level": "high",
+    "family_significance": "high",
+    "suggested_budget_range": {"min": 2000, "max": 20000},
+    "purchase_phases": [
+      {
+        "phase_name": "Cultural Attire (Week 1)",
+        "days_from_now": 0,
+        "categories": ["formal_wear", "festival_decor"],
+        "priority": "must_have",
+        "note": "Dress to honour the local tradition — regional and ethnic wear is appreciated."
+      },
+      {
+        "phase_name": "Personal Care & Travel (Week 1-2)",
+        "days_from_now": 4,
+        "categories": ["personal_care", "bags_luggage"],
+        "priority": "should_have",
+        "note": "Travel-ready essentials for attending outdoor events."
+      },
+      {
+        "phase_name": "Gifts & Souvenirs (Week 2)",
+        "days_from_now": 7,
+        "categories": ["kitchen_essentials", "festival_decor"],
+        "priority": "nice_to_have",
+        "note": "Traditional gifts and keepsakes from the cultural event."
+      }
+    ]
+  },
+  "seasonal_prep": {
+    "label": "Seasonal Preparation",
+    "keywords": [
+      "winter", "summer", "monsoon", "rainy season", "cold wave", "heat wave",
+      "season change", "preparing for winter", "summer prep", "monsoon prep",
+      "warm clothes", "summer clothes", "raincoat", "umbrella", "heater",
+      "fan", "cooler", "sweater", "jacket", "blanket", "shawl", "woolen",
+      "cotton clothes", "seasonal", "weather"
+    ],
+    "timeline_days": 14,
+    "emotion_level": "moderate",
+    "family_significance": "moderate",
+    "suggested_budget_range": {"min": 1000, "max": 20000},
+    "purchase_phases": [
+      {
+        "phase_name": "Climate Essentials (Days 1-3)",
+        "days_from_now": 0,
+        "categories": ["formal_wear", "bedding"],
+        "priority": "must_have",
+        "note": "Clothing and bedding appropriate to the incoming season."
+      },
+      {
+        "phase_name": "Home Comfort (Week 1)",
+        "days_from_now": 4,
+        "categories": ["kitchen_essentials", "personal_care"],
+        "priority": "should_have",
+        "note": "Seasonal home essentials and personal care adjusted for the weather."
+      },
+      {
+        "phase_name": "Nice to Have (Week 2)",
+        "days_from_now": 7,
+        "categories": ["study_accessories"],
+        "priority": "nice_to_have",
+        "note": "Comfort items for the season."
+      }
+    ]
+  },
+  "generic": {
+    "label": "Shopping Assistance",
+    "keywords": [],
+    "timeline_days": 30,
+    "emotion_level": "moderate",
+    "family_significance": "moderate",
+    "suggested_budget_range": {"min": 500, "max": 50000},
+    "purchase_phases": [
+      {
+        "phase_name": "Immediate Needs (Days 1-3)",
+        "days_from_now": 0,
+        "categories": ["personal_care", "bags_luggage"],
+        "priority": "must_have",
+        "note": "Start with the essentials."
+      },
+      {
+        "phase_name": "Main Purchases (Days 4-7)",
+        "days_from_now": 4,
+        "categories": ["formal_wear", "bedding"],
+        "priority": "should_have",
+        "note": "Core items for your situation."
+      },
+      {
+        "phase_name": "Nice to Have (Week 2)",
+        "days_from_now": 7,
+        "categories": ["kitchen_essentials"],
+        "priority": "nice_to_have",
+        "note": "Comfort and convenience upgrades."
+      }
+    ]
   }
 }

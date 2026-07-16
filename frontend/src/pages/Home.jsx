@@ -17,7 +17,7 @@ const SCENARIOS = [
 
 export default function Home() {
   const [userInput, setUserInput] = useState('')
-  const [isXRayOpen, setIsXRayOpen] = useState(typeof window !== 'undefined' ? window.innerWidth >= 1024 : false)
+  const [isXRayOpen, setIsXRayOpen] = useState(false)
   const [showJudgeMode, setShowJudgeMode] = useState(false)
   const [result, setResult] = useState(null)
   const [selectedProduct, setSelectedProduct] = useState(null)
@@ -26,6 +26,7 @@ export default function Home() {
   const [isCartOpen, setIsCartOpen] = useState(false)
   const [checkoutState, setCheckoutState] = useState('idle') // 'idle' | 'processing' | 'success'
   const [toast, setToast] = useState(null)
+  const [orderId, setOrderId] = useState(null)
   const brainRef = useRef(null)
 
   const showToast = (msg) => {
@@ -40,6 +41,7 @@ export default function Home() {
 
   const handleBuyNow = () => {
     setIsCartOpen(false)
+    setOrderId(Math.floor(100000 + Math.random() * 900000)) // generate once, not inline in JSX
     setCheckoutState('processing')
     setTimeout(() => {
         setCheckoutState('success')
@@ -98,9 +100,9 @@ export default function Home() {
     recognition.onresult = (event) => {
       const transcript = event.results[0][0].transcript
       setUserInput(transcript)
-      // Auto submit after 1 second of setting transcript for magic feel
+      // Auto submit — pass current form state, not hardcoded defaults
       setTimeout(() => {
-         handleAnalyze(transcript, "600001", 10000)
+         handleAnalyze(transcript, pincode || "600001", budget ? parseInt(budget) : null, null)
       }, 500)
     }
 
@@ -138,6 +140,7 @@ export default function Home() {
     analyze(payload, {
       onSuccess: (data) => {
         setResult(data)
+        setIsXRayOpen(true) // auto-reveal the AI brain on first result so judges see the agent debate
       }
     })
   }
@@ -158,7 +161,7 @@ export default function Home() {
         {/* LEFT: MEESHO APP SHELL */}
         <div className={`relative w-full max-w-full transition-all duration-500 ease-in-out shrink-0 overflow-hidden flex flex-col bg-white
           ${isXRayOpen 
-            ? 'sm:max-w-[400px] h-[85vh] lg:h-full rounded-3xl lg:rounded-[40px] shadow-2xl border-4 lg:border-[8px] border-gray-900 mx-auto lg:mx-0' 
+            ? 'sm:max-w-[480px] h-[85vh] lg:h-full rounded-3xl lg:rounded-[40px] shadow-2xl border-4 lg:border-[8px] border-gray-900 mx-auto lg:mx-0' 
             : 'lg:max-w-5xl h-[100vh] lg:h-full rounded-none lg:rounded-3xl shadow-none lg:shadow-xl border-0 lg:border border-gray-200 mx-auto'}
         `}>
           
@@ -349,8 +352,12 @@ export default function Home() {
                   <div className="space-y-6">
                     {(() => {
                       const seenProductIds = new Set();
-                      const validPhases = result.purchase_timeline.map(phase => {
-                         const phaseProducts = result.all_products?.filter(p => {
+                      const oosProducts = result.all_products?.filter(p => p.stock_status === 'out_of_stock') || [];
+                      const inStockProducts = result.all_products?.filter(p => p.stock_status !== 'out_of_stock') || [];
+
+                      // ── Original phased timeline — exactly as before ──────────
+                      let phasesToRender = result.purchase_timeline.map(phase => {
+                         const phaseProducts = inStockProducts.filter(p => {
                             if (seenProductIds.has(p.id)) return false;
                             const matches = phase.categories.some(cat => p.category?.toLowerCase().includes(cat.toLowerCase()));
                             if (matches) {
@@ -359,61 +366,92 @@ export default function Home() {
                             }
                             return false;
                          }) || [];
-                         return { ...phase, displayProducts: phaseProducts.slice(0, 6) };
+                         return { ...phase, displayProducts: phaseProducts };
                       }).filter(phase => phase.displayProducts.length > 0 || phase.phase_name === "Waiting for Inventory");
-                      
-                      
-                      const phasesToRender = validPhases.length > 0 ? validPhases : [{
+
+                      const phasesToShow = phasesToRender.length > 0 ? phasesToRender : [{
                          phase_name: "Recommended Products",
                          note: "Top selections for your upcoming event.",
-                         displayProducts: result.all_products?.length > 0 ? result.all_products.slice(0, 4) : [result.top_recommendation]
+                         displayProducts: inStockProducts.length > 0 ? inStockProducts : [result.top_recommendation].filter(Boolean)
                       }];
 
-                      return phasesToRender.map((phase, i) => (
-                        <div key={i} className="relative pl-5 border-l-2 border-gray-200 ml-2">
-                          <div className="absolute -left-[9px] top-0.5 w-4 h-4 rounded-full bg-white border-2 border-[#F43397]"></div>
-                          <h4 className="font-bold text-sm text-gray-900 mb-1">{phase.phase_name}</h4>
-                          <p className="text-xs text-gray-500 mb-3 leading-relaxed">{phase.note}</p>
-                          
-                          <div className={`flex gap-4 overflow-x-auto pb-4 snap-x scrollbar-hide ${!isXRayOpen ? 'lg:grid lg:grid-cols-3 lg:gap-6 lg:overflow-visible lg:pb-0' : ''}`}>
-                            {phase.displayProducts?.map((prod, j) => (
-                              <div key={j} className={`shrink-0 ${!isXRayOpen ? 'w-48 lg:w-full' : 'w-36'} bg-white border border-gray-100 rounded-2xl shadow-sm hover:shadow-md transition-shadow snap-center overflow-hidden cursor-pointer group`} onClick={() => setSelectedProduct(prod)}>
-                                 <div className="relative w-full aspect-square bg-gray-50 overflow-hidden">
-                                    <img 
-                                      src={`/images/${prod.image_placeholder}.jpg`}
-                                      onError={(e) => {
-                                        e.target.onerror = null; 
-                                        e.target.src = `https://ui-avatars.com/api/?name=${encodeURIComponent(prod.name.split(' ').slice(0,2).join('+'))}&background=random&color=fff&size=256&font-size=0.33`;
-                                      }}
-                                      alt={prod.name} 
-                                      className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" 
-                                    />
-                                    {/* Mock Meesho logo watermark */}
-                                    <div className="absolute bottom-2 right-2 w-6 h-6 bg-white/80 backdrop-blur-sm rounded-full flex items-center justify-center shadow-sm">
-                                      <span className="text-[8px] font-bold text-[#F43397]">M</span>
-                                    </div>
-                                 </div>
-                                 <div className="p-3">
-                                   <p className={`font-medium text-gray-800 leading-tight ${!isXRayOpen ? 'text-sm line-clamp-2' : 'text-xs truncate'}`}>{prod.name}</p>
-                                   <div className="flex items-end gap-2 mt-2">
-                                      <span className="text-base font-bold text-gray-900">₹{prod.price}</span>
-                                      <span className="text-xs text-gray-400 line-through mb-0.5">₹{prod.price + Math.floor(prod.price * 0.4)}</span>
-                                   </div>
-                                   <button className="w-full mt-3 py-2 bg-pink-50 text-[#F43397] rounded-xl text-xs font-bold hover:bg-[#F43397] hover:text-white transition-colors">
-                                     View Product
-                                   </button>
-                                 </div>
+                      const renderProductCard = (prod, j) => (
+                        <div key={j} className={`shrink-0 ${!isXRayOpen ? 'w-48' : 'w-36'} bg-white border border-gray-100 rounded-2xl shadow-sm hover:shadow-md transition-shadow snap-center overflow-hidden cursor-pointer group`} onClick={() => setSelectedProduct(prod)}>
+                           <div className="relative w-full aspect-square bg-gray-50 overflow-hidden">
+                              <img
+                                src={prod.image_placeholder ? `/images/${prod.image_placeholder}.jpg` : `https://ui-avatars.com/api/?name=${encodeURIComponent(prod.name.split(' ').slice(0,2).join('+'))}&background=random&color=fff&size=256&font-size=0.33`}
+                                onError={(e) => { e.target.onerror = null; e.target.src = `https://ui-avatars.com/api/?name=${encodeURIComponent(prod.name.split(' ').slice(0,2).join('+'))}&background=random&color=fff&size=256&font-size=0.33`; }}
+                                alt={prod.name}
+                                className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                              />
+                              <div className="absolute bottom-2 right-2 w-6 h-6 bg-white/80 backdrop-blur-sm rounded-full flex items-center justify-center shadow-sm">
+                                <span className="text-[8px] font-bold text-[#F43397]">M</span>
                               </div>
-                            ))}
-                          </div>
+                           </div>
+                           <div className="p-3">
+                             <p className={`font-medium text-gray-800 leading-tight ${!isXRayOpen ? 'text-sm line-clamp-2' : 'text-xs truncate'}`}>{prod.name}</p>
+                             <div className="flex items-end gap-2 mt-2">
+                               <span className="text-base font-bold text-gray-900">₹{prod.price}</span>
+                               <span className="text-xs text-gray-400 line-through mb-0.5">₹{prod.price + Math.floor(prod.price * 0.4)}</span>
+                             </div>
+                             <button className="w-full mt-3 py-2 bg-pink-50 text-[#F43397] rounded-xl text-xs font-bold hover:bg-[#F43397] hover:text-white transition-colors">
+                               View Product
+                             </button>
+                           </div>
                         </div>
-                      ))
+                      );
+
+                      return (
+                        <>
+                          {/* Original phase timeline — untouched */}
+                          {phasesToShow.map((phase, i) => (
+                            <div key={i} className="relative pl-5 border-l-2 border-gray-200 ml-2">
+                              <div className="absolute -left-[9px] top-0.5 w-4 h-4 rounded-full bg-white border-2 border-[#F43397]"></div>
+                              <h4 className="font-bold text-sm text-gray-900 mb-1">{phase.phase_name}</h4>
+                              <p className="text-xs text-gray-500 mb-3 leading-relaxed">{phase.note}</p>
+                              <div className={`flex gap-4 overflow-x-auto pb-5 snap-x scrollbar-product`}>
+                                {phase.displayProducts?.map((prod, j) => renderProductCard(prod, j))}
+                              </div>
+                            </div>
+                          ))}
+
+                          {/* OOS section — only if unavailable items exist, shown at the very bottom */}
+                          {oosProducts.length > 0 && (
+                            <div className="relative pl-5 border-l-2 border-amber-200 ml-2 mt-2">
+                              <div className="absolute -left-[9px] top-0.5 w-4 h-4 rounded-full bg-white border-2 border-amber-400"></div>
+                              <h4 className="font-bold text-sm text-amber-700 mb-1">⚠ Currently Unavailable on Meesho</h4>
+                              <p className="text-xs text-gray-500 mb-3 leading-relaxed">These specific items you may need aren't available right now. Set an alert and we'll notify you!</p>
+                              <div className={`flex gap-4 overflow-x-auto pb-5 snap-x scrollbar-product`}>
+                                {oosProducts.map((prod, j) => (
+                                  <div key={j} className={`shrink-0 ${!isXRayOpen ? 'w-48' : 'w-36'} bg-white border border-amber-100 rounded-2xl shadow-sm snap-center overflow-hidden`}>
+                                     <div className="relative w-full aspect-square bg-amber-50 overflow-hidden flex items-center justify-center">
+                                        <span className="text-3xl">📦</span>
+                                        <div className="absolute top-2 left-2 bg-amber-500 text-white text-[10px] font-bold px-2 py-0.5 rounded-full shadow-sm">
+                                            Out of Stock
+                                        </div>
+                                     </div>
+                                     <div className="p-3">
+                                       <p className={`font-medium text-gray-700 leading-tight ${!isXRayOpen ? 'text-sm line-clamp-2' : 'text-xs truncate'}`}>{prod.name}</p>
+                                       <p className="text-xs text-amber-600 font-semibold mt-2">Not available currently</p>
+                                       <button 
+                                         onClick={(e) => { e.stopPropagation(); showToast(`Alert set for ${prod.name}`); }}
+                                         className="w-full mt-3 py-2 bg-amber-50 text-amber-600 rounded-xl text-xs font-bold hover:bg-amber-500 hover:text-white transition-colors border border-amber-200">
+                                         🔔 Notify Me
+                                       </button>
+                                     </div>
+                                  </div>
+                                ))}
+                              </div>
+                            </div>
+                          )}
+                        </>
+                      );
                     })()}
                   </div>
                 </div>
                 
                 <div className="p-4 bg-white border-t border-gray-100 text-center shadow-[0_-4px_6px_-1px_rgba(0,0,0,0.05)] z-10">
-                   <button onClick={() => { setResult(null); setCartItems([]) }} className="text-sm font-bold text-[#F43397] py-2 px-6 rounded-full hover:bg-pink-50 transition-colors">Start Over</button>
+                   <button onClick={() => setResult(null)} className="text-sm font-bold text-[#F43397] py-2 px-6 rounded-full hover:bg-pink-50 transition-colors">Start Over</button>
                 </div>
               </div>
             )}
@@ -453,7 +491,12 @@ export default function Home() {
                   <Activity className="w-5 h-5 text-prism-400" />
                   PRISM Brain X-Ray
                 </h2>
-                <span className="text-xs font-semibold px-2.5 py-1 bg-prism-500/20 text-prism-300 rounded-lg border border-prism-500/30">Developer Mode</span>
+                <div className="flex items-center gap-3">
+                  <span className="text-xs font-semibold px-2.5 py-1 bg-prism-500/20 text-prism-300 rounded-lg border border-prism-500/30 hidden sm:inline-block">Developer Mode</span>
+                  <button onClick={() => setIsXRayOpen(false)} className="p-1.5 text-gray-400 hover:text-white bg-white/5 hover:bg-white/10 rounded-full transition-all flex items-center justify-center group" title="Close X-Ray">
+                    <X className="w-5 h-5 group-hover:rotate-90 transition-transform duration-300" />
+                  </button>
+                </div>
               </div>
 
               <div className="flex-1 overflow-y-auto p-6 space-y-6 relative z-10 scrollbar-hide">
@@ -483,7 +526,8 @@ export default function Home() {
                           <BharatContextBadge 
                             context={result.bharat_context} 
                             stateDetected={result.state_detected} 
-                            institutionDetected={result.institution_detected} 
+                            institutionDetected={result.institution_detected}
+                            detectedIntent={result.detected_intent}
                           />
                         </div>
                       )}
@@ -627,6 +671,11 @@ export default function Home() {
                       ★ {selectedProduct.seller_rating}
                     </span>
                   )}
+                  {selectedProduct.confidence_score > 0 && (
+                    <span className="flex items-center text-[10px] text-prism-600 font-bold bg-prism-50 border border-prism-200 px-2 py-1 rounded uppercase tracking-wide">
+                      PRISM Score {selectedProduct.confidence_score}/98
+                    </span>
+                  )}
                 </div>
                 
                 <h2 className="text-xl font-bold text-gray-900 mb-2 leading-tight">{selectedProduct.name}</h2>
@@ -673,8 +722,8 @@ export default function Home() {
                         PRISM Smart Timing Strategy
                       </h3>
                       <div className="space-y-2">
-                        {selectedProduct.id === result?.top_recommendation?.id && result.temporal_strategies ? (
-                          result.temporal_strategies.map((ts, idx) => (
+                        {selectedProduct.temporal_strategies ? (
+                          selectedProduct.temporal_strategies.map((ts, idx) => (
                             <div key={idx} className={`p-3 rounded-xl border ${ts.recommended ? 'border-emerald-500 bg-emerald-50 shadow-sm' : 'border-gray-100 bg-white opacity-70'}`}>
                               <div className="flex justify-between items-center mb-1">
                                 <span className={`text-xs font-bold ${ts.recommended ? 'text-emerald-700' : 'text-gray-700'}`}>
@@ -734,7 +783,7 @@ export default function Home() {
       {/* Cart Modal Overlay */}
       <AnimatePresence>
         {isCartOpen && (
-          <div className="absolute inset-0 z-50 flex justify-end bg-black/40 backdrop-blur-sm overflow-hidden">
+          <div className="fixed inset-0 z-50 flex justify-end bg-black/40 backdrop-blur-sm overflow-hidden">
             <motion.div
               initial={{ x: '100%' }}
               animate={{ x: 0 }}
@@ -762,7 +811,15 @@ export default function Home() {
                   cartItems.map((item, idx) => (
                     <motion.div key={idx} layout initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} className="flex gap-4 p-3 bg-white rounded-2xl border border-gray-100 shadow-sm relative group">
                       <div className="w-20 h-20 bg-gray-50 rounded-xl overflow-hidden shrink-0 border border-gray-100">
-                        <img src={`/images/${item.image_placeholder}.jpg`} alt={item.name} className="w-full h-full object-cover" />
+                        <img
+                          src={`/images/${item.image_placeholder}.jpg`}
+                          onError={(e) => {
+                            e.target.onerror = null;
+                            e.target.src = `https://ui-avatars.com/api/?name=${encodeURIComponent(item.name.split(' ').slice(0,2).join('+'))}&background=random&color=fff&size=256&font-size=0.33`;
+                          }}
+                          alt={item.name}
+                          className="w-full h-full object-cover"
+                        />
                       </div>
                       <div className="flex-1 flex flex-col justify-center pr-6">
                         <p className="text-sm font-semibold text-gray-800 line-clamp-2 leading-tight mb-1">{item.name}</p>
@@ -823,7 +880,7 @@ export default function Home() {
                   <div className="w-full bg-gray-50 rounded-xl p-4 text-left border border-gray-100">
                     <div className="flex justify-between items-center text-xs mb-2">
                       <span className="text-gray-500 font-medium">Order ID</span>
-                      <span className="text-gray-900 font-bold">#MSH-{Math.floor(100000 + Math.random() * 900000)}</span>
+                      <span className="text-gray-900 font-bold">#MSH-{orderId}</span>
                     </div>
                     <div className="flex justify-between items-center text-xs">
                       <span className="text-gray-500 font-medium">Expected Delivery</span>

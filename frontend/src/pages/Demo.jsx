@@ -97,6 +97,7 @@ export default function Demo() {
               context={result.bharat_context}
               stateDetected={result.state_detected}
               institutionDetected={result.institution_detected}
+              detectedIntent={result.detected_intent}
             />
           </div>
         </div>

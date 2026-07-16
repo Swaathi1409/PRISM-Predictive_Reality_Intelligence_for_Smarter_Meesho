@@ -50,11 +50,12 @@ api.interceptors.response.use(
  * @param {string} params.user_pincode - 6-digit delivery pincode
  * @param {number|null} params.budget - Max budget in INR, or null
  */
-export async function analyzePrism({ user_input, user_pincode, budget }) {
+export async function analyzePrism({ user_input, user_pincode, budget, target_date }) {
   const response = await api.post('/api/prism/analyze', {
     user_input,
     user_pincode,
     budget: budget || null,
+    ...(target_date ? { target_date } : {}),
   })
   return response.data
 }

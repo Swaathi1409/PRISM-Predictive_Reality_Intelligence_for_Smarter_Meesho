@@ -1,16 +1,19 @@
 /**
- * BharatContextBadge.jsx — State/institution cultural context card.
+ * BharatContextBadge.jsx — State/institution/cultural context card.
  *
- * Shows detected institution, wattage limits, relevant festivals,
- * government scheme notes, and climate-specific advice.
+ * Now shows:
+ * - Institution, wattage limits
+ * - State / travel destination + climate
+ * - Cultural context (LLM-detected) — e.g. "Islamic majority, modest dress expected"
+ * - Relevant festivals, govt scheme notes, contextual notes
  *
  * Library: framer-motion (MIT), lucide-react (ISC).
  */
 
 import { motion } from 'framer-motion'
-import { MapPin, Zap, Star, AlertTriangle, Thermometer } from 'lucide-react'
+import { MapPin, Zap, Star, AlertTriangle, Thermometer, Globe, Heart } from 'lucide-react'
 
-export default function BharatContextBadge({ context, stateDetected, institutionDetected }) {
+export default function BharatContextBadge({ context, stateDetected, institutionDetected, detectedIntent }) {
   if (!context) return null
 
   const hasContent =
@@ -19,7 +22,8 @@ export default function BharatContextBadge({ context, stateDetected, institution
     context.wattage_limit ||
     (context.relevant_festivals?.length > 0) ||
     context.government_scheme_note ||
-    (context.contextual_notes?.length > 0)
+    (context.contextual_notes?.length > 0) ||
+    context.cultural_context
 
   if (!hasContent) {
     return (
@@ -49,9 +53,9 @@ export default function BharatContextBadge({ context, stateDetected, institution
       id="bharat-context-section"
       aria-label="Bharat Cultural Context"
     >
-      <div className="rounded-2xl border border-amber-500/30 bg-amber-500/5 p-5 h-full flex flex-col">
+      <div className="rounded-2xl border border-amber-500/30 bg-amber-500/5 p-5 h-full flex flex-col gap-3">
         {/* Header */}
-        <div className="flex items-center gap-3 mb-4">
+        <div className="flex items-center gap-3">
           <div className="w-8 h-8 rounded-lg bg-amber-500/20 border border-amber-500/30 flex items-center justify-center">
             <MapPin className="w-4 h-4 text-amber-400" />
           </div>
@@ -61,7 +65,33 @@ export default function BharatContextBadge({ context, stateDetected, institution
           </div>
         </div>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-4">
+        {/* Detected Intent — if available */}
+        {detectedIntent && (
+          <div className="p-3 rounded-xl bg-violet-500/10 border border-violet-500/20">
+            <div className="flex items-start gap-2">
+              <Heart className="w-4 h-4 text-violet-400 mt-0.5 flex-shrink-0" />
+              <div>
+                <p className="text-xs text-violet-400 uppercase tracking-wider mb-0.5">Detected Intent</p>
+                <p className="text-sm text-violet-200 leading-relaxed">{detectedIntent}</p>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* Cultural Context — prominently shown */}
+        {context.cultural_context && (
+          <div className="p-3 rounded-xl bg-rose-500/10 border border-rose-500/20">
+            <div className="flex items-start gap-2">
+              <Globe className="w-4 h-4 text-rose-400 mt-0.5 flex-shrink-0" />
+              <div>
+                <p className="text-xs text-rose-400 uppercase tracking-wider mb-0.5">Cultural Context</p>
+                <p className="text-sm text-rose-200 leading-relaxed">{context.cultural_context}</p>
+              </div>
+            </div>
+          </div>
+        )}
+
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
           {/* Institution */}
           {context.institution_name && (
             <ContextItem
@@ -72,11 +102,11 @@ export default function BharatContextBadge({ context, stateDetected, institution
             />
           )}
 
-          {/* State */}
+          {/* State / Destination */}
           {context.state_name && (
             <ContextItem
               icon={<MapPin className="w-3.5 h-3.5 text-blue-400" />}
-              label="State"
+              label={institutionDetected ? "State" : "Location / Destination"}
               value={context.state_name}
               sub={context.climate_note}
             />
@@ -105,7 +135,7 @@ export default function BharatContextBadge({ context, stateDetected, institution
 
         {/* Government scheme note */}
         {context.government_scheme_note && (
-          <div className="mb-3 p-3 rounded-xl bg-emerald-500/10 border border-emerald-500/20">
+          <div className="p-3 rounded-xl bg-emerald-500/10 border border-emerald-500/20">
             <div className="flex items-start gap-2">
               <AlertTriangle className="w-4 h-4 text-emerald-400 mt-0.5 flex-shrink-0" />
               <p className="text-sm text-emerald-300 break-words min-w-0">{context.government_scheme_note}</p>
@@ -116,7 +146,7 @@ export default function BharatContextBadge({ context, stateDetected, institution
         {/* Contextual notes */}
         {context.contextual_notes?.length > 0 && (
           <div className="space-y-2 mt-auto">
-            {context.contextual_notes.map((note, i) => (
+            {context.contextual_notes.slice(0, 4).map((note, i) => (
               <div key={i} className="flex items-start gap-2">
                 <Thermometer className="w-3.5 h-3.5 text-amber-400 mt-0.5 flex-shrink-0" />
                 <p className="text-xs text-gray-400 break-words min-w-0 leading-relaxed">{note}</p>

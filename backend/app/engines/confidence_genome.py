@@ -36,6 +36,7 @@ class ConfidenceGenome:
         Returns a dict matching the ConfidenceBreakdown Pydantic schema.
         """
         factors = []
+        soch_result = soch_result or {}
         final_score = soch_result.get("final_score", settings.confidence_base_score)
 
         # ── Extract per-agent signals ──────────────────────────────────────

@@ -95,8 +95,20 @@ def generate(
     scheme_note = _check_upcoming_scheme(current_month)
 
     # ── Recommendation logic ──────────────────────────────────────────────
-    user_input = context.get("user_input", "").lower()
-    finance_constraint = any(k in user_input for k in ["limited", "tight", "credit", "emi", "pay later", "short on cash", "budget constraint", "amount"])
+    # Use LLM-detected budget constraint flag (from detect_event_with_llm) as primary signal.
+    # Fall back to keyword matching only if LLM flag is not set.
+    budget_constraint_from_llm = context.get("budget_constraint_detected", None)
+    if budget_constraint_from_llm is not None:
+        finance_constraint = budget_constraint_from_llm
+    else:
+        # Legacy fallback: keyword matching
+        user_input = context.get("user_input", "").lower()
+        finance_constraint = any(
+            k in user_input
+            for k in ["limited", "tight", "credit", "emi", "pay later",
+                      "short on cash", "budget constraint", "installment",
+                      "kist", "kisti", "baad mein", "bad mein"]
+        )
 
     if finance_constraint:
         buy_now_recommended = False

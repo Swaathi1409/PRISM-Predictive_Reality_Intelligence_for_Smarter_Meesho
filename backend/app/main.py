@@ -8,12 +8,13 @@ validation. Chosen over Flask for these specific capabilities.
 
 Startup sequence:
 1. Load .env (local dev) or use injected env vars (Docker)
-2. Validate all environment variables — fail fast if ANTHROPIC_API_KEY is missing
+2. Validate all environment variables — fail fast if GROQ_API_KEY is missing
 3. Initialise database tables
 4. Register CORS middleware
 5. Register all routers under /api prefix
 """
 
+from contextlib import asynccontextmanager
 from dotenv import load_dotenv
 
 load_dotenv()  # loads .env in local dev; no-op in Docker where env is injected
@@ -27,6 +28,33 @@ from app.routes import health, prism, sessions
 from app.utils.logger import get_logger
 
 logger = get_logger(__name__)
+
+# ── Lifespan (replaces deprecated @app.on_event) ─────────────────────────────
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    """Handles startup validation and DB init cleanly without deprecation warnings."""
+    # ── Startup ───────────────────────────────────────────────────────────────
+    if (
+        not settings.groq_api_key
+        or settings.groq_api_key in ("not_set", "your_key_here")
+        or len(settings.groq_api_key) < 10
+    ):
+        logger.error(
+            "GROQ_API_KEY is not set or invalid. "
+            "Set it in .env and restart. Analyze endpoint will not work."
+        )
+    else:
+        logger.info(f"GROQ_API_KEY configured. Model: {settings.llm_model}")
+
+    logger.info("PRISM API starting up")
+    init_db()
+    logger.info(f"Database initialised at {settings.database_url}")
+    logger.info(f"Environment: {settings.environment}")
+    logger.info("API docs available at http://localhost:8000/docs")
+    yield
+    # ── Shutdown ──────────────────────────────────────────────────────────────
+    logger.info("PRISM API shutting down cleanly")
+
 
 # ── App factory ───────────────────────────────────────────────────────────────
 app = FastAPI(
@@ -47,12 +75,13 @@ plan for India's next 500 million internet users.
 6. **Bharat Context** — Institution constraints, state climate, government schemes
 
 ### Open Source Attributions
-FastAPI (MIT) · LangChain (MIT) · Anthropic SDK (Anthropic Terms) ·
+FastAPI (MIT) · Groq SDK (Apache 2.0) ·
 SQLAlchemy (MIT) · Alembic (MIT) · Redis-py (BSD) · Pydantic (MIT) · Uvicorn (BSD)
 """,
     version="1.0.0",
     docs_url="/docs",
     redoc_url="/redoc",
+    lifespan=lifespan,
     contact={
         "name": "ScriptedBy{Her} 2.0",
         "url": "https://github.com/Swaathi1409",
@@ -77,30 +106,6 @@ app.add_middleware(
 app.include_router(health.router, prefix="/api")
 app.include_router(prism.router, prefix="/api")
 app.include_router(sessions.router, prefix="/api")
-
-
-# ── Lifecycle events ──────────────────────────────────────────────────────────
-@app.on_event("startup")
-def on_startup():
-    # ── Validate API key on startup ───────────────────────────────────────────
-    if (
-        not settings.groq_api_key
-        or settings.groq_api_key in ("not_set", "your_key_here")
-        or len(settings.groq_api_key) < 10
-    ):
-        logger.error(
-            "GROQ_API_KEY is not set or invalid. "
-            "Set it in .env and restart. Analyze endpoint will not work."
-        )
-    else:
-        logger.info(f"GROQ_API_KEY configured. Model: {settings.llm_model}")
-
-    logger.info("PRISM API starting up")
-    init_db()
-    logger.info(f"Database initialised at {settings.database_url}")
-    logger.info(f"Environment: {settings.environment}")
-    logger.info("API docs available at http://localhost:8000/docs")
-
 
 @app.get("/", tags=["root"])
 def root():
