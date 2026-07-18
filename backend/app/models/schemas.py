@@ -46,6 +46,24 @@ class PrismRequest(BaseModel):
         description="Optional target date for the event. E.g. '2026-08-15'.",
         pattern=r"^\d{4}-\d{2}-\d{2}$",
     )
+    user_context: Optional[str] = Field(
+        default=None,
+        description=(
+            "PRISM Memory Intelligence context string. Pre-built by the frontend from the user's "
+            "session history. Contains signals like city, employer, lifestyle tags, prior event types, "
+            "budget affinity, and likely-owned categories. Injected as a prefix into the LLM prompt "
+            "so recommendations are personalised across sessions. Max 800 chars."
+        ),
+        max_length=800,
+    )
+    avoid_categories: Optional[List[str]] = Field(
+        default=None,
+        description=(
+            "List of product categories the user likely already owns (mined from past sessions). "
+            "E.g. ['laptop', 'formal_wear', 'office_bag']. The product matcher will deprioritise "
+            "these categories so PRISM surfaces fresh/accessory recommendations instead."
+        ),
+    )
 
 
 # ─────────────────────────────────────────────
@@ -135,7 +153,8 @@ class PrismResponse(BaseModel):
     purchase_timeline: List[PurchasePhase] = Field(..., description="Phased purchase plan for the detected event, enriched with cultural and climate context.")
     agent_debate: List[AgentMessage] = Field(..., description="Messages from all 4 agents (Kismat, Paisa, Samay, Soch) with their verdicts.")
     top_recommendation: dict = Field(..., description="The top recommended product with all its details.")
-    all_products: List[dict] = Field(default=[], description="List of all products considered, useful for mapping to purchase phases.")
+    top_picks: List[dict] = Field(default=[], description="Best product per subcategory, selected by 4-agent confidence score. Shown in Row 1 (PRISM Top Picks). Max 8 items, guaranteed variety — no two from same subcategory.")
+    all_products: List[dict] = Field(default=[], description="Remaining products (alternatives/budget variants) not in top_picks. Shown in Row 2 (More to Explore). Max 16 items.")
     confidence: ConfidenceBreakdown = Field(..., description="Decomposed confidence score with per-factor breakdown.")
     temporal_strategies: List[TemporalStrategy] = Field(..., description="Three purchase timing strategies: Buy Now, Wait for Sale, Split Purchase.")
     bharat_context: BharatContextDisplay = Field(..., description="Cultural, climate, and institutional context detected from the user's input.")
@@ -143,6 +162,8 @@ class PrismResponse(BaseModel):
     institution_detected: Optional[str] = Field(default=None, description="Machine-readable institution key detected from the input.")
     llm_roadmap: Optional[str] = Field(default=None, description="Indicates whether LLM-first unified detection was used.")
     detected_intent: Optional[str] = Field(default=None, description="The core shopping intent extracted by the LLM. E.g. 'Trekking gear and culturally appropriate clothing for a Kashmir trip'.")
+    is_specific_product_ask: bool = Field(default=False, description="True when the user asked for a specific product type (e.g. 'I need a phone'). Triggers the two-tier display: Row 1 = exact item only, Row 2 = accessories with 'You may also need' label.")
+    primary_item_label: Optional[str] = Field(default=None, description="The specific product the user asked for (e.g. 'phone', 'earphones'). Used to generate the Row 2 label.")
 
 
 # ─────────────────────────────────────────────

@@ -38,7 +38,7 @@ from app.config import settings
 from app.engines.confidence_genome import ConfidenceGenome
 from app.engines.emotional_layer import EmotionalLayer
 from app.engines.life_event_engine import LifeEventEngine
-from app.engines.product_matcher import match_products
+from app.engines.product_matcher import match_products, select_top_picks, split_by_primary_and_accessories
 from app.engines.temporal_simulator import generate as temporal_generate
 from app.models.orm_models import AgentLog, Recommendation, Session as SessionORM
 from app.models.schemas import PrismRequest, PrismResponse
@@ -66,8 +66,13 @@ class PrismService:
         user_input = request.user_input
         user_pincode = request.user_pincode
         budget = request.budget
+        # ── Memory Mining fields ─────────────────────────────────────────────
+        user_context = request.user_context  # LLM personalisation string from frontend
+        avoid_categories = request.avoid_categories or []  # categories user likely owns
 
         logger.info(f"[{session_id}] Starting analysis: input='{user_input[:80]}'")
+        if user_context:
+            logger.info(f"[{session_id}] Memory context received ({len(user_context)} chars), avoid_categories={avoid_categories}")
 
         # ── Step 1: Cache check ────────────────────────────────────────────
         ck = cache_key(user_input, user_pincode, str(budget), str(request.target_date or ""))
@@ -78,8 +83,9 @@ class PrismService:
 
         # ── Step 2: LLM-First Event + Context Detection ───────────────────
         # This single call replaces: detect_event() + detect_location() + generate_llm_roadmap()
+        # user_context is passed so the LLM can personalise recommendations based on memory
         logger.info(f"[{session_id}] Running LLM-first event + context detection...")
-        llm_detection = _event_engine.detect_event_with_llm(user_input)
+        llm_detection = _event_engine.detect_event_with_llm(user_input, user_context=user_context)
 
         # ── Step 3: Build canonical event_data and context ────────────────
         inst_key = None
@@ -92,6 +98,47 @@ class PrismService:
         exact_items = []
         enriched_phases = []
         llm_roadmap_used = False
+
+        if llm_detection and llm_detection.get("rate_limit_exceeded"):
+            logger.error(f"[{session_id}] Groq API rate limit exceeded: {llm_detection.get('error_message')}")
+            empty_confidence = {
+                "total_score": 0.0,
+                "base_score": 0,
+                "factors": [],
+                "interpretation": "Error"
+            }
+            empty_product = {
+                "id": "NONE",
+                "name": "Service Unavailable",
+                "category": "system",
+                "price": 0,
+                "seller_name": "PRISM Error",
+                "seller_rating": 0,
+                "stock_status": "out_of_stock",
+                "image_placeholder": "out_of_stock",
+                "description": "We are currently experiencing high traffic (Groq API limit exceeded). Please try again shortly."
+            }
+            response_data = PrismResponse(
+                session_id=session_id,
+                detected_event="Service Unavailable",
+                event_key="error",
+                emotion_level="low",
+                family_significance="low",
+                emotional_message=f"We're sorry, our AI brain is experiencing very high traffic right now (Groq API limit exceeded). Please try again in a few minutes.",
+                purchase_timeline=[],
+                agent_debate=[],
+                top_recommendation=empty_product,
+                top_picks=[],
+                all_products=[],
+                confidence=empty_confidence,
+                temporal_strategies=[],
+                bharat_context={"state_name": None, "institution_name": None},
+                state_detected=None,
+                institution_detected=None,
+                llm_roadmap=None,
+                detected_intent="Rate Limit Error",
+            )
+            return response_data
 
         if llm_detection:
             # ── LLM path (primary) ────────────────────────────────────────
@@ -212,6 +259,7 @@ class PrismService:
                 purchase_timeline=[],
                 agent_debate=[],
                 top_recommendation={},
+                top_picks=[],
                 all_products=[],
                 confidence={"total_score": 0.0, "base_score": 0, "factors": [], "interpretation": "Unsupported"},
                 temporal_strategies=[],
@@ -243,7 +291,12 @@ class PrismService:
             llm_detection=llm_detection,
         )
 
-        # ── Step 6: Extract all categories from phases ────────────────────
+        # Use LLM's detected budget if frontend didn't pass one
+        if llm_detection and llm_detection.get("detected_budget") and (not budget or budget == 0):
+            budget = llm_detection.get("detected_budget")
+            logger.info(f"[{session_id}] Using LLM-detected budget: {budget}")
+
+        # ── Step 4: Map LLM categories to physical DB categories ────────────────────
         all_categories = []
         suggested_items_with_categories = {}
         for phase in enriched_phases:
@@ -256,6 +309,15 @@ class PrismService:
         # Also include LLM's direct category_mapping
         if llm_detection and llm_detection.get("category_mapping"):
             all_categories.extend(llm_detection["category_mapping"])
+            
+        # Ensure we don't miss standard categories by injecting the fallback template categories.
+        # This creates a powerful hybrid approach where the LLM defines the emotional journey and custom items,
+        # but the template guarantees comprehensive product retrieval (e.g. study lamps for college, lehengas for wedding).
+        template = _event_engine.get_template(event_data.get("event_key", "generic"))
+        if template and event_data.get("event_key") != "generic":
+            for template_phase in template.get("purchase_phases", []):
+                all_categories.extend(template_phase.get("categories", []))
+                
         # Deduplicate
         all_categories = list(dict.fromkeys(all_categories))
 
@@ -280,7 +342,69 @@ class PrismService:
             exact_items=exact_items,
             suggested_items_with_categories=suggested_items_with_categories,
             product_search_context=product_search_context,
+            avoid_categories=avoid_categories,  # Memory Mining: deprioritise likely-owned categories
         )
+
+        # ── Step 7.4: Deterministic pre-filter — obvious mismatches ─────────
+        # Catches known bad products by name keyword before burning LLM tokens.
+        # These are patterns that are always wrong regardless of event context.
+        if products:
+            _user_lower = user_input.lower()
+
+            # Cleaning/disinfectant product names that must never appear for beauty/personal care/fashion
+            _CLEANING_BRAND_KEYWORDS = {
+                "harpic", "lizol", "domex", "colin", "toilet cleaner", "floor cleaner",
+                "bathroom cleaner", "drain cleaner", "pest control", "disinfectant spray",
+                "descaling", "washing machine cleaner", "washing machine cleaning",
+                "anti rust", "rust remover", "bleach",
+            }
+            _ACADEMIC_KEYWORDS = {
+                "comprehension skills", "short passages", "close reading",
+                "grade 6", "grade 7", "grade 8", "ncert", "textbook", "cbse guide",
+            }
+            _OFFICE_IRRELEVANT_KEYWORDS = {
+                "shirt stays", "shirt garters", "tie clip",
+            }
+
+            # Decide which keyword sets to activate based on user intent
+            _active_blocklist: set = set()
+
+            _beauty_signals = {"makeup", "beauty", "skincare", "sun protection", "sunscreen",
+                               "moisturizer", "serum", "foundation", "lipstick", "mascara",
+                               "kajal", "blush", "highlighter", "concealer", "face wash",
+                               "face cream", "lotion", "toner", "lip balm"}
+            _fashion_signals = {"dress", "outfit", "kurti", "saree", "lehenga", "clothes",
+                                "fashion", "wear", "shirt", "jeans"}
+
+            if any(sig in _user_lower for sig in _beauty_signals):
+                _active_blocklist |= _CLEANING_BRAND_KEYWORDS | _ACADEMIC_KEYWORDS | _OFFICE_IRRELEVANT_KEYWORDS
+            if any(sig in _user_lower for sig in _fashion_signals):
+                _active_blocklist |= _ACADEMIC_KEYWORDS | _OFFICE_IRRELEVANT_KEYWORDS
+
+            if _active_blocklist:
+                def _is_obviously_wrong(p: dict) -> bool:
+                    name = (p.get("name") or "").lower()
+                    return any(kw in name for kw in _active_blocklist)
+                before = len(products)
+                products = [p for p in products if not _is_obviously_wrong(p) or p.get("stock_status") == "out_of_stock"]
+                if len(products) < before:
+                    logger.info(f"[{session_id}] Deterministic pre-filter removed {before - len(products)} obviously wrong products")
+
+        # ── Step 7.5: LLM Logical Filtering ────────────────────────────────
+        if products:
+            logger.info(f"[{session_id}] Pre-filter product count: {len(products)}")
+            
+            fallback_intent = event_data.get("label", "generic") if event_data.get("event_key") != "generic" else user_input
+            intent = llm_detection.get("intent", fallback_intent) if llm_detection else fallback_intent
+            
+            approved_ids = _event_engine.filter_products_with_llm(
+                user_input=user_input,
+                intent=intent,
+                products=products
+            )
+            # Retain dummy OOS items automatically, filter the rest
+            products = [p for p in products if p.get("id") in approved_ids or p.get("stock_status") == "out_of_stock"]
+            logger.info(f"[{session_id}] Post-filter product count: {len(products)}")
 
         if not products:
             logger.info(f"[{session_id}] No products found for this context.")
@@ -336,6 +460,7 @@ class PrismService:
                 purchase_timeline=empty_timeline,
                 agent_debate=[],
                 top_recommendation=empty_product,
+                top_picks=[],
                 all_products=[],
                 confidence=empty_confidence,
                 temporal_strategies=empty_strategies,
@@ -414,15 +539,83 @@ class PrismService:
         _persist_agent_logs(self.db, session_id, all_agent_results, top_product)
         self.db.commit()
 
-        # ── Step 14: Enrich all products and Build response ───────────────
+        # ── Step 14: Enrich all products with 4-agent scores ─────────────
+        # Each product gets scored by Kismat + Paisa + Samay + Genome.
+        # select_top_picks() then uses confidence_score to pick the best
+        # product per subcategory for Row 1 (Top Picks).
         for prod in products:
             prod["temporal_strategies"] = temporal_generate(prod, agent_context)
-            
+
             p_k = _kismat.evaluate(prod, agent_context)
             p_p = _paisa.evaluate(prod, agent_context)
             p_s = _samay.evaluate(prod, agent_context)
             p_genome = _genome.compute([p_k, p_p, p_s], None, prod, user_pincode)
             prod["confidence_score"] = p_genome["total_score"]
+
+        # ── Step 14.5: Detect specific-product ask vs context mention ───────
+        # "I need a phone at best price" → specific ask → two-tier layout
+        # "I bought a phone, need accessories" → context mention → normal flow
+        # Detection: exact_items_requested present + intent signals a direct purchase
+        is_specific_product_ask = False
+        primary_item_label = None
+
+        SPECIFIC_ASK_TERMS = [
+            'phone', 'mobile', 'smartphone', 'laptop', 'earphone', 'earphones',
+            'headphone', 'headphones', 'charger', 'tablet', 'watch', 'smartwatch',
+            'camera', 'tv', 'television', 'refrigerator', 'fridge', 'ac',
+            'air conditioner', 'washing machine', 'microwave', 'mixer', 'blender',
+            'speaker', 'powerbank', 'power bank', 'keyboard', 'mouse',
+        ]
+        # Context words that indicate past ownership (NOT a direct ask)
+        OWNERSHIP_SIGNALS = ['bought', 'have', 'own', 'got', 'purchased', 'already', 'my', 'using']
+
+        user_lower = user_input.lower()
+        has_ownership_signal = any(sig in user_lower for sig in OWNERSHIP_SIGNALS)
+
+        if exact_items and not has_ownership_signal:
+            for term in SPECIFIC_ASK_TERMS:
+                if any(term in item.lower() for item in exact_items):
+                    is_specific_product_ask = True
+                    primary_item_label = term
+                    break
+        # Also check user_input directly if LLM didn't populate exact_items
+        if not is_specific_product_ask and not has_ownership_signal:
+            for term in SPECIFIC_ASK_TERMS:
+                if term in user_lower:
+                    is_specific_product_ask = True
+                    primary_item_label = term
+                    break
+
+        logger.info(f"[{session_id}] is_specific_product_ask={is_specific_product_ask}, primary_item_label={primary_item_label}")
+
+        # Split into two display tiers
+        top_picks, other_products = select_top_picks(
+            products,
+            top_picks_limit=8,
+            others_limit=16,
+        )
+
+        # ── Specific-ask override: restructure tiers ──────────────────────
+        # Row 1 = only the primary item (or OOS stub)
+        # Row 2 = accessories with "You may also need" label
+        if is_specific_product_ask and primary_item_label:
+            all_scored = top_picks + other_products
+            primary_prods, accessory_prods = split_by_primary_and_accessories(
+                all_scored, primary_item_label
+            )
+            # If no primary products found at all, keep OOS stubs in top_picks
+            if primary_prods:
+                top_picks = primary_prods[:8]
+                other_products = accessory_prods[:16]
+            else:
+                # top_picks already has OOS stubs from select_top_picks; keep them
+                # accessories become other_products
+                other_products = [p for p in other_products if p.get("stock_status") != "out_of_stock"]
+
+        logger.info(
+            f"[{session_id}] Product tiers: {len(top_picks)} top_picks, "
+            f"{len(other_products)} other_products"
+        )
 
         response_data = PrismResponse(
             session_id=session_id,
@@ -444,7 +637,8 @@ class PrismService:
                 for r in all_agent_results
             ],
             top_recommendation=top_product,
-            all_products=products,
+            top_picks=top_picks,
+            all_products=other_products,
             confidence=confidence_data,
             temporal_strategies=strategies,
             bharat_context=bharat_context,
@@ -452,6 +646,8 @@ class PrismService:
             institution_detected=inst_key,
             llm_roadmap="LLM-first unified detection" if llm_roadmap_used else None,
             detected_intent=llm_detection.get("intent") if llm_detection else None,
+            is_specific_product_ask=is_specific_product_ask,
+            primary_item_label=primary_item_label,
         )
 
         # ── Step 15: Cache the response ───────────────────────────────────
@@ -459,6 +655,7 @@ class PrismService:
         logger.info(f"[{session_id}] Analysis complete. Score: {response_data.confidence.total_score}")
 
         return response_data
+
 
 
 # ─────────────────────────────────────────────

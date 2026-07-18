@@ -37,7 +37,12 @@
             "first_job"
         ],
         "description": "Hanging toiletry organizer, waterproof lining, 4 compartments, hook closure.",
-        "image_placeholder": "grey_hanging_toiletry_bag_v2"
+        "image_placeholder": "grey_hanging_toiletry_bag_v2",
+        "image_url": "",
+        "brand": "TravelEase",
+        "original_price": 712,
+        "discount_percent": 44,
+        "confidence_score": 85
     },
     {
         "id": "PERSONAL005",
@@ -76,7 +81,12 @@
             "first_job"
         ],
         "description": "1200W compact foldable hair dryer, 2 heat settings, cool shot button. NOTE: Exceeds 750W hostel limit.",
-        "image_placeholder": "pink_hair_dryer_1200w_compact_v2"
+        "image_placeholder": "pink_hair_dryer_1200w_compact_v2",
+        "image_url": "",
+        "brand": "StylePro",
+        "original_price": 1141,
+        "discount_percent": 30,
+        "confidence_score": 76
     },
     {
         "id": "PERSONAL006",
@@ -112,7 +122,12 @@
             "first_job"
         ],
         "description": "60W travel mini straightener, heats in 30 seconds, dual voltage. Under 750W hostel limit.",
-        "image_placeholder": "rose_gold_mini_straightener_v2"
+        "image_placeholder": "rose_gold_mini_straightener_v2",
+        "image_url": "",
+        "brand": "StylePro",
+        "original_price": 966,
+        "discount_percent": 38,
+        "confidence_score": 70
     },
     {
         "id": "PERSONAL007",
@@ -156,7 +171,12 @@
             "hostel_move"
         ],
         "description": "Stainless steel 40mm padlock, 3-key pack, rust-resistant. Pack of 2.",
-        "image_placeholder": "silver_padlock_40mm_2pack_v2"
+        "image_placeholder": "silver_padlock_40mm_2pack_v2",
+        "image_url": "",
+        "brand": "SecureLock",
+        "original_price": 332,
+        "discount_percent": 25,
+        "confidence_score": 93
     },
     {
         "id": "PERSONAL008",
@@ -201,7 +221,12 @@
             "new_baby"
         ],
         "description": "25-piece compact first aid kit: bandages, antiseptic wipes, gauze, pain relief spray.",
-        "image_placeholder": "red_first_aid_kit_25pc_v2"
+        "image_placeholder": "red_first_aid_kit_25pc_v2",
+        "image_url": "",
+        "brand": "SafetyFirst",
+        "original_price": 442,
+        "discount_percent": 21,
+        "confidence_score": 92
     },
     {
         "id": "SHOP001",
@@ -244,7 +269,12 @@
             "shop_opening"
         ],
         "description": "200-page A4 billing register, single-ruled, hardcover.",
-        "image_placeholder": "green_billing_register_a4_v2"
+        "image_placeholder": "green_billing_register_a4_v2",
+        "image_url": "",
+        "brand": "BizSupply",
+        "original_price": 252,
+        "discount_percent": 21,
+        "confidence_score": 85
     },
     {
         "id": "SHOP002",
@@ -283,7 +313,12 @@
             "new_home"
         ],
         "description": "5-shelf adjustable metal storage rack, 150kg capacity, powder-coated finish.",
-        "image_placeholder": "grey_metal_storage_rack_5shelf_v2"
+        "image_placeholder": "grey_metal_storage_rack_5shelf_v2",
+        "image_url": "",
+        "brand": "ShopFit",
+        "original_price": 4165,
+        "discount_percent": 28,
+        "confidence_score": 75
     },
     {
         "id": "SHOP003",
@@ -326,7 +361,12 @@
             "shop_opening"
         ],
         "description": "1000-piece writable price tag sticker roll, white with red border, removable adhesive.",
-        "image_placeholder": "white_price_tag_sticker_roll_v2"
+        "image_placeholder": "white_price_tag_sticker_roll_v2",
+        "image_url": "",
+        "brand": "BizSupply",
+        "original_price": 229,
+        "discount_percent": 35,
+        "confidence_score": 88
     },
     {
         "id": "SHOP004",
@@ -368,7 +408,12 @@
             "shop_opening"
         ],
         "description": "Pack of 100 non-woven reusable carry bags, medium size, 30kg capacity.",
-        "image_placeholder": "pink_nonwoven_carrybag_100pack_v2"
+        "image_placeholder": "pink_nonwoven_carrybag_100pack_v2",
+        "image_url": "",
+        "brand": "PackRight",
+        "original_price": 578,
+        "discount_percent": 31,
+        "confidence_score": 86
     },
     {
         "id": "SHOP005",
@@ -413,7 +458,12 @@
             "first_job"
         ],
         "description": "12-digit solar/battery dual-power calculator, large display, tax function.",
-        "image_placeholder": "black_12digit_solar_calculator_v2"
+        "image_placeholder": "black_12digit_solar_calculator_v2",
+        "image_url": "",
+        "brand": "BizSupply",
+        "original_price": 498,
+        "discount_percent": 40,
+        "confidence_score": 89
     },
     {
         "id": "SHOP006",
@@ -452,7 +502,12 @@
             "shop_opening"
         ],
         "description": "Metal lockable cash box with removable coin tray, 2 keys included.",
-        "image_placeholder": "grey_metal_cash_box_with_tray_v2"
+        "image_placeholder": "grey_metal_cash_box_with_tray_v2",
+        "image_url": "",
+        "brand": "SecureShop",
+        "original_price": 1205,
+        "discount_percent": 42,
+        "confidence_score": 82
     },
     {
         "id": "SHOP007",
@@ -490,7 +545,12 @@
             "shop_opening"
         ],
         "description": "3-tier clear acrylic product display stand, ideal for small items, jewellery, cosmetics.",
-        "image_placeholder": "clear_acrylic_display_stand_3tier_v2"
+        "image_placeholder": "clear_acrylic_display_stand_3tier_v2",
+        "image_url": "",
+        "brand": "ShopDisplay",
+        "original_price": 742,
+        "discount_percent": 26,
+        "confidence_score": 77
     },
     {
         "id": "WEDDING001",
@@ -531,7 +591,12 @@
             "festival_prep"
         ],
         "description": "Authentic Kanjivaram silk saree with zari gold border, wedding occasion wear.",
-        "image_placeholder": "red_kanjivaram_silk_saree_v2"
+        "image_placeholder": "red_kanjivaram_silk_saree_v2",
+        "image_url": "",
+        "brand": "SilkRoute",
+        "original_price": 6943,
+        "discount_percent": 28,
+        "confidence_score": 86
     },
     {
         "id": "WEDDING002",
@@ -571,7 +636,12 @@
             "festival_prep"
         ],
         "description": "Ivory raw silk sherwani with dupatta and churidar, embroidered collar.",
-        "image_placeholder": "ivory_sherwani_set_men_v2"
+        "image_placeholder": "ivory_sherwani_set_men_v2",
+        "image_url": "",
+        "brand": "WeddingEthnic",
+        "original_price": 4665,
+        "discount_percent": 25,
+        "confidence_score": 79
     },
     {
         "id": "WEDDING003",
@@ -612,7 +682,12 @@
             "new_home"
         ],
         "description": "Velvet-lined jewellery storage box, 24 compartments, mirror inside, lock and key.",
-        "image_placeholder": "maroon_velvet_jewellery_box_24_v2"
+        "image_placeholder": "maroon_velvet_jewellery_box_24_v2",
+        "image_url": "",
+        "brand": "VelvetCase",
+        "original_price": 1249,
+        "discount_percent": 28,
+        "confidence_score": 88
     },
     {
         "id": "WEDDING004",
@@ -653,7 +728,12 @@
             "festival_prep"
         ],
         "description": "7-piece silver-plated pooja thali set: thali, diya, kalash, agarbatti stand, bowl.",
-        "image_placeholder": "silver_pooja_thali_7pc_v2"
+        "image_placeholder": "silver_pooja_thali_7pc_v2",
+        "image_url": "",
+        "brand": "DivineArt",
+        "original_price": 1557,
+        "discount_percent": 23,
+        "confidence_score": 90
     },
     {
         "id": "WEDDING005",
@@ -693,7 +773,12 @@
             "new_home"
         ],
         "description": "6 stainless steel serving bowls in graduated sizes, mirror finish, for weddings and events.",
-        "image_placeholder": "steel_serving_bowl_set_6pc_v2"
+        "image_placeholder": "steel_serving_bowl_set_6pc_v2",
+        "image_url": "",
+        "brand": "HomeChef",
+        "original_price": 1947,
+        "discount_percent": 23,
+        "confidence_score": 87
     },
     {
         "id": "GOEXAM001",
@@ -738,7 +823,12 @@
             "first_job"
         ],
         "description": "Dated A5 study planner with daily/weekly/monthly schedules, goal tracker.",
-        "image_placeholder": "blue_study_planner_a5_dated_v2"
+        "image_placeholder": "blue_study_planner_a5_dated_v2",
+        "image_url": "",
+        "brand": "ClearPage",
+        "original_price": 378,
+        "discount_percent": 21,
+        "confidence_score": 90
     },
     {
         "id": "GOEXAM002",
@@ -783,7 +873,12 @@
             "first_job"
         ],
         "description": "6 pastel highlighters, chisel tip, smear-proof on laser print.",
-        "image_placeholder": "pastel_highlighter_set_6colour_v2"
+        "image_placeholder": "pastel_highlighter_set_6colour_v2",
+        "image_url": "",
+        "brand": "ColorMemo",
+        "original_price": 244,
+        "discount_percent": 39,
+        "confidence_score": 92
     },
     {
         "id": "GOEXAM003",
@@ -824,7 +919,12 @@
             "government_exam"
         ],
         "description": "40W 12-inch portable table fan, USB powered, 3 speed settings. Under 750W hostel limit.",
-        "image_placeholder": "white_portable_table_fan_12inch_v2"
+        "image_placeholder": "white_portable_table_fan_12inch_v2",
+        "image_url": "",
+        "brand": "CoolBreeze",
+        "original_price": 999,
+        "discount_percent": 30,
+        "confidence_score": 79
     },
     {
         "id": "GOEXAM004",
@@ -866,7 +966,12 @@
             "hostel_move"
         ],
         "description": "Memory foam lumbar cushion with adjustable strap, fits any chair.",
-        "image_placeholder": "black_lumbar_cushion_memory_foam_v2"
+        "image_placeholder": "black_lumbar_cushion_memory_foam_v2",
+        "image_url": "",
+        "brand": "ErgoDesk",
+        "original_price": 693,
+        "discount_percent": 28,
+        "confidence_score": 86
     },
     {
         "id": "GOEXAM005",
@@ -910,7 +1015,12 @@
             "shop_opening"
         ],
         "description": "13-pocket expandable file organiser, A4 size, elastic closure, alphabetical tabs.",
-        "image_placeholder": "blue_expandable_file_organizer_v2"
+        "image_placeholder": "blue_expandable_file_organizer_v2",
+        "image_url": "",
+        "brand": "BizSupply",
+        "original_price": 506,
+        "discount_percent": 31,
+        "confidence_score": 85
     },
     {
         "id": "HOMEDECOR001",
@@ -951,7 +1061,12 @@
             "wedding"
         ],
         "description": "Set of 2 eyelet curtains, 70% blackout, 5-feet drop, machine washable.",
-        "image_placeholder": "grey_eyelet_curtain_5ft_pair_v2"
+        "image_placeholder": "grey_eyelet_curtain_5ft_pair_v2",
+        "image_url": "",
+        "brand": "HomeDecor",
+        "original_price": 1141,
+        "discount_percent": 30,
+        "confidence_score": 84
     },
     {
         "id": "HOMEDECOR002",
@@ -991,7 +1106,12 @@
             "first_job"
         ],
         "description": "12-inch round wooden wall clock, silent sweep mechanism, AA battery.",
-        "image_placeholder": "wooden_wall_clock_round_12inch_v2"
+        "image_placeholder": "wooden_wall_clock_round_12inch_v2",
+        "image_url": "",
+        "brand": "TimeCraft",
+        "original_price": 802,
+        "discount_percent": 44,
+        "confidence_score": 87
     },
     {
         "id": "HOMEDECOR003",
@@ -1031,7 +1151,12 @@
             "wedding"
         ],
         "description": "5-piece chrome bathroom set: soap dispenser, toothbrush holder, towel ring, toilet roll holder, towel bar.",
-        "image_placeholder": "chrome_bathroom_accessories_5pc_v2"
+        "image_placeholder": "chrome_bathroom_accessories_5pc_v2",
+        "image_url": "",
+        "brand": "BathLux",
+        "original_price": 1779,
+        "discount_percent": 27,
+        "confidence_score": 84
     },
     {
         "id": "HOMEDECOR004",
@@ -1072,7 +1197,12 @@
             "first_job"
         ],
         "description": "3-piece dustbin set: 5L, 10L, 25L sizes, swing lid, matching colours.",
-        "image_placeholder": "white_dustbin_set_3pc_v2"
+        "image_placeholder": "white_dustbin_set_3pc_v2",
+        "image_url": "",
+        "brand": "CleanHome",
+        "original_price": 792,
+        "discount_percent": 37,
+        "confidence_score": 82
     },
     {
         "id": "HOMEDECOR005",
@@ -1116,7 +1246,12 @@
             "shop_opening"
         ],
         "description": "Natural coir rope doormat, non-slip rubber backing, 45x75cm.",
-        "image_placeholder": "natural_coir_doormat_45x75_v2"
+        "image_placeholder": "natural_coir_doormat_45x75_v2",
+        "image_url": "",
+        "brand": "EcoJute",
+        "original_price": 374,
+        "discount_percent": 20,
+        "confidence_score": 88
     },
     {
         "id": "EDGE001",
@@ -1145,7 +1280,12 @@
             "new_home"
         ],
         "description": "Clearance stock bedsheet, limited sizes available.",
-        "image_placeholder": "faded_clearance_bedsheet_v2"
+        "image_placeholder": "faded_clearance_bedsheet_v2",
+        "image_url": "",
+        "brand": "ClearanceHub",
+        "original_price": 139,
+        "discount_percent": 29,
+        "confidence_score": 60
     },
     {
         "id": "EDGE002",
@@ -1184,7 +1324,12 @@
             "first_job"
         ],
         "description": "2000W steam iron with auto shut-off. NOTE: Significantly exceeds 750W hostel limit. Not suitable for hostel use.",
-        "image_placeholder": "blue_steam_iron_2000w_v2"
+        "image_placeholder": "blue_steam_iron_2000w_v2",
+        "image_url": "",
+        "brand": "HomeAppliance",
+        "original_price": 2498,
+        "discount_percent": 40,
+        "confidence_score": 85
     },
     {
         "id": "EDGE003",
@@ -1215,7 +1360,12 @@
             "festival_prep"
         ],
         "description": "5-metre LED string lights. Low stock \u2014 order soon.",
-        "image_placeholder": "multicolor_string_lights_5m_v2"
+        "image_placeholder": "multicolor_string_lights_5m_v2",
+        "image_url": "",
+        "brand": "FestiveLights",
+        "original_price": 258,
+        "discount_percent": 23,
+        "confidence_score": 67
     },
     {
         "id": "EDGE004",
@@ -1247,7 +1397,12 @@
             "hostel_move"
         ],
         "description": "3L aluminium pressure cooker, non-ISI, limited warranty.",
-        "image_placeholder": "aluminium_budget_cooker_3L_v2"
+        "image_placeholder": "aluminium_budget_cooker_3L_v2",
+        "image_url": "",
+        "brand": "BudgetKitchen",
+        "original_price": 788,
+        "discount_percent": 43,
+        "confidence_score": 60
     },
     {
         "id": "EDGE005",
@@ -1282,6 +1437,11 @@
             "first_job"
         ],
         "description": "Trending brand 30L backpack. Price rising fast due to increased demand.",
-        "image_placeholder": "black_trending_backpack_30L_v2"
+        "image_placeholder": "black_trending_backpack_30L_v2",
+        "image_url": "",
+        "brand": "TrendBag",
+        "original_price": 1732,
+        "discount_percent": 25,
+        "confidence_score": 69
     }
 ]

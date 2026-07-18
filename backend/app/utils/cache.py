@@ -42,7 +42,7 @@ except Exception as e:
 def cache_key(user_input: str, pincode: str, budget: str, target_date: str = "") -> str:
     """Generates a deterministic cache key from the analysis inputs."""
     raw = f"{user_input.lower().strip()}|{pincode}|{budget}|{target_date}"
-    return f"prism:v1:{hashlib.md5(raw.encode()).hexdigest()}"
+    return f"prism:v2:{hashlib.md5(raw.encode()).hexdigest()}"
 
 
 def get_cached(key: str) -> Optional[Any]:

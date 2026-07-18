@@ -117,14 +117,18 @@ Rules for your response:
 - Do NOT mention the confidence score number
 - Reference the location/cultural context if it's relevant to the product choice"""
 
-        response = _client.chat.completions.create(
-            model=settings.llm_model,
-            max_tokens=settings.llm_max_tokens_orchestrator,
-            temperature=settings.llm_temperature,
-            messages=[{"role": "user", "content": prompt}],
-            timeout=20.0,
-        )
-        soch_message = response.choices[0].message.content.strip()
+        try:
+            response = _client.chat.completions.create(
+                model=settings.llm_model,
+                max_tokens=settings.llm_max_tokens_orchestrator,
+                temperature=settings.llm_temperature,
+                messages=[{"role": "user", "content": prompt}],
+                timeout=20.0,
+            )
+            soch_message = response.choices[0].message.content.strip()
+        except Exception as e:
+            print(f"Soch LLM Error: {e}")
+            soch_message = "The agents have evaluated the product based on price, quality, and delivery speed. Based on the aggregate score, this product meets the criteria for your situation."
 
         # Final verdict: 2+ rejections → REJECT, otherwise RECOMMEND
         reject_count = verdicts.count("reject")

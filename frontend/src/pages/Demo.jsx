@@ -1,29 +1,35 @@
 /**
  * Demo.jsx — Full results page showing all 6 PRISM pillars.
  *
- * Displays: EmotionalMessage, ProductCard, AgentDebateChamber,
+ * Displays: EmotionalMessage, ProductCatalog (two-row), AgentDebateChamber,
  * ConfidenceGenome, TemporalSimulator, LifeEventResult, BharatContextBadge.
  * All 6 PRISM pillars are visible and interactive.
+ *
+ * Product display uses the new two-row layout:
+ *   Row 1 — PRISM Top Picks: best product per subcategory (4-agent selected)
+ *   Row 2 — More to Explore: budget variants and alternatives
  *
  * If no result in context (e.g. direct navigation), redirects to Home.
  */
 
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { motion } from 'framer-motion'
 import { usePrism } from '../context/PrismContext'
 import LoadingOrchestrator from '../components/LoadingOrchestrator'
 import EmotionalMessage from '../components/EmotionalMessage'
-import ProductCard from '../components/ProductCard'
+import ProductCatalog from '../components/ProductCatalog'
 import AgentDebateChamber from '../components/AgentDebateChamber'
 import ConfidenceGenome from '../components/ConfidenceGenome'
 import TemporalSimulator from '../components/TemporalSimulator'
+import StrategyConfirmation from '../components/StrategyConfirmation'
 import LifeEventResult from '../components/LifeEventResult'
 import BharatContextBadge from '../components/BharatContextBadge'
 
 export default function Demo() {
   const navigate = useNavigate()
   const { result, query } = usePrism()
+  const [selectedStrategy, setSelectedStrategy] = useState(null)
 
   useEffect(() => {
     if (!result) {
@@ -35,15 +41,12 @@ export default function Demo() {
     return <LoadingOrchestrator />
   }
 
-  // Find Soch's final verdict for the product card
-  const sochAgent = result.agent_debate?.find((a) => a.agent_name === 'Soch')
-  const finalVerdict = sochAgent?.verdict || 'caution'
-
   return (
     <div className="min-h-screen" style={{ backgroundColor: '#0f0a1e' }}>
       <div className="fixed inset-0 pointer-events-none" style={{ background: 'radial-gradient(ellipse at top, rgba(108,43,217,0.3) 0%, transparent 70%)', opacity: 0.5 }} />
 
       <div className="relative pt-24 pb-20 px-4 max-w-7xl mx-auto">
+
         {/* Session header */}
         <motion.div
           initial={{ opacity: 0, y: -10 }}
@@ -68,14 +71,39 @@ export default function Demo() {
           )}
         </motion.div>
 
-        {/* Main grid */}
+        {/* ── Product Catalog: two-row layout (full width, above the fold) ── */}
+        <motion.div
+          initial={{ opacity: 0, y: 14 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5 }}
+          className="mb-5"
+        >
+          <ProductCatalog
+            topPicks={result.top_picks || []}
+            otherProducts={result.all_products || []}
+            isSpecificAsk={result.is_specific_product_ask || false}
+            primaryItemLabel={result.primary_item_label || null}
+          />
+        </motion.div>
+
+        {/* Main grid: 3 cols on desktop */}
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-5">
 
-          {/* LEFT COLUMN — Product + Confidence + Temporal */}
+          {/* LEFT COLUMN — Confidence + Temporal */}
           <div className="lg:col-span-1 space-y-5">
-            <ProductCard product={result.top_recommendation} finalVerdict={finalVerdict} />
             <ConfidenceGenome confidence={result.confidence} />
-            <TemporalSimulator strategies={result.temporal_strategies} />
+            <TemporalSimulator 
+              strategies={result.temporal_strategies} 
+              selectedStrategy={selectedStrategy}
+              onSelectStrategy={setSelectedStrategy}
+            />
+            {selectedStrategy && (
+              <StrategyConfirmation 
+                selectedStrategy={selectedStrategy}
+                strategies={result.temporal_strategies}
+                onClear={() => setSelectedStrategy(null)}
+              />
+            )}
           </div>
 
           {/* RIGHT COLUMN — Emotional + Agents + Timeline + Bharat */}
@@ -109,7 +137,7 @@ export default function Demo() {
           transition={{ delay: 1.5 }}
           className="text-center text-xs text-gray-700 mt-10"
         >
-          Session ID: {result.session_id} · Powered by Claude · PRISM v1.0.0
+          Session ID: {result.session_id} · Powered by PRISM AI · v1.0.0
         </motion.p>
       </div>
     </div>

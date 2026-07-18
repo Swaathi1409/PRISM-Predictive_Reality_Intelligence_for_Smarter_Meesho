@@ -25,7 +25,7 @@ class Settings(BaseSettings):
     backend_url: str = "http://localhost:8000"
 
     # LLM
-    llm_model: str = "llama-3.3-70b-versatile"
+    llm_model: str = "llama-3.1-8b-instant"
     llm_max_tokens_orchestrator: int = 250
     llm_max_tokens_emotional: int = 180
     llm_max_tokens_event: int = 150

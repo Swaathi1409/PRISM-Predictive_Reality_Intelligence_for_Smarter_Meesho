@@ -133,10 +133,15 @@ Write 2 to 3 sentences ONLY. Rules:
 6. Write in warm, simple Indian English. Use ONLY English, absolutely no Hindi or other language mixed in.
 7. Maximum 60 words total."""
 
-        response = _client.chat.completions.create(
-            model=settings.llm_model,
-            max_tokens=settings.llm_max_tokens_emotional,
-            temperature=settings.llm_temperature,
-            messages=[{"role": "user", "content": prompt}],
-        )
-        return response.choices[0].message.content.strip()
+        try:
+            response = _client.chat.completions.create(
+                model=settings.llm_model,
+                max_tokens=settings.llm_max_tokens_emotional,
+                temperature=settings.llm_temperature,
+                messages=[{"role": "user", "content": prompt}],
+                timeout=15.0,
+            )
+            return response.choices[0].message.content.strip()
+        except Exception as e:
+            print(f"Emotional Layer LLM Error: {e}")
+            return "Congratulations on this new moment! Let's get you set up with everything you need."

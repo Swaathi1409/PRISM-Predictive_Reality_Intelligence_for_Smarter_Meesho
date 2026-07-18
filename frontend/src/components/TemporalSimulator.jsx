@@ -11,7 +11,7 @@ import { motion } from 'framer-motion'
 import { Clock, CheckCircle2 } from 'lucide-react'
 import { STRATEGY_CONFIG } from '../utils/constants'
 
-export default function TemporalSimulator({ strategies }) {
+export default function TemporalSimulator({ strategies, selectedStrategy, onSelectStrategy }) {
   if (!strategies || strategies.length === 0) return null
 
   return (
@@ -31,17 +31,27 @@ export default function TemporalSimulator({ strategies }) {
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
           {strategies.map((strategy, i) => {
             const cfg = STRATEGY_CONFIG[strategy.strategy_key] || { icon: '📦', color: 'from-gray-600 to-gray-500' }
+            const isSelected = selectedStrategy?.strategy_key === strategy.strategy_key;
+            
+            // Button label logic
+            let btnLabel = "I choose this";
+            if (strategy.strategy_key === "buy_now") btnLabel = "Proceed with this";
+            else if (strategy.strategy_key === "wait") btnLabel = "Set a reminder";
+            else if (strategy.strategy_key === "split") btnLabel = "Split my payment";
+
             return (
               <motion.div
                 key={strategy.strategy_key}
+                onClick={() => onSelectStrategy && onSelectStrategy(strategy)}
                 initial={{ opacity: 0, y: 15 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: i * 0.1, duration: 0.4 }}
                 id={`strategy-${strategy.strategy_key}`}
-                className={`relative rounded-xl border p-4 transition-all
-                  ${strategy.recommended
-                    ? 'border-prism-500/60 bg-prism-500/10 shadow-prism'
-                    : 'border-surface-border bg-surface-elevated'
+                className={`group relative flex flex-col rounded-xl border p-4 transition-all cursor-pointer
+                  ${isSelected ? 'border-prism-400 bg-prism-500/20 shadow-prism ring-1 ring-prism-400' 
+                    : strategy.recommended
+                      ? 'border-prism-500/60 bg-prism-500/10 shadow-prism hover:border-prism-500/80'
+                      : 'border-surface-border bg-surface-elevated hover:border-gray-500'
                   }`}
               >
                 {/* Recommended badge */}
@@ -59,7 +69,7 @@ export default function TemporalSimulator({ strategies }) {
                   <span className={`text-2xl w-10 h-10 rounded-xl bg-gradient-to-br ${cfg.color} flex items-center justify-center`}>
                     {cfg.icon}
                   </span>
-                  <span className="font-display font-semibold text-white text-sm">{strategy.strategy_name}</span>
+                  <span className="font-display font-semibold text-white text-sm leading-tight">{strategy.strategy_name}</span>
                 </div>
 
                 {/* Price */}
@@ -78,7 +88,20 @@ export default function TemporalSimulator({ strategies }) {
                 <p className="text-xs text-prism-300 mb-2 font-medium">{strategy.action_date}</p>
 
                 {/* Note */}
-                <p className="text-xs text-gray-400 leading-relaxed">{strategy.note}</p>
+                <p className="text-xs text-gray-400 leading-relaxed flex-grow">{strategy.note}</p>
+
+                {/* Action button */}
+                <button
+                  className={`mt-4 w-full py-2 rounded-lg text-xs font-semibold transition-colors pointer-events-none ${
+                    isSelected 
+                      ? 'bg-prism-500 text-white'
+                      : strategy.recommended
+                        ? 'bg-prism-500/20 text-prism-300 group-hover:bg-prism-500 group-hover:text-white'
+                        : 'bg-surface-border text-gray-300 group-hover:bg-gray-700 group-hover:text-white'
+                  }`}
+                >
+                  {isSelected ? 'Selected' : btnLabel}
+                </button>
               </motion.div>
             )
           })}
