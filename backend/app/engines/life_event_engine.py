@@ -30,10 +30,8 @@ import os
 import re
 from typing import Dict, Any, Optional, Tuple, List
 
-from groq import Groq
 from app.config import settings
-
-_client = Groq(api_key=settings.groq_api_key)
+from app.utils.groq_client import groq_chat
 
 _TEMPLATES_PATH = os.path.join(os.path.dirname(__file__), "../data/life_event_templates.json")
 _CONTEXT_PATH = os.path.join(os.path.dirname(__file__), "../data/bharat_context.json")
@@ -656,168 +654,70 @@ class LifeEventEngine:
         if user_context and user_context.strip():
             memory_block = f"""\n[PRISM Memory Intelligence — from user's prior sessions]\n{user_context.strip()}\n\nUSE THIS CONTEXT: Avoid re-recommending categories the user already owns. Prioritise accessories/complements for those categories and fresh categories they haven\'t seen yet. Let their budget affinity and city/employer inform tone and product range.\n\n"""
 
-        prompt = f"""You are PRISM, the world's most culturally intelligent Indian shopping assistant.{memory_block}
-A user has typed: "{user_input}"
+        prompt = f"""You are PRISM, India's smartest shopping assistant.{memory_block}
+User said: "{user_input}"
 
-Your job: Deeply understand what they need, where they are/going, what cultural context matters, and what products will actually help them. Think like a smart Indian friend who knows local customs, climates, and regional products.
+Understand the life event, location, cultural context, and exact products needed. Think like a smart Indian friend.
 
-EXAMPLES of excellent reasoning:
-- "Going trekking to Kashmir" → Detect: travel_adventure to cold mountain Islamic-majority region. Cultural: modest dress, warm layers, halal food storage. Products: thermal wear, trek bag, woolen shawls, warm bedding.
-- "Son got into IIT Bombay hostel" → Detect: hostel_move to humid coastal city. Products: cotton bedding, study accessories, personal care.
-- "Navratri coming up" → Detect: festival_prep. Products: festive dress, decor.
-- "Getting married in Rajasthan in winter" → Detect: wedding in dry cold climate. Products: layered wedding attire, warm occasion wear.
-- "Moving to new flat in Bangalore" → Detect: new_home in tech-hub mild climate. Products: kitchen setup, bedding, decor.
-- "Setting up my music studio" or "recording studio setup" or "home studio" or "setting up studio" → Detect: generic (creative workspace). Intent: 'Setting up a professional music/recording/photo studio'. Products: electronics (microphone, audio interface, studio monitors/speakers, headphones), home_decor (acoustic panels, studio lighting), bags_luggage (equipment bags), stationery (cables, adapters). NEVER show bedding, pillows, kitchen items, or clothing for studio setups.
-- "Setting up photo studio" or "photography studio" → Detect: generic. Products: electronics (camera, studio lights, tripod, backdrop), bags_luggage (camera bag).
-- "I want to buy a car" or "Book a flight to Delhi" or "Invest in stocks" → Detect: unsupported. Intent: "User wants a non-retail service". Purchase phases: []. Message: "I specialize in retail shopping and event planning on Meesho. I cannot help with cars, flights, or stocks."
+EXAMPLES:
+- "Going trekking to Kashmir" → travel_adventure, cold mountain, modest dress, thermal wear, trek bag, woolen shawls
+- "Son got into IIT Bombay hostel" → hostel_move, humid coastal, cotton bedding, study lamp, personal care
+- "Navratri coming up" → festival_prep, festive dress, decor
+- "I need a phone" → generic, direct_purchase_ask, exact_items_requested=["phone"], 1 phase (electronics only)
+- "I bought a phone, need accessories" → generic, owns_and_wants_accessories, exact_items_requested=["phone"]
+- "Setting up music studio" → generic, electronics (mic, speakers, audio interface, headphones), home_decor (acoustic panels)
+- "Book a flight" or "Buy a car" or "Invest in stocks" → unsupported, purchase_phases=[], apology in emotional_message
 
-Available event keys: hostel_move, wedding, new_baby, first_job, festival_prep, new_home, government_exam, shop_opening, travel_adventure, religious_travel, cultural_event, seasonal_prep, generic, unsupported
+Event keys: hostel_move, wedding, new_baby, first_job, festival_prep, new_home, government_exam, shop_opening, travel_adventure, religious_travel, cultural_event, seasonal_prep, generic, unsupported
 
-CRITICAL GUARDRAIL:
-If the user's request is completely unrelated to buying physical retail products (e.g., booking flights, investing in stocks, insurance, restaurant recommendations, software), you MUST set "event_key" to "unsupported". In this case, set "purchase_phases" to [] and write a brief apology in "emotional_message". Note: Buying a car or bike means they need automotive accessories (which IS supported).
-
-Available product categories: bedding, study_accessories, personal_care, bags_luggage, kitchen_essentials, formal_wear, festival_decor, baby_products, electronics, kitchen_appliances, shop_supplies, food, security, home_decor, jewellery, stationery, exam_supplies, wedding_apparel, home_improvement, fashion_men, fashion_women, fashion_kids, beauty_grooming, home_kitchen, appliances, sports_fitness, sportswear, shoes, watches, toys_games, pet_supplies, garden_outdoor, automotive
-
-CATEGORY MAPPING GUIDE (map user needs to these):
-- Trekking bag / luggage / backpack / suitcase / wallet / handbag → bags_luggage
-- Men's shirts / jeans / trousers / polo / blazer / office wear → fashion_men
-- Women's western wear / dress / kurti / tops / nightwear → fashion_women
-- Kids clothing / children's wear / school uniform / baby clothes → fashion_kids
-- Ethnic wear / kurta / saree / lehenga / sherwani / traditional dress / modest wear / woolen / thermal → formal_wear
-- Sports shoes / running shoes / formal shoes / sandals / heels / slippers → shoes
-- Tracksuit / joggers / gym wear / jersey / sports kit / athletic wear → sportswear
-- Sleeping bag / warm blanket / thermal sheets / bedsheet / pillow / comforter → bedding
-- Sunscreen / first aid / toiletries / grooming kits → personal_care
-- Skincare / makeup / beauty products / cosmetics / haircare / perfume → beauty_grooming
-- Water bottle / flask / tiffin / portable cooker → kitchen_essentials
-- Cookware / utensils / kitchen containers / storage / crockery → home_kitchen
-- Mixer / blender / microwave / induction / pressure cooker → kitchen_appliances
-- Washing machine / fridge / refrigerator / AC / air conditioner / TV / geyser → appliances
-- Wall decor / lighting / furniture / curtains / rugs / photo frames → home_decor
-- Yoga mat / dumbbells / cricket kit / cycling gear / badminton / treadmill → sports_fitness
-- Watches / smartwatch → watches
-- Necklace / earrings / ring / bracelet / gold jewellery / bridal jewellery → jewellery
-- Diapers / baby care / stroller / nursing / baby food → baby_products
-- Toys / board games / STEM toys / kids toys → toys_games
-- Pet food / dog supplies / cat supplies → pet_supplies
-- Gardening / camping / trekking / hiking gear / outdoor furniture → garden_outdoor
-- Car accessories / bike accessories / car care / vehicle → automotive
-- CCTV / smart lock / door lock / security camera / alarm → security
-- Study materials / books / prep materials → study_accessories
-- Pens / notebooks / writing materials / calculator / craft → stationery
-- Decorations / lights / rangoli / puja items → festival_decor
-- Commercial items / shelves / POS systems / signage / billing → shop_supplies
-- Tools / hardware / repair items → home_improvement
-- Laptops / chargers / tech gadgets / speakers / headphones / camera → electronics
-- Wedding dresses / bridal wear / groom wear → wedding_apparel
-- Food / groceries / snacks / beverages → food
-
-CRITICAL: For "purchase_phases", you MUST generate EXACTLY 2 or 3 distinct chronological phases. Do NOT generate fewer than 2 phases for valid retail queries.
-
-Return ONLY valid JSON with this exact structure:
-{{
-  "is_supported_retail_query": true,
-  "event_key": "one of the valid event keys above",
-  "event_label": "Natural 3-5 word description of what they are doing",
-  "intent": "The core underlying need in 1 sentence",
-  "detected_location": {{
-    "place_name": "Kashmir / Tamil Nadu / Mumbai / null",
-    "state_key": "jammu_kashmir / tamil_nadu / maharashtra / null (use snake_case state name)",
-    "climate": "cold mountain / tropical humid / arid desert / semi-arid / moderate / null",
-    "season_guess": "winter / summer / monsoon / null",
-    "is_travel_destination": true
-  }},
-  "cultural_context": "Specific cultural norms that affect product choices. E.g. 'Islamic majority region, modest dress expected, halal food storage important, conservative attire for women' OR 'Tamil Hindu culture, Kancheevaram silk appropriate for occasions' OR null if no special cultural context",
-  "climate_product_note": "How climate affects what they should buy. E.g. 'Cold mountain air requires thermal layers, wool, moisture-wicking base' OR null",
-  "product_needs": [
-    "specific product need 1 (e.g. 'warm woolen shawl for cold evenings')",
-    "specific product need 2 (e.g. 'trekking backpack 40-60L')",
-    "specific product need 3"
-  ],
-  "category_mapping": ["formal_wear", "bags_luggage", "bedding"],
-  "emotional_message": "2-3 warm sentences acknowledging their situation. Warm Indian English. No product names. No prices. Do NOT start with I. Start with the emotion or the moment.",
-  "budget_constraint_detected": true_or_false,
-  "detected_budget": 500, // The exact budget number in rupees if detected, else null
-  "exact_items_requested": ["specific items they literally asked for"],
-  "purchase_phases": [
-    {{
-      "phase_name": "Phase 1: Immediate Needs (Week 1)",
-      "days_from_now": 0,
-      "categories": ["bags_luggage", "bedding"],
-      "suggested_items": ["travel backpack", "bedsheet"],
-      "priority": "must_have",
-      "note": "Why they need this first, with cultural/climate context."
-    }},
-    {{
-      "phase_name": "Phase 2: Settle In (Week 2)",
-      "days_from_now": 7,
-      "categories": ["study_accessories", "personal_care"],
-      "suggested_items": ["study lamp", "toiletry kit"],
-      "priority": "should_have",
-      "note": "Items needed after first week of settling in."
-    }},
-    {{
-      "phase_name": "Phase 3: Long-Term Comfort (Week 3-4)",
-      "days_from_now": 14,
-      "categories": ["kitchen_essentials", "fashion_men"],
-      "suggested_items": ["water bottle", "casual wear"],
-      "priority": "nice_to_have",
-      "note": "Comfort and lifestyle upgrades once settled."
-    }}
-  ],
-  "timeline_days": 30,
-  "emotion_level": "very_high or high or moderate or low",
-  "family_significance": "extremely_high or very_high or high or moderate",
-  "budget_constraint_detected": false,
-  "urgency_override": false
-}}
-
-CRITICAL INSTRUCTION FOR NON-SHOPPING QUERIES:
-If the user's intent is NOT about buying physical retail products (e.g., book flights, get restaurant recommendations, invest in stocks, buy insurance, get a software/app, etc.), YOU MUST STRICTLY DO THE FOLLOWING:
-1. Set "is_supported_retail_query" to false.
-2. Set "event_key" to "unsupported".
-3. Set "intent" to "Unsupported non-retail request".
-4. Set "purchase_phases" to an empty list: [].
-5. Set "exact_items_requested" to [].
-6. Write an apology in "emotional_message" stating that you only specialize in retail shopping and event planning on Meesho.
-Failure to do this will result in the system hallucinating products.
+Categories: bedding, study_accessories, personal_care, bags_luggage, kitchen_essentials, formal_wear, festival_decor, baby_products, electronics, kitchen_appliances, shop_supplies, food, security, home_decor, jewellery, stationery, exam_supplies, wedding_apparel, home_improvement, fashion_men, fashion_women, fashion_kids, beauty_grooming, home_kitchen, appliances, sports_fitness, sportswear, shoes, watches, toys_games, pet_supplies, garden_outdoor, automotive
 
 RULES:
-1. All categories in purchase_phases MUST be from the valid categories list above
-2. Use the CATEGORY MAPPING GUIDE to convert user needs → valid categories
-3. emotional_message must be warm, specific to their situation, in Indian English
-4. cultural_context and climate_product_note must be genuinely useful, not generic
-5. If location is a travel destination, set is_travel_destination: true
-6. timeline_days: hostel/first_job=28-30, wedding=90, trek/travel=14-21, festival=7-14, government_exam=60
-7. PHASE NAMING RULE — CRITICAL:
-   - If timeline_days >= 21 (hostel move, first job, new home, wedding etc.), name phases as:
-     Phase 1: Immediate Needs (Week 1), Phase 2: Settle In (Week 2), Phase 3: Long-Term Comfort (Week 3-4)
-   - If timeline_days < 21 (festival, travel, exam within 2 weeks, next week, day trip, temple visit, single-day event), name phases as:
-     Phase 1: Get Ready (Days 1-2), Phase 2: Main Purchases (Days 3-5), Phase 3: Final Touches (Days 5-7)
-   - ALWAYS generate EXACTLY 3 phases. Never fewer.
-   - If the user says "next week" or implies an event within 7 days, set timeline_days=7 and ALWAYS use the DAY-based naming (Days 1-2 etc), NOT week-based.
-8. CATEGORY GUARDRAILS — CRITICAL (avoid irrelevant categories):
-   - hostel_move / first_job / government_exam: NEVER use baby_products, wedding_apparel, toys_games, pet_supplies, automotive, power_tools, kitchen_appliances (use kitchen_essentials for mini kettles/tiffins instead)
-   - wedding: NEVER use baby_products, exam_supplies, power_tools, pet_supplies
-   - festival_prep: NEVER use baby_products, exam_supplies, automotive, power_tools
-   - new_baby: NEVER use exam_supplies, shop_supplies, automotive, power_tools
-   - religious_travel / cultural_event (e.g. visiting temple, attending puja, pilgrimage): ONLY use formal_wear (modest/traditional attire), personal_care (hygiene basics), festival_decor (prasad/puja items), food (offerings/prasad sweets), shoes, bags_luggage (small bag/wallet). NEVER use study_accessories, exam_supplies, electronics, appliances, kitchen_appliances, baby_products, toys_games, automotive, shop_supplies, home_improvement, sportswear, sports_fitness, security, garden_outdoor, pet_supplies.
-   - generic (studio setup / music studio / recording studio / photo studio / creative workspace): ONLY use electronics (microphone, speakers, headphones, studio monitors, audio interface, camera, lighting), home_decor (studio lighting, acoustic panels), bags_luggage (equipment bag), stationery (cables, adapters). NEVER use bedding, pillow, kitchen_essentials, home_kitchen, kitchen_appliances, fashion_men, fashion_women, personal_care, baby_products.
-   - For hostel_move specifically: bedding means bedsheets/pillows for a college student, NOT baby bedding/mattress covers
-   - BUDGET GUARDRAIL: If the user specifies a budget (e.g. "under ₹100", "under 500"), set detected_budget to that value. Do NOT include categories whose typical minimum price exceeds the stated budget. For budgets under ₹200, limit categories to food, stationery, festival_decor, personal_care only.
-9. If a user says "next month" or "starting [month]", set timeline_days=28-30 and use WEEK-based phase naming
-10. exact_items_requested: only list items the user literally mentioned by name
-11. SPECIFIC ITEM RULE: If the user asks for a very specific product type (e.g. "phone", "earphones", "laptop", "charger"), set exact_items_requested to that item and limit purchase_phases categories STRICTLY to the one category that matches it. Do NOT add adjacent/complementary categories in phase categories — those can be suggested in phase notes only.
+1. ALWAYS return exactly 3 purchase_phases (unless unsupported)
+2. Phase naming: timeline>=21 days → "Week 1/2/3-4" style; timeline<21 → "Days 1-2/3-5/5-7" style
+3. hostel/first_job/exam: never use baby_products, wedding_apparel, kitchen_appliances
+4. religious_travel: only formal_wear, personal_care, festival_decor, food, shoes, bags_luggage
+5. studio setup: only electronics, home_decor, bags_luggage, stationery — never bedding/clothing
+6. user_intent_type: "direct_purchase_ask" (wants to BUY item now) | "owns_and_wants_accessories" (already HAS item) | "context_event" (life situation)
+7. If user says "I need X" → direct_purchase_ask. If "I bought X" → owns_and_wants_accessories
+8. budget_guardrail: if budget stated, exclude categories whose min price exceeds budget
+
+Return ONLY valid JSON:
+{{
+  "is_supported_retail_query": true,
+  "event_key": "hostel_move",
+  "event_label": "Moving to college hostel",
+  "intent": "Setting up for first time away from home",
+  "detected_location": {{"place_name": "Mumbai", "state_key": "maharashtra", "climate": "tropical humid", "season_guess": "summer", "is_travel_destination": false}},
+  "cultural_context": null,
+  "climate_product_note": null,
+  "product_needs": ["cotton breathable bedsheet", "study lamp", "toiletry kit"],
+  "category_mapping": ["bedding", "study_accessories", "personal_care"],
+  "emotional_message": "2-3 warm sentences. No products/prices. Don't start with I. Indian English.",
+  "budget_constraint_detected": false,
+  "detected_budget": null,
+  "exact_items_requested": [],
+  "purchase_phases": [
+    {{"phase_name": "Phase 1: Immediate Needs (Week 1)", "days_from_now": 0, "categories": ["bedding", "bags_luggage"], "suggested_items": ["bedsheet", "backpack"], "priority": "must_have", "note": "First day essentials."}},
+    {{"phase_name": "Phase 2: Settle In (Week 2)", "days_from_now": 7, "categories": ["study_accessories", "personal_care"], "suggested_items": ["study lamp", "toiletry kit"], "priority": "should_have", "note": "Study and hygiene setup."}},
+    {{"phase_name": "Phase 3: Long-Term Comfort (Week 3-4)", "days_from_now": 14, "categories": ["kitchen_essentials", "fashion_men"], "suggested_items": ["water bottle", "casual wear"], "priority": "nice_to_have", "note": "Comfort upgrades."}}
+  ],
+  "timeline_days": 30,
+  "emotion_level": "high",
+  "family_significance": "very_high",
+  "urgency_override": false,
+  "user_intent_type": "context_event"
+}}
 """
 
         try:
-            response = _client.chat.completions.create(
-                model=settings.llm_model,
-                temperature=0.2,  # Low temp for structured extraction
+            response = groq_chat(
+                model="llama-3.1-8b-instant",   # fast model, separate rate bucket
+                temperature=0.1,
                 messages=[{"role": "user", "content": prompt}],
                 response_format={"type": "json_object"},
-                max_tokens=1200,
-                timeout=25.0,
+                max_tokens=700,
+                timeout=20.0,
             )
             content = response.choices[0].message.content.strip()
             result = json.loads(content)
@@ -835,9 +735,13 @@ RULES:
 
         except Exception as e:
             error_str = str(e).lower()
-            print(f"[LLM Event Detection Error]: {e}")
+            logger.warning(f"[LLM Event Detection] Failed: {type(e).__name__}: {str(e)[:200]}")
             if "429" in error_str or "rate limit" in error_str or "rate_limit_exceeded" in error_str:
+                # Rate limit persists even after groq_chat retries.
+                # Return a special signal so prism_service uses keyword fallback.
+                logger.warning("[LLM Event Detection] Rate limit exceeded after all retries — signalling keyword fallback")
                 return {"rate_limit_exceeded": True, "error_message": str(e)}
+            # Other errors (JSON parse, timeout, etc.) — return None for keyword fallback
             return None
 
     def detect_event(self, user_input: str) -> Dict[str, Any]:
@@ -1033,13 +937,13 @@ Valid categories: [bedding, study_accessories, personal_care, bags_luggage, kitc
 """
 
         try:
-            response = _client.chat.completions.create(
-                model=settings.llm_model,
-                temperature=settings.llm_temperature,
+            response = groq_chat(
+                model="llama-3.1-8b-instant",
+                temperature=0.1,
                 messages=[{"role": "user", "content": prompt}],
                 response_format={"type": "json_object"},
-                max_tokens=800,
-                timeout=20.0,
+                max_tokens=500,
+                timeout=15.0,
             )
             content = response.choices[0].message.content.strip()
             return json.loads(content)
@@ -1047,17 +951,25 @@ Valid categories: [bedding, study_accessories, personal_care, bags_luggage, kitc
             print(f"LLM Roadmap Fallback Error: {e}")
             return None
 
-    def filter_products_with_llm(self, user_input: str, intent: str, products: List[Dict[str, Any]]) -> List[str]:
+    def filter_products_with_llm(
+        self,
+        user_input: str,
+        intent: str,
+        products: List[Dict[str, Any]],
+        user_intent_type: Optional[str] = None,
+    ) -> List[str]:
         """
-        Takes the candidate products from the hardcoded matcher and filters out
+        Takes the candidate products from the matcher and filters out
         any products that logically make zero sense for the user's intent.
-        For example, drops a "4 socket junction box" for a "bought new mobile" event.
         Returns a list of approved product_ids.
+
+        user_intent_type: LLM-detected intent class (direct_purchase_ask /
+                          owns_and_wants_accessories / context_event).
+                          When provided, used instead of keyword heuristics.
         """
         if not products:
             return []
 
-        # Minify products to save tokens (price included for budget filtering)
         minified = [
             {
                 "id": p.get("id"),
@@ -1078,38 +990,50 @@ Valid categories: [bedding, study_accessories, personal_care, bags_luggage, kitc
             'speaker', 'powerbank', 'power bank', 'keyboard', 'mouse',
         ]
         user_lower = user_input.lower()
-        is_specific_ask = any(kw in user_lower for kw in specific_keywords)
-        
+        is_specific_ask = (
+            user_intent_type == "direct_purchase_ask"
+            or (user_intent_type is None and any(kw in user_lower for kw in specific_keywords))
+        )
+
+        # Ownership context: user already owns the primary item
+        is_ownership = user_intent_type == "owns_and_wants_accessories"
+
         strictness_note = ""
-        if is_specific_ask:
+        if is_specific_ask and not is_ownership:
             strictness_note = """
-CRITICAL: The user is asking for a SPECIFIC product type. Be VERY STRICT.
-- ONLY approve products that ARE that specific item.
-- If the user asked for a phone, approve ONLY phones/smartphones. Reject chargers, cables, covers, cases, earphones unless they literally asked for those too.
-- If the user asked for earphones, approve ONLY earphones/headphones. Reject chargers, phones, cables.
-- In short: match EXACTLY what the user asked for. Reject everything else."""
+CRITICAL: The user is asking to BUY a SPECIFIC product type (direct purchase). Be VERY STRICT.
+- ONLY approve products that ARE that specific item (the primary product they asked for).
+- If user asked for a phone: approve ONLY phones/smartphones. Reject chargers, cables, covers, cases, earphones.
+- If user asked for earphones: approve ONLY earphones/headphones. Reject chargers, phones, cables.
+- In short: match EXACTLY what the user asked for as the primary item. Reject everything else.
+- These accessories will be shown separately in Row 2 — do NOT approve them here."""
+        elif is_ownership:
+            strictness_note = """
+NOTE: The user ALREADY OWNS the primary item and wants accessories/complements.
+- Approve accessories, cases, cables, chargers, covers, stands related to the item they own.
+- Reject products that are the primary item itself (they already have it).
+- Example: "I bought a phone" → approve charger, cover, earphone. Reject phones."""
 
         prompt = f"""You are a strict logical filter for a shopping assistant.
 The user said: "{user_input}"
 Their detected intent is: "{intent}"
+User intent classification: "{user_intent_type or 'unknown'}"
 {strictness_note}
 
-Below is a list of candidate products retrieved from our database. Some products might be completely irrelevant (e.g. a junction box for someone who bought a mobile phone) because they share a broad category like 'electronics'.
+Below is a list of candidate products retrieved from our database. Some products might be completely irrelevant.
 
-Your task is to review each product and filter out the ones that make ZERO logical sense for the user's intent. Keep the ones that are directly relevant or could be reasonably useful accessories (unless the user asked for something very specific — in that case be strict).
+Your task is to review each product and filter out the ones that make ZERO logical sense for the user's intent. Keep products that are directly relevant or reasonably useful.
 
-ALSO: If the user mentioned a budget (e.g. "under 100", "under ₹500"), reject ALL products whose price exceeds that budget — even if they are the right category.
+ALSO: If the user mentioned a budget (e.g. "under 100", "under ₹500"), reject ALL products whose price exceeds that budget.
 
-CRITICAL — OBVIOUS MISMATCH EXAMPLES (ALWAYS reject these patterns):
-- Toilet cleaners / floor cleaners / bathroom cleaners (Harpic, Lizol, Domex, Colin) appearing for: skincare, makeup, beauty, sun protection, personal care queries → REJECT
-- School textbooks / comprehension books / academic books appearing for: makeup, beauty, fashion, lifestyle queries → REJECT  
-- Men's shirt stays / office accessories appearing for: home decor, beauty, kitchen queries → REJECT
-- Baby products appearing for: adult personal care, men's grooming queries → REJECT
-- Kitchen cleaning tablets / descaling powder appearing for: beauty, grooming, clothing queries → REJECT
-- Any product whose name contains 'cleaning', 'cleaner', 'disinfectant', 'toilet', 'floor mop', 'drain', 'pest control' for personal care / beauty / fashion queries → REJECT
-- Any product clearly for a different gender or age group than implied by the query → REJECT
-- Studio equipment (mic, speaker, headphone) for home/kitchen setup queries → REJECT
+CRITICAL — ALWAYS REJECT THESE PATTERNS:
+- Toilet cleaners / floor cleaners (Harpic, Lizol, Domex, Colin) for skincare/beauty/personal care → REJECT
+- School textbooks / academic books for makeup, beauty, fashion queries → REJECT
+- Baby products for adult personal care / men's grooming queries → REJECT
+- Kitchen cleaning tablets / descaling powder for beauty / clothing queries → REJECT
+- Products containing 'cleaning', 'cleaner', 'disinfectant', 'toilet', 'floor mop', 'drain', 'pest control' for personal care / beauty / fashion → REJECT
 - Pillows / bedsheets / kitchen items for music studio / recording studio queries → REJECT
+- Studio equipment (mic, speaker) for home/kitchen setup queries → REJECT
 
 Products:
 {json.dumps(minified, indent=2)}
@@ -1120,22 +1044,18 @@ Return ONLY valid JSON in this exact structure:
 }}
 """
         try:
-            # Using a smaller, faster model for this simple filtering task to save tokens and avoid rate limits
-            response = _client.chat.completions.create(
+            response = groq_chat(
                 model="llama-3.1-8b-instant",
-                temperature=0.0,  # Zero temperature for strict logic
+                temperature=0.0,
                 messages=[{"role": "user", "content": prompt}],
                 response_format={"type": "json_object"},
-                max_tokens=2000,
-                timeout=20.0,
+                max_tokens=800,
+                timeout=15.0,
             )
             content = response.choices[0].message.content.strip()
             result = json.loads(content)
             return result.get("approved_product_ids", [])
         except Exception as e:
             print(f"LLM Product Filter Error: {e}")
-            # If the LLM filter fails (timeout, API error, rate limit), fail OPEN:
-            # return all candidate product IDs so the user still sees products.
-            # Failing closed (returning []) would block ALL products and show nothing,
-            # which is far worse UX than showing slightly unfiltered results.
+            # Fail open — return all candidate IDs so user still sees products
             return [p.get("id") for p in products if p.get("id")]

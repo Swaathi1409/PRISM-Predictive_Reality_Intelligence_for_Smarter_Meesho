@@ -151,7 +151,7 @@ function TopPickCard({ product, index }) {
       }}>
         {product.image_url && !product.image_url.includes('placehold') ? (
           <img
-            src={product.image_url}
+            src={product.image_url.replace(/\/images\/W\/IMAGERENDERING_[A-Z0-9-]+/, '')}
             alt={product.name}
             referrerPolicy="no-referrer"
             style={{ width: '100%', height: '100%', objectFit: 'cover', borderRadius: 10 }}
@@ -279,7 +279,7 @@ function OtherProductCard({ product, index }) {
       }}>
         {product.image_url && !product.image_url.includes('placehold') ? (
           <img
-            src={product.image_url}
+            src={product.image_url.replace(/\/images\/W\/IMAGERENDERING_[A-Z0-9-]+/, '')}
             alt={product.name}
             referrerPolicy="no-referrer"
             style={{ width: '100%', height: '100%', objectFit: 'cover', borderRadius: 8 }}

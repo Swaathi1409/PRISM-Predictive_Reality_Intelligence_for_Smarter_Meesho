@@ -100,45 +100,12 @@ class PrismService:
         llm_roadmap_used = False
 
         if llm_detection and llm_detection.get("rate_limit_exceeded"):
-            logger.error(f"[{session_id}] Groq API rate limit exceeded: {llm_detection.get('error_message')}")
-            empty_confidence = {
-                "total_score": 0.0,
-                "base_score": 0,
-                "factors": [],
-                "interpretation": "Error"
-            }
-            empty_product = {
-                "id": "NONE",
-                "name": "Service Unavailable",
-                "category": "system",
-                "price": 0,
-                "seller_name": "PRISM Error",
-                "seller_rating": 0,
-                "stock_status": "out_of_stock",
-                "image_placeholder": "out_of_stock",
-                "description": "We are currently experiencing high traffic (Groq API limit exceeded). Please try again shortly."
-            }
-            response_data = PrismResponse(
-                session_id=session_id,
-                detected_event="Service Unavailable",
-                event_key="error",
-                emotion_level="low",
-                family_significance="low",
-                emotional_message=f"We're sorry, our AI brain is experiencing very high traffic right now (Groq API limit exceeded). Please try again in a few minutes.",
-                purchase_timeline=[],
-                agent_debate=[],
-                top_recommendation=empty_product,
-                top_picks=[],
-                all_products=[],
-                confidence=empty_confidence,
-                temporal_strategies=[],
-                bharat_context={"state_name": None, "institution_name": None},
-                state_detected=None,
-                institution_detected=None,
-                llm_roadmap=None,
-                detected_intent="Rate Limit Error",
+            logger.warning(
+                f"[{session_id}] Groq API rate limit persists after retries — "
+                f"using keyword fallback so user still gets results."
             )
-            return response_data
+            # Set llm_detection to None so we fall through to keyword detection below
+            llm_detection = None
 
         if llm_detection:
             # ── LLM path (primary) ────────────────────────────────────────
@@ -199,37 +166,26 @@ class PrismService:
             )
 
         else:
-            # ── Fallback keyword path ─────────────────────────────────────
-            logger.warning(f"[{session_id}] LLM detection failed — falling back to keyword detection")
+            # ── Fallback keyword path (LLM unavailable / rate-limited) ───────
+            logger.warning(f"[{session_id}] LLM unavailable — using keyword detection (fully LLM-free)")
             event_data = _event_engine.detect_event(user_input)
             inst_key, inst_data, state_key, state_data = _event_engine.detect_location(user_input)
 
             logger.info(
                 f"[{session_id}] [FALLBACK] Event: {event_data['event_key']} "
-                f"(confidence={event_data['confidence']:.2f}), "
-                f"institution={inst_key}, state={state_key}"
+                f"(confidence={event_data['confidence']:.2f})"
             )
 
-            # Fallback LLM roadmap (uses the old approach)
-            location_summary = _build_location_summary(inst_data, state_data)
-            llm_result = _event_engine.generate_llm_roadmap(event_data, location_summary, user_input)
-            if llm_result:
-                emotional_message = llm_result.get("emotional_message", "")
-                exact_items = llm_result.get("exact_items_requested", [])
-                dynamic_phases = llm_result.get("purchase_phases", [])
-                if dynamic_phases:
-                    enriched_phases = _event_engine.enrich_with_context(
-                        dynamic_phases, inst_data, state_data
-                    )
-                    llm_roadmap_used = True
-                else:
-                    enriched_phases = _event_engine.enrich_with_context(
-                        event_data["purchase_phases"], inst_data, state_data
-                    )
-            else:
-                enriched_phases = _event_engine.enrich_with_context(
-                    event_data["purchase_phases"], inst_data, state_data
-                )
+            # Use template phases directly — no additional LLM call
+            enriched_phases = _event_engine.enrich_with_context(
+                event_data["purchase_phases"], inst_data, state_data
+            )
+
+            # Lightweight template message — no LLM needed
+            emotional_message = (
+                f"Here's a smart shopping plan for your {event_data.get('label', 'upcoming event')}. "
+                f"We've curated the best products for your needs."
+            )
 
             if not emotional_message:
                 emotional_message = _emotional_layer.generate_opening(
@@ -325,11 +281,13 @@ class PrismService:
         logger.info(f"[{session_id}] Matching products... exact_items: {exact_items}, suggested: {list(suggested_items_with_categories.keys())}, categories: {all_categories}")
 
         # Build semantic search context for product matcher
+        user_intent_type = llm_detection.get("user_intent_type") if llm_detection else None
         product_search_context = {
             "user_input": user_input,
             "cultural_context": cultural_context,
             "climate_note": climate_product_note,
             "product_needs": llm_detection.get("product_needs", []) if llm_detection else [],
+            "event_label": llm_detection.get("event_label", "") if llm_detection else "",
         }
 
         products = match_products(
@@ -342,7 +300,8 @@ class PrismService:
             exact_items=exact_items,
             suggested_items_with_categories=suggested_items_with_categories,
             product_search_context=product_search_context,
-            avoid_categories=avoid_categories,  # Memory Mining: deprioritise likely-owned categories
+            avoid_categories=avoid_categories,
+            user_intent_type=user_intent_type,
         )
 
         # ── Step 7.4: Deterministic pre-filter — obvious mismatches ─────────
@@ -400,7 +359,8 @@ class PrismService:
             approved_ids = _event_engine.filter_products_with_llm(
                 user_input=user_input,
                 intent=intent,
-                products=products
+                products=products,
+                user_intent_type=user_intent_type,
             )
             # Retain dummy OOS items automatically, filter the rest
             products = [p for p in products if p.get("id") in approved_ids or p.get("stock_status") == "out_of_stock"]
@@ -553,9 +513,10 @@ class PrismService:
             prod["confidence_score"] = p_genome["total_score"]
 
         # ── Step 14.5: Detect specific-product ask vs context mention ───────
-        # "I need a phone at best price" → specific ask → two-tier layout
-        # "I bought a phone, need accessories" → context mention → normal flow
-        # Detection: exact_items_requested present + intent signals a direct purchase
+        # Use LLM-detected user_intent_type (reliable) with keyword fallback.
+        # "direct_purchase_ask"         → two-tier layout (item first, accessories second)
+        # "owns_and_wants_accessories"   → two-tier layout (accessories first, no primary item)
+        # "context_event" / None        → normal multi-phase timeline
         is_specific_product_ask = False
         primary_item_label = None
 
@@ -566,27 +527,55 @@ class PrismService:
             'air conditioner', 'washing machine', 'microwave', 'mixer', 'blender',
             'speaker', 'powerbank', 'power bank', 'keyboard', 'mouse',
         ]
-        # Context words that indicate past ownership (NOT a direct ask)
-        OWNERSHIP_SIGNALS = ['bought', 'have', 'own', 'got', 'purchased', 'already', 'my', 'using']
 
         user_lower = user_input.lower()
-        has_ownership_signal = any(sig in user_lower for sig in OWNERSHIP_SIGNALS)
 
-        if exact_items and not has_ownership_signal:
+        # Primary: use LLM-detected intent type (far more reliable than keyword lists)
+        if user_intent_type == "direct_purchase_ask" and exact_items:
             for term in SPECIFIC_ASK_TERMS:
                 if any(term in item.lower() for item in exact_items):
                     is_specific_product_ask = True
                     primary_item_label = term
                     break
-        # Also check user_input directly if LLM didn't populate exact_items
-        if not is_specific_product_ask and not has_ownership_signal:
+            # Also scan user_input if exact_items didn't match the term list
+            if not is_specific_product_ask:
+                for term in SPECIFIC_ASK_TERMS:
+                    if term in user_lower:
+                        is_specific_product_ask = True
+                        primary_item_label = term
+                        break
+        elif user_intent_type == "direct_purchase_ask":
+            # LLM says direct ask but exact_items empty — check user_input
             for term in SPECIFIC_ASK_TERMS:
                 if term in user_lower:
                     is_specific_product_ask = True
                     primary_item_label = term
                     break
+        elif user_intent_type in ("context_event", "owns_and_wants_accessories", None):
+            # Not a direct ask — keep is_specific_product_ask=False
+            # For owns_and_wants_accessories, accessories will populate the main timeline
+            pass
+        else:
+            # Fallback keyword detection (LLM did not return user_intent_type)
+            OWNERSHIP_SIGNALS = ['bought', 'have', 'own', 'got', 'purchased', 'already', 'my', 'using']
+            has_ownership_signal = any(sig in user_lower for sig in OWNERSHIP_SIGNALS)
+            if exact_items and not has_ownership_signal:
+                for term in SPECIFIC_ASK_TERMS:
+                    if any(term in item.lower() for item in exact_items):
+                        is_specific_product_ask = True
+                        primary_item_label = term
+                        break
+            if not is_specific_product_ask and not has_ownership_signal:
+                for term in SPECIFIC_ASK_TERMS:
+                    if term in user_lower:
+                        is_specific_product_ask = True
+                        primary_item_label = term
+                        break
 
-        logger.info(f"[{session_id}] is_specific_product_ask={is_specific_product_ask}, primary_item_label={primary_item_label}")
+        logger.info(
+            f"[{session_id}] user_intent_type={user_intent_type}, "
+            f"is_specific_product_ask={is_specific_product_ask}, primary_item_label={primary_item_label}"
+        )
 
         # Split into two display tiers
         top_picks, other_products = select_top_picks(
@@ -646,6 +635,7 @@ class PrismService:
             institution_detected=inst_key,
             llm_roadmap="LLM-first unified detection" if llm_roadmap_used else None,
             detected_intent=llm_detection.get("intent") if llm_detection else None,
+            user_intent_type=user_intent_type,
             is_specific_product_ask=is_specific_product_ask,
             primary_item_label=primary_item_label,
         )

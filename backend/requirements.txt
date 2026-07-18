@@ -24,6 +24,10 @@ python-dotenv==1.0.1
 # HTTP client — httpx (BSD)
 httpx==0.27.0
 
+# RAG / Semantic Search — fastembed (MIT, ONNX-based, Windows-safe), numpy (BSD)
+fastembed==0.3.6
+numpy>=1.24.0
+
 # Testing — pytest (MIT), pytest-asyncio (Apache 2.0)
 pytest==8.2.0
 pytest-asyncio==0.23.6

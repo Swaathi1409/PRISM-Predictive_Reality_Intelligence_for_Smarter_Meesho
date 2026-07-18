@@ -402,8 +402,8 @@ export default function Home() {
                       const renderProductCard = (prod, j) => {
                         const isTopPick   = allTopPicks.some(t => t.id === prod.id);
                         const namePart    = (prod.name || '').split(' ').slice(0, 2).join('+');
-                        const imgFallback = `https://picsum.photos/seed/${encodeURIComponent(namePart)}/400/400`;
-                        const imgSrc      = prod.image_url
+                        const imgFallback = `/images/placeholder.jpg`;
+                        const imgSrc      = prod.image_url ? prod.image_url.replace(/\/images\/W\/IMAGERENDERING_[A-Z0-9-]+/, '') : null
                           || (prod.image_placeholder ? `/images/${prod.image_placeholder}.jpg` : imgFallback);
                         return (
                           <div
@@ -616,8 +616,8 @@ export default function Home() {
                       const renderProductCard = (prod, j) => {
                         const isTopPick   = allTopPicks.some(t => t.id === prod.id);
                         const namePart    = (prod.name || '').split(' ').slice(0, 2).join('+');
-                        const imgFallback = `https://picsum.photos/seed/${encodeURIComponent(namePart)}/400/400`;
-                        const imgSrc      = prod.image_url
+                        const imgFallback = `/images/placeholder.jpg`;
+                        const imgSrc      = prod.image_url ? prod.image_url.replace(/\/images\/W\/IMAGERENDERING_[A-Z0-9-]+/, '') : null
                           || (prod.image_placeholder ? `/images/${prod.image_placeholder}.jpg` : imgFallback);
                         return (
                           <div
@@ -1071,10 +1071,10 @@ export default function Home() {
               {/* Product Image Header */}
               <div className="relative w-full h-48 sm:h-56 bg-gray-50 shrink-0">
                 <img 
-                  src={selectedProduct.image_url || (selectedProduct.image_placeholder ? `/images/${selectedProduct.image_placeholder}.jpg` : `https://picsum.photos/seed/${encodeURIComponent(selectedProduct.id || selectedProduct.name)}/400/400`)}
+                  src={(selectedProduct.image_url ? selectedProduct.image_url.replace(/\/images\/W\/IMAGERENDERING_[A-Z0-9-]+/, '') : null) || (selectedProduct.image_placeholder ? `/images/${selectedProduct.image_placeholder}.jpg` : `/images/placeholder.jpg`)}
                   onError={(e) => {
                     e.target.onerror = null; 
-                    e.target.src = `https://picsum.photos/seed/${encodeURIComponent(selectedProduct.id || selectedProduct.name)}/400/400`;
+                    e.target.src = `/images/placeholder.jpg`;
                   }}
                   alt={selectedProduct.name} 
                   className="w-full h-full object-cover"
@@ -1283,10 +1283,10 @@ export default function Home() {
                     <motion.div key={idx} layout initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} className="flex gap-4 p-3 bg-white rounded-2xl border border-gray-100 shadow-sm relative group">
                       <div className="w-20 h-20 bg-gray-50 rounded-xl overflow-hidden shrink-0 border border-gray-100">
                         <img
-                          src={item.image_url || (item.image_placeholder ? `/images/${item.image_placeholder}.jpg` : `https://picsum.photos/seed/${encodeURIComponent(item.id || item.name)}/400/400`)}
+                          src={(item.image_url ? item.image_url.replace(/\/images\/W\/IMAGERENDERING_[A-Z0-9-]+/, '') : null) || (item.image_placeholder ? `/images/${item.image_placeholder}.jpg` : `/images/placeholder.jpg`)}
                           onError={(e) => {
                             e.target.onerror = null;
-                            e.target.src = `https://picsum.photos/seed/${encodeURIComponent(item.id || item.name)}/400/400`;
+                            e.target.src = `/images/placeholder.jpg`;
                           }}
                           alt={item.name}
                           className="w-full h-full object-cover"

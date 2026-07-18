@@ -32,7 +32,7 @@ logger = get_logger(__name__)
 # ── Lifespan (replaces deprecated @app.on_event) ─────────────────────────────
 @asynccontextmanager
 async def lifespan(app: FastAPI):
-    """Handles startup validation and DB init cleanly without deprecation warnings."""
+    """Handles startup validation, DB init, and RAG index warm-up."""
     # ── Startup ───────────────────────────────────────────────────────────────
     if (
         not settings.groq_api_key
@@ -51,6 +51,53 @@ async def lifespan(app: FastAPI):
     logger.info(f"Database initialised at {settings.database_url}")
     logger.info(f"Environment: {settings.environment}")
     logger.info("API docs available at http://localhost:8000/docs")
+
+    # ── RAG Index warm-up (non-blocking) ─────────────────────────────────────
+    # Tries to load from disk first (fast), then builds from DB if needed.
+    # Runs in a background thread so startup is never delayed.
+    import asyncio, threading
+    from app.engines.embedding_index import get_index
+
+    def _warmup_embedding_index():
+        try:
+            import sqlite3, json, os
+            db_path = os.path.join(os.path.dirname(__file__), "data/prism_catalog.db")
+            index = get_index()
+            if index._try_load_from_disk():
+                logger.info("[RAG] Embedding index loaded from disk at startup.")
+                return
+            # Build fresh from DB
+            if os.path.exists(db_path):
+                conn = sqlite3.connect(db_path)
+                conn.row_factory = sqlite3.Row
+                cur = conn.cursor()
+                cur.execute("SELECT * FROM products")
+                rows = cur.fetchall()
+                conn.close()
+                products = []
+                for r in rows:
+                    p = dict(r)
+                    for col in ("available_pincodes", "tags", "event_tags"):
+                        raw = p.get(col)
+                        if isinstance(raw, str):
+                            try:
+                                p[col] = json.loads(raw)
+                            except Exception:
+                                p[col] = []
+                    products.append(p)
+                success = index.build_index(products)
+                if success:
+                    logger.info(f"[RAG] Embedding index built at startup ({len(products)} products).")
+                else:
+                    logger.warning("[RAG] Embedding index build failed — falling back to keyword matching.")
+            else:
+                logger.warning(f"[RAG] Catalog DB not found at {db_path}")
+        except Exception as e:
+            logger.warning(f"[RAG] Startup warm-up error (non-fatal): {e}")
+
+    thread = threading.Thread(target=_warmup_embedding_index, daemon=True, name="rag-warmup")
+    thread.start()
+
     yield
     # ── Shutdown ──────────────────────────────────────────────────────────────
     logger.info("PRISM API shutting down cleanly")

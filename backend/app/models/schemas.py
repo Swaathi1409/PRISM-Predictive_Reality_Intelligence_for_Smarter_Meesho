@@ -162,6 +162,7 @@ class PrismResponse(BaseModel):
     institution_detected: Optional[str] = Field(default=None, description="Machine-readable institution key detected from the input.")
     llm_roadmap: Optional[str] = Field(default=None, description="Indicates whether LLM-first unified detection was used.")
     detected_intent: Optional[str] = Field(default=None, description="The core shopping intent extracted by the LLM. E.g. 'Trekking gear and culturally appropriate clothing for a Kashmir trip'.")
+    user_intent_type: Optional[str] = Field(default=None, description="The specific intent type like direct_purchase_ask, owns_and_wants_accessories, or context_event")
     is_specific_product_ask: bool = Field(default=False, description="True when the user asked for a specific product type (e.g. 'I need a phone'). Triggers the two-tier display: Row 1 = exact item only, Row 2 = accessories with 'You may also need' label.")
     primary_item_label: Optional[str] = Field(default=None, description="The specific product the user asked for (e.g. 'phone', 'earphones'). Used to generate the Row 2 label.")
 

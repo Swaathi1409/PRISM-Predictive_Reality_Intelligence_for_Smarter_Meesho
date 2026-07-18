@@ -17,12 +17,10 @@ instead of a generic verdict that ignores why the person is buying.
 Library: groq (Apache 2.0) — chosen for fast inference with OpenAI-compatible API.
 """
 
-from groq import Groq
 from app.config import settings
 from app.agents.base_agent import BaseAgent
+from app.utils.groq_client import groq_chat
 from typing import Dict, Any, List
-
-_client = Groq(api_key=settings.groq_api_key)
 
 
 class SochOrchestrator(BaseAgent):
@@ -118,7 +116,7 @@ Rules for your response:
 - Reference the location/cultural context if it's relevant to the product choice"""
 
         try:
-            response = _client.chat.completions.create(
+            response = groq_chat(
                 model=settings.llm_model,
                 max_tokens=settings.llm_max_tokens_orchestrator,
                 temperature=settings.llm_temperature,
