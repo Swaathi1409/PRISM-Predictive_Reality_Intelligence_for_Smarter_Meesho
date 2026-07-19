@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { useAuth } from '../context/AuthContext';
 import { Sparkles, Mail, Lock, User, ArrowRight, Activity, Zap, LockKeyhole } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
+import { useBackendStatus } from '../hooks/useBackendStatus';
 
 export default function AuthPage() {
   const [isLogin, setIsLogin] = useState(true);
@@ -13,6 +14,8 @@ export default function AuthPage() {
   
   const { login, register } = useAuth();
   const navigate = useNavigate();
+  const backendStatus = useBackendStatus();
+  const backendReady = backendStatus === 'online';
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -158,11 +161,13 @@ export default function AuthPage() {
 
             <button
               type="submit"
-              disabled={isLoading}
+              disabled={isLoading || !backendReady}
               className="w-full py-3 px-4 bg-gradient-to-r from-fuchsia-600 to-blue-600 hover:from-fuchsia-500 hover:to-blue-500 text-white rounded-xl font-medium transition-all flex items-center justify-center gap-2 mt-8 disabled:opacity-50 disabled:cursor-not-allowed group shadow-[0_0_20px_rgba(192,38,211,0.3)] hover:shadow-[0_0_30px_rgba(192,38,211,0.5)]"
             >
               {isLoading ? (
                 <span className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin"></span>
+              ) : !backendReady ? (
+                <><span className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin"></span> Waking up backend…</>
               ) : (
                 <>
                   {isLogin ? 'Sign In' : 'Create Account'}
@@ -170,6 +175,11 @@ export default function AuthPage() {
                 </>
               )}
             </button>
+            {!backendReady && (
+              <p className="text-center text-xs text-amber-400 mt-2 animate-pulse">
+                ⏳ Server is waking up (~30s). Button will unlock automatically.
+              </p>
+            )}
           </form>
 
           <div className="mt-8 text-center">
