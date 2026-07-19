@@ -22,14 +22,14 @@
     min-height: 100vh;
   }
 
-  /* Global scrollbar for dark backgrounds (darker violet) */
+  /* Global scrollbar for dark backgrounds (darker violet, thinner) */
   * {
-    scrollbar-color: #481a90 #1a1230; /* Firefox */
+    scrollbar-color: #3b1676 #0f0a1e; /* Firefox */
   }
-  *::-webkit-scrollbar { width: 10px; height: 10px; }
-  *::-webkit-scrollbar-track { background: #1a1230; }
-  *::-webkit-scrollbar-thumb { background: #481a90; border-radius: 6px; border: 2px solid #1a1230; }
-  *::-webkit-scrollbar-thumb:hover { background: #5820b0; }
+  *::-webkit-scrollbar { width: 6px; height: 6px; }
+  *::-webkit-scrollbar-track { background: #0f0a1e; }
+  *::-webkit-scrollbar-thumb { background: #3b1676; border-radius: 3px; }
+  *::-webkit-scrollbar-thumb:hover { background: #481a90; }
 
   /* Scrollbar for light backgrounds (light pink) */
   .scrollbar-light {
