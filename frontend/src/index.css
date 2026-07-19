@@ -22,11 +22,14 @@
     min-height: 100vh;
   }
 
-  /* Custom scrollbar — visible in front */
-  ::-webkit-scrollbar { width: 8px; height: 8px; }
-  ::-webkit-scrollbar-track { background: #ffffff; }
-  ::-webkit-scrollbar-thumb { background: #F43397; border-radius: 4px; }
-  ::-webkit-scrollbar-thumb:hover { background: #c5157a; }
+  /* Custom scrollbar — visible in front (for all elements) */
+  * {
+    scrollbar-color: #F43397 #ffffff; /* Firefox */
+  }
+  *::-webkit-scrollbar { width: 8px; height: 8px; }
+  *::-webkit-scrollbar-track { background: #ffffff; }
+  *::-webkit-scrollbar-thumb { background: #F43397; border-radius: 4px; }
+  *::-webkit-scrollbar-thumb:hover { background: #c5157a; }
 
   /* Selection */
   ::selection { background: rgba(108, 43, 217, 0.3); color: white; }
