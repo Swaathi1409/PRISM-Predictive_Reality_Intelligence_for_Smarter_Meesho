@@ -633,6 +633,22 @@ class PrismService:
                 # accessories become other_products
                 other_products = [p for p in other_products if p.get("stock_status") != "out_of_stock"]
 
+        # Deduplicate to prevent same item showing twice
+        seen_ids = set()
+        dedup_top_picks = []
+        for p in top_picks:
+            if p.get("id") not in seen_ids:
+                seen_ids.add(p.get("id"))
+                dedup_top_picks.append(p)
+        top_picks = dedup_top_picks
+
+        dedup_other = []
+        for p in other_products:
+            if p.get("id") not in seen_ids:
+                seen_ids.add(p.get("id"))
+                dedup_other.append(p)
+        other_products = dedup_other
+
         logger.info(
             f"[{session_id}] Product tiers: {len(top_picks)} top_picks, "
             f"{len(other_products)} other_products"

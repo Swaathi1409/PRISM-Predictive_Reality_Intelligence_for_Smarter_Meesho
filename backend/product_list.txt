@@ -1,0 +1,119 @@
+1	TREK001.jpg	bags_luggage	38.5	60L Trekking Backpack — large orange/green hiking rucksack with MOLLE straps
+2	HOSTEL001.jpg	bedding	38.3	Single Fitted Bedsheet Set — blue/white stripes, college dorm style
+3	HOSTEL002.jpg	personal_care	38.1	Toiletry Organizer Bag — grey hanging organizer with mesh pockets
+4	TREK002.jpg	formal_wear	38.0	Thermal Layering Set — dark grey inner top + leggings
+5	ELEC001.jpg	electronics	37.9	Noise-Cancelling Study Headphones — over-ear, black matte
+6	ELEC002.jpg	electronics	37.8	Portable Power Bank 20000mAh — slim, white/silver
+7	WED001.jpg	wedding_apparel	37.7	Lehenga Choli Set Red — bridal lehenga with heavy embroidery
+8	TREK008.jpg	bedding	37.6	Trekking Sleeping Mat / Foam Pad — roll-up orange foam mat
+9	TREK009.jpg	personal_care	37.5	Trekking First Aid Kit — red zip pouch with first aid supplies
+10	TREK010.jpg	formal_wear	37.5	Waterproof Trekking Jacket — rain jacket, olive green
+11	TREK004.jpg	formal_wear	37.4	Thermal Base Layer Set Top & Bottom — Unisex grey thermal set
+12	TREK005.jpg	bags_luggage	37.4	Trekking Hydration Bladder 2L — water bladder with hose, blue
+13	ELEC003.jpg	electronics	37.3	Laptop Cooling Pad — USB stand with 4 fans, black
+14	KIT001.jpg	kitchen_essentials	37.3	Multi-Cooker / Pressure Cooker 5L — stainless steel
+15	ELEC005.jpg	electronics	37.2	Web Camera HD 1080p — USB webcam with clip mount
+16	HOME_IMP001.jpg	home_improvement	37.2	Power Drill Cordless Set — drill + bit set
+17	HOME_IMP002.jpg	home_improvement	37.1	Wall Anchors & Screw Kit — assorted screws in organizer box
+18	HOME_IMP003.jpg	home_improvement	37.1	Measuring Tape 5m Stanley — yellow metal tape measure
+19	HOME_IMP004.jpg	home_improvement	37.0	Spirit Level Tool 24 inch — yellow level
+20	GOEXAM001.jpg	exam_supplies	37.0	Geometry Box Set Staedtler — compass, ruler, protractor in metal case
+21	GOEXAM002.jpg	exam_supplies	37.0	Scientific Calculator Casio — Casio fx-991ES style, black
+22	FORMAL001.jpg	formal_wear	37.0	Men's Formal Shirt White — crisp white dress shirt
+23	FORMAL002.jpg	formal_wear	37.0	Men's Formal Trouser Stretch Fit Black — black slim trousers
+24	GOEXAM004.jpg	exam_supplies	36.9	Exam Clipboard Pad A4 — hard clipboard with storage
+25	IMG_PROD_BABY_CARRIER_GREY_ERGONOMIC.jpg	baby	36.9	Grey Ergonomic Baby Carrier — structured front-carry baby carrier
+26	FRM001.jpg	formal_wear	36.8	Men's Formal Slim Fit Shirt White Pack of 3 — folded white shirts
+27	KIT005.jpg	kitchen_essentials	36.8	Electric Kettle 1500W 1.5L Stainless — chrome electric kettle
+28	KITCHEN009.jpg	kitchen_essentials	36.7	Broom and Dustpan Set Floor Sweeper — upright broom + dustpan
+29	SHOP004.jpg	shop_supplies	36.7	Non-Woven Carry Bags Pack of 100 — stacked colourful bags
+30	FESTIVE006.jpg	festival_decor	36.7	Scented Candle Set Festive 6 Pack — 6 pastel candles in gift box
+31	WEDDING004.jpg	wedding_apparel	36.4	Pooja Thali Set Silver Plated 7 Piece — silver pooja thali
+32	IMG_PROD_BLUE_MICROFIBER_COMFORTER.jpg	bedding	36.4	Blue Microfiber Comforter — fluffy blue double comforter
+33	BAG001.jpg	bags_luggage	36.4	45L Laptop Backpack Water Resistant — black professional backpack
+34	SECURITY004.jpg	security	36.3	Godrej NX Pro 20L Digital Safe Locker — grey digital safe
+35	BABY007.jpg	baby_products	36.3	Baby Nail Cutter Safety Grooming Kit — baby grooming set
+36	HOMEDECOR002.jpg	home_decor	36.3	Round Wall Clock Wooden Silent Sweep — minimalist wood clock
+37	EDGE002.jpg	study_accessories	36.3	Premium Iron 2000W Auto Shut-Off — steam iron, blue/white
+38	FESTIVE007.jpg	festival_decor	36.2	Torans Door Hanging Marigold Fabric 5 Feet — orange door toran
+39	SHOP003.jpg	shop_supplies	36.2	Price Tag Sticker Roll 1000 Pieces — roll of blank price labels
+40	STU003.jpg	study_accessories	36.1	Oxford Notebook Set A4 Pack of 6 — spiral notebooks
+41	PERSONAL004.jpg	personal_care	35.9	Travel Toiletry Bag Waterproof Hanging — hanging dopp kit grey
+42	TREK013.jpg	bedding	35.8	Woolen Razai / Quilt Heavy Winter 300GSM — thick Kashmiri quilt
+43	KITCHEN004.jpg	kitchen_essentials	35.8	Water Filter Pitcher 2.5L BPA Free — Brita-style clear pitcher
+44	FRM002.jpg	formal_wear	35.7	Women's Chiffon Saree with Blouse Piece Festive — pastel saree
+45	STUDY004.jpg	study_accessories	35.7	Stationery Combo Kit 20 Piece — pen/ruler/eraser set
+46	FORMAL003.jpg	formal_wear	35.6	Women's Formal Blazer Single Button Navy — fitted navy blazer
+47	JWLRY004.jpg	jewellery	35.6	Kundan Necklace Set with Earrings Bridal — gold kundan set
+48	JWLRY001.jpg	jewellery	35.6	925 Sterling Silver Nose Pin with CZ — tiny silver nose pin
+49	IMG_PROD_LAUNDRY_BAG_SET_BLUE_WHITE.jpg	bags_luggage	35.5	Blue & White Laundry Bags Set of 2 — mesh laundry bags
+50	PERSONAL002.jpg	personal_care	35.5	Bathroom Organizer Shelf 3 Tier Wall Mount — chrome shelf
+51	GOEXAM005.jpg	exam_supplies	35.4	File Organizer Box Expandable 13 Pocket — A4 accordion file box
+52	BABY006.jpg	baby_products	35.3	Baby Carrier Wrap Ergonomic 3-in-1 — grey structured carrier
+53	FES004.jpg	festival_decor	35.2	Brass Puja Thali Set 7 Piece — brass pooja plate with diya
+54	TREK017.jpg	study_accessories	35.2	Headlamp LED 200 Lumen with Red Mode — black head torch
+55	BAG003.jpg	bags_luggage	35.0	College Tote Bag Canvas with Zipper — coloured canvas tote
+56	KIT002.jpg	kitchen_essentials	35.0	Non-stick Kadhai 28cm with Lid — black kadhai with glass lid
+57	STATIONERY005.jpg	stationery	35.0	Desk Organizer 6-Compartment Wooden — bamboo desk organizer
+58	PERSONAL005.jpg	personal_care	35.0	Hair Dryer 1200W Compact Foldable — pink/white travel dryer
+59	STU002.jpg	study_accessories	34.9	LED Desk Lamp with USB Charging Port — white LED study lamp
+60	BABY003.jpg	baby_products	34.9	Baby Bath Tub Ergonomic with Stand — blue baby bathtub
+61	FRM003.jpg	formal_wear	34.7	Men's Cotton Kurta Pyjama Set Festive — white kurta with pyjama
+62	GOEXAM003.jpg	exam_supplies	34.7	Portable Table Fan 12 Inch 40W USB — small white desk fan
+63	HOMEDECOR004.jpg	home_decor	34.7	Dustbin Set 3 Piece Home Office — matching white/grey bins
+64	STU004.jpg	study_accessories	34.7	Adjustable Laptop Stand Aluminium — silver foldable riser
+65	TREK003.jpg	formal_wear	34.7	Heavy Woolen Kashmiri Shawl Full Size — brown/cream shawl
+66	FORMAL004.jpg	formal_wear	34.6	Formal Oxford Shoes Men Black Lace Up — classic black dress shoes
+67	TREK015.jpg	formal_wear	34.6	Moisture-Wicking Quick-Dry T-Shirt Pack of 3 — sports athletic tees
+68	WEDDING005.jpg	wedding_apparel	34.5	Serving Dishes Stainless Steel Set of 6 — steel serving bowls
+69	HOMEDECOR003.jpg	home_decor	34.4	Bathroom Accessories Set 5 Piece Chrome — soap dish + towel rings
+70	BED004.jpg	bedding	34.4	Cotton Pillow Set of 2 with Pillow Covers — white pillows
+71	ELEC006.jpg	electronics	34.3	HP DeskJet 2723e All-in-One Printer — white inkjet printer
+72	STUDY007.jpg	study_accessories	34.3	Sticky Notes Combo 5 Colours 400 Sheets — multi-color post-its
+73	FRM004.jpg	formal_wear	33.9	Women's A-Line Anarkali Suit 3-piece — printed floral anarkali
+74	ELEC004.jpg	electronics	33.8	Portronics Kronos Y2 Smartwatch with SpO2 — round smartwatch
+75	WED002.jpg	stationery	33.8	Premium Shagun Gift Envelopes Pack of 50 — red shagun packets
+76	BABY008.jpg	baby_products	33.7	Baby Mosquito Net Crib Size Foldable — white mesh dome net
+77	SHOP001.jpg	shop_supplies	33.7	Billing Register A4 Ruled 200 Pages — bound accounting register
+78	TREK006.jpg	formal_wear	33.7	Modest Full-Sleeve Cotton Kurta Unisex Kashmir — plain white kurta
+79	HOME_IMP005.jpg	home_improvement	33.4	Asian Paints ezyCR8 Enamel Spray Paint White 200ml — spray can
+80	WEDDING001.jpg	wedding_apparel	33.4	Kanjivaram Silk Saree Red Gold Border — traditional silk saree
+81	KITCHEN007.jpg	kitchen_essentials	33.3	Mini Electric Kettle 500ML 400W Travel — small travel kettle
+82	SHOP006.jpg	shop_supplies	33.3	Cash Box Metal Lockable with Tray — grey metal cashbox
+83	BED002.jpg	bedding	33.2	Microfiber Reversible Comforter 200GSM — double-sided comforter
+84	SECURITY002.jpg	security	33.1	Yale YDM4109 Digital Door Lock Fingerprint+PIN — smart door lock
+85	TREK007.jpg	bedding	33.0	Sleeping Bag Mummy Style 0°C Rating Camping — red/grey bag
+86	FORMAL005.jpg	formal_wear	33.0	Formal Watch Analogue Men Leather Strap — classic analogue watch
+87	FRM005.jpg	formal_wear	33.0	Men's Formal Trouser Slim Fit Black — slim black trousers
+88	STUDY005.jpg	study_accessories	32.6	Wall-Mount Whiteboard 2×1.5 Feet — magnetic whiteboard on wall
+89	TREK011.jpg	formal_wear	32.4	Heavy Cotton Full-Length Salwar Kameez Modest Travel — long kameez
+90	BED005.jpg	bedding	32.4	Baby Muslin Swaddle Blanket Set of 3 — white folded swaddles
+91	SECURITY005.jpg	security	32.3	Honeywell 5109 Fire Alarm Smoke Detector — white ceiling sensor
+92	STUDY003.jpg	study_accessories	32.1	Foldable Wooden Study Table Laptop Desk — fold-flat lap desk
+93	FORMAL007.jpg	formal_wear	32.1	Leather Belt Men Brown Reversible — brown reversible belt
+94	KIT003.jpg	kitchen_essentials	32.0	RO+UV Water Purifier 7L Tank — white wall-mount purifier
+95	BAB003.jpg	baby_products	32.0	Wooden Baby Rattle and Teether Set — natural wood toys
+96	IMG_PROD_MENS_FORMAL_SHIRT_WHITE_PACK3.jpg	formal_wear	31.8	White Mens Formal Shirts Pack of 3 — neatly folded white shirts
+97	IMG_PROD_CLAY_DIYAS_100_SET_TERRACOTTA.jpg	festival_decor	31.7	Terracotta Clay Diyas Set of 100 — tray of earthen Diwali diyas
+98	BAG002.jpg	bags_luggage	31.6	Hard Shell Trolley 24 Inch Cabin Size — navy blue spinner trolley
+99	FES003.jpg	festival_decor	31.6	Rangoli Stencil Kit 20 Designs with Colours — stencil + colour pack
+100	IMG_PROD_PU_LEATHER_PORTFOLIO_BLACK.jpg	bags_luggage	31.2	Black PU Leather Portfolio Bag — professional padfolio
+101	IMG_PROD_NOTEBOOK_SET_BLUE_COVER.jpg	study_accessories	31.1	Blue Cover Notebooks Set of 6 — blue spiral notebooks
+102	TREK014.jpg	bags_luggage	30.8	Compact Dry Bag 10L Waterproof Roll-Top — orange dry bag
+103	WEDDING002.jpg	wedding_apparel	30.6	Men's Sherwani Set Ivory Wedding — ivory sherwani with dupatta
+104	SHOP002.jpg	shop_supplies	30.5	Metal Storage Rack 5 Shelf Adjustable — grey steel shelving
+105	BAG005.jpg	bags_luggage	30.5	Document Holder Portfolio A4 PU Leather — brown portfolio
+106	FES005.jpg	festival_decor	30.3	Silk Torans Door Hanging Festive 36 inch — colourful door toran
+107	TREK018.jpg	formal_wear	30.3	Traditional Himachali Woolen Cap & Gloves Set — woolen winter set
+108	SHOP007.jpg	shop_supplies	30.2	Acrylic Display Stand 3 Tier for Products — clear acrylic rack
+109	BED008.jpg	bedding	30.2	Anti-Allergy Pillow Pack of 2 — hypoallergenic white pillows
+110	TREK012.jpg	bags_luggage	29.9	Trekking Poles Aluminium Foldable Pair Anti-Shock — black poles
+111	BAG006.jpg	bags_luggage	29.8	Document Folder Bag A4 Office — black zippered folder bag
+112	IMG_PROD_SHAGUN_ENVELOPES_RED_GOLD.jpg	festival_decor	29.3	Red & Gold Shagun Envelopes Set of 50 — decorative gift envelopes
+113	BAB004.jpg	baby_products	29.2	Baby Carrier Wrap 5-in-1 Ergonomic — navy structured carrier
+114	BAG004.jpg	bags_luggage	29.2	Waterproof Laundry Bag with Drawstring 3pcs — mesh bags
+115	SECURITY003.jpg	security	28.0	Watchguard Door-Eye Peephole Camera LCD — door viewer camera
+116	BED003.jpg	bedding	27.2	Single Bed Foam Mattress 4 Inch — blue foam mattress
+117	EDGE005.jpg	bags_luggage	27.2	Rising Price Backpack Trending Brand — colourful casual backpack
+118	STU001.jpg	study_accessories	26.1	Wooden Study Table with Bookshelf 3ft — solid wood study desk
+119	BAB005.jpg	baby_products	26.1	Convertible Baby Crib Bed with Mosquito Net — white wooden crib

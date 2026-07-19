@@ -22,7 +22,7 @@ export default function Home() {
   const [userInput, setUserInput] = useState('')
   const [isXRayOpen, setIsXRayOpen] = useState(false)
   const [showJudgeMode, setShowJudgeMode] = useState(false)
-  const [judgeTab, setJudgeTab] = useState('howto') // 'howto' | 'scope' | 'vision'
+  const [judgeTab, setJudgeTab] = useState('howto') // 'howto' | 'vision' | 'architecture' | 'scope'
   const [result, setResult] = useState(null)
   const [selectedProduct, setSelectedProduct] = useState(null)
   const [isListening, setIsListening] = useState(false)
@@ -181,36 +181,35 @@ export default function Home() {
   }
 
   return (
-    <div className="min-h-[100dvh] bg-[#fafafa] flex flex-col items-center justify-center p-2 sm:p-4 lg:p-8 font-sans overflow-x-hidden relative">
+    <div className="min-h-[100dvh] bg-[#ffe1ec] bg-gradient-to-br from-[#ffe1ec] via-[#fce7f3] to-[#ffecf4] flex flex-col items-center justify-center p-2 sm:p-4 lg:p-8 font-sans overflow-x-hidden relative selection:bg-[#F43397]/30 selection:text-[#F43397]">
       
-      {/* Premium AI x Meesho Themed Background */}
-      <div className="fixed inset-0 pointer-events-none z-0 overflow-hidden bg-slate-50">
-        <div className="absolute -top-[20%] -left-[10%] w-[70%] h-[70%] rounded-full bg-[#F43397]/25 blur-[120px] mix-blend-multiply animate-[pulse_6s_ease-in-out_infinite]" />
-        <div className="absolute -bottom-[20%] -right-[10%] w-[70%] h-[70%] rounded-full bg-prism-600/25 blur-[120px] mix-blend-multiply animate-[pulse_8s_ease-in-out_infinite_reverse]" />
-        <div className="absolute top-[20%] left-[40%] w-[50%] h-[50%] rounded-full bg-indigo-500/15 blur-[120px] mix-blend-multiply animate-[pulse_7s_ease-in-out_infinite]" />
-        <div className="absolute inset-0 bg-[url('data:image/svg+xml,%3Csvg width=\'24\' height=\'24\' viewBox=\'0 0 24 24\' xmlns=\'http://www.w3.org/2000/svg\'%3E%3Ccircle cx=\'2\' cy=\'2\' r=\'1.5\' fill=\'rgba(0,0,0,0.08)\'/%3E%3C/svg%3E')] [mask-image:linear-gradient(to_bottom,white_40%,transparent)]" />
+      {/* Pleasant Meesho Pink Background */}
+      <div className="fixed inset-0 pointer-events-none z-0 overflow-hidden">
+        <div className="absolute -top-[20%] -left-[10%] w-[70%] h-[70%] rounded-full bg-[#F43397]/10 blur-[120px] mix-blend-multiply animate-[pulse_8s_ease-in-out_infinite]" />
+        <div className="absolute top-[10%] right-[0%] w-[60%] h-[80%] rounded-full bg-purple-400/10 blur-[120px] mix-blend-multiply animate-[pulse_10s_ease-in-out_infinite_reverse]" />
+        <div className="absolute -bottom-[20%] left-[20%] w-[50%] h-[50%] rounded-full bg-[#F43397]/15 blur-[120px] mix-blend-multiply animate-[pulse_7s_ease-in-out_infinite]" />
+        <div className="absolute inset-0 bg-[url('data:image/svg+xml,%3Csvg width=\'32\' height=\'32\' viewBox=\'0 0 32 32\' xmlns=\'http://www.w3.org/2000/svg\'%3E%3Ccircle cx=\'2\' cy=\'2\' r=\'1\' fill=\'rgba(244,51,151,0.03)\'/%3E%3C/svg%3E')] opacity-70" />
       </div>
 
-      <div className={`relative z-10 flex flex-col lg:flex-row w-full max-w-[1400px] transition-all duration-500 ease-in-out gap-4 lg:gap-8 justify-center items-stretch ${isXRayOpen ? 'min-h-[150vh] lg:min-h-0 lg:h-[90vh]' : 'h-[95vh] lg:h-[90vh]'}`}>
+      <div className={`relative z-10 flex flex-col lg:flex-row w-full max-w-[1400px] transition-all duration-700 ease-[cubic-bezier(0.23,1,0.32,1)] gap-4 lg:gap-8 justify-center items-stretch ${isXRayOpen ? 'min-h-[150vh] lg:min-h-0 lg:h-[90vh]' : 'h-[95vh] lg:h-[90vh]'}`}>
         
         {/* LEFT: MEESHO APP SHELL */}
-        <div className={`relative w-full max-w-full transition-all duration-500 ease-in-out shrink-0 overflow-hidden flex flex-col bg-white
+        <div className={`relative w-full max-w-full transition-all duration-700 ease-[cubic-bezier(0.23,1,0.32,1)] shrink-0 overflow-hidden flex flex-col bg-white
           ${isXRayOpen 
-            ? 'sm:max-w-[480px] h-[85vh] lg:h-full rounded-3xl lg:rounded-[40px] shadow-2xl border-4 lg:border-[8px] border-gray-900 mx-auto lg:mx-0' 
-            : 'lg:max-w-5xl h-[100vh] lg:h-full rounded-none lg:rounded-3xl shadow-none lg:shadow-xl border-0 lg:border border-gray-200 mx-auto'}
+            ? 'sm:max-w-[480px] h-[85vh] lg:h-full rounded-3xl lg:rounded-[40px] shadow-[0_0_80px_rgba(244,51,151,0.15)] border border-pink-100 ring-1 ring-pink-50 mx-auto lg:mx-0 transform lg:scale-[1.02] z-20' 
+            : 'lg:max-w-5xl h-[100vh] lg:h-full rounded-none lg:rounded-3xl shadow-[0_0_100px_rgba(244,51,151,0.1)] border-0 lg:border border-pink-100 mx-auto z-20'}
         `}>
           
-          {/* Mobile Status Bar Fake */}
-          <div className={`w-full h-7 bg-white flex items-center justify-between px-6 pt-2 shrink-0 ${!isXRayOpen ? 'lg:hidden' : ''}`}>
-            <span className="text-[10px] font-medium">9:41</span>
-            <div className="flex gap-1">
-              <div className="w-4 h-2.5 bg-black rounded-sm"></div>
-            </div>
-          </div>
 
           {/* App Header */}
           <div className="px-4 py-3 border-b border-gray-100 flex items-center justify-between bg-white z-10 shadow-sm shrink-0">
-            <h1 className="text-2xl font-bold text-[#F43397]">meesho</h1>
+            <h1 
+              className="text-2xl font-bold text-[#F43397] cursor-pointer hover:opacity-80 transition-opacity" 
+              onClick={() => { setResult(null); setIsXRayOpen(false); setUserInput(''); }}
+              title="Back to Home / Scenarios"
+            >
+              meesho
+            </h1>
             <div className="flex items-center gap-4">
               <button 
                 onClick={() => setShowJudgeMode(true)}
@@ -256,43 +255,48 @@ export default function Home() {
           </div>
 
           {/* App Content Area */}
-          <div className="flex-1 overflow-y-auto bg-[#F9F9F9] relative flex flex-col scrollbar-hide">
+          <div className="flex-1 overflow-y-auto bg-slate-50/50 relative flex flex-col scrollbar-hide">
             {!isPending && !result && (
-              <div className="p-5 flex-1 flex flex-col">
-                <div className="mb-8 mt-10 text-center">
-                  <div className="w-16 h-16 bg-pink-50 rounded-2xl flex items-center justify-center mx-auto mb-4 border border-pink-100">
-                     <Brain className="w-8 h-8 text-[#F43397]" />
+              <div className="p-5 flex-1 flex flex-col relative">
+                {/* Dynamic Background Element */}
+                <div className="absolute top-0 right-0 w-80 h-80 bg-[#F43397]/5 rounded-full blur-3xl -z-10 pointer-events-none"></div>
+                <div className="absolute bottom-0 left-0 w-80 h-80 bg-indigo-500/5 rounded-full blur-3xl -z-10 pointer-events-none"></div>
+
+                <div className="mb-4 mt-6 text-center z-10">
+                  <div className="w-16 h-16 bg-white rounded-2xl flex items-center justify-center mx-auto mb-4 border border-pink-100/50 shadow-[0_8px_30px_rgba(244,51,151,0.12)] relative group hover:scale-105 transition-transform duration-500 cursor-pointer">
+                     <div className="absolute inset-0 bg-gradient-to-br from-[#F43397]/20 to-purple-500/20 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-500 blur-md"></div>
+                     <Brain className="w-8 h-8 text-[#F43397] relative z-10" />
                   </div>
-                  <h2 className="text-2xl font-bold text-gray-900 mb-2">PRISM Brain</h2>
-                  <p className="text-sm text-gray-500 max-w-[250px] mx-auto">Tap the mic and tell me what's happening in your life.</p>
+                  <h2 className="text-3xl font-black bg-gradient-to-r from-gray-900 via-gray-700 to-gray-900 bg-clip-text text-transparent mb-2">PRISM Brain</h2>
+                  <p className="text-sm text-gray-500 max-w-[280px] mx-auto font-medium leading-relaxed">Speak your life event, and PRISM will intelligently curate exactly what you need.</p>
                 </div>
 
-                <div className="relative mb-8">
-                  {/* Memory Mining chip hidden from frontend per user request */}
-                  <form onSubmit={handleManualSubmit} className="flex flex-col gap-3">
-                    <div className="flex gap-2 relative">
+                <div className="relative mb-6 z-10 mx-2">
+                  <form onSubmit={handleManualSubmit} className="flex flex-col gap-4">
+                    <div className="flex gap-3 relative">
                       <div className="relative flex-1 group">
-                        <span className="absolute -top-6 left-2 text-xs font-semibold text-gray-500 uppercase tracking-wider">
-                          What's happening? <span className="text-red-500">*</span>
+                        <span className="absolute -top-6 left-3 text-[10px] font-black text-gray-400 uppercase tracking-widest">
+                          What's happening? <span className="text-[#F43397]">*</span>
                         </span>
+                        <div className={`absolute -inset-1.5 rounded-full opacity-0 group-hover:opacity-100 blur-md transition duration-500 ${isListening ? 'opacity-100 bg-gradient-to-r from-[#F43397]/40 to-purple-500/40 animate-pulse' : 'bg-gradient-to-r from-[#F43397]/20 to-indigo-500/20'}`}></div>
                         <input
                           value={userInput}
                           onChange={(e) => setUserInput(e.target.value)}
-                          placeholder={isListening ? "Listening..." : "E.g. Moving to hostel next week..."}
-                          className={`w-full text-gray-900 bg-white border ${isListening ? 'border-[#F43397] ring-2 ring-pink-100' : 'border-gray-200'} rounded-full py-4 pl-5 pr-14 shadow-sm focus:outline-none focus:border-[#F43397] focus:ring-1 focus:ring-[#F43397] transition-all mt-4`}
+                          placeholder={isListening ? "Listening to your intent..." : "E.g. Moving to hostel next week..."}
+                          className={`relative w-full text-gray-900 bg-white/90 backdrop-blur-xl border ${isListening ? 'border-transparent shadow-[0_0_20px_rgba(244,51,151,0.2)]' : 'border-gray-200/80 shadow-lg'} rounded-full py-4 pl-6 pr-14 focus:outline-none focus:ring-2 focus:ring-[#F43397]/50 transition-all font-medium`}
                           required
                         />
                         <button 
                           type="button" 
                           onClick={isListening ? () => {} : handleListen}
-                          className={`absolute right-2 top-6 p-2 rounded-full transition-all shadow-sm ${isListening ? 'bg-red-500 text-white animate-pulse' : 'bg-gray-100 text-gray-500 hover:bg-[#F43397] hover:text-white'}`}
+                          className={`absolute right-2 top-2 p-2.5 rounded-full transition-all shadow-sm ${isListening ? 'bg-red-500 text-white animate-pulse shadow-[0_0_15px_rgba(239,68,68,0.5)]' : 'bg-gray-50 text-gray-500 hover:bg-[#F43397] hover:text-white hover:shadow-[0_0_15px_rgba(244,51,151,0.4)]'}`}
                           title="Voice Input"
                         >
                           {isListening ? <MicOff className="w-5 h-5" /> : <Mic className="w-5 h-5" />}
                         </button>
                       </div>
                       {userInput.trim() && !isListening && (
-                        <button type="submit" className="p-4 mt-4 bg-[#F43397] text-white rounded-full hover:bg-pink-600 transition-transform active:scale-95 shadow-md flex-shrink-0 flex items-center justify-center">
+                        <button type="submit" className="mt-0 w-14 bg-[#F43397] text-white rounded-full hover:bg-pink-600 hover:shadow-[0_0_20px_rgba(244,51,151,0.4)] transition-all active:scale-95 flex-shrink-0 flex items-center justify-center">
                           <Send className="w-5 h-5" />
                         </button>
                       )}
@@ -342,17 +346,22 @@ export default function Home() {
                   </form>
                 </div>
 
-                <div className="space-y-3">
-                  <p className="text-xs font-bold text-gray-400 uppercase tracking-wider px-2">Try a scenario</p>
-                  {SCENARIOS.map((sc, idx) => (
-                    <button
-                      key={idx}
-                      onClick={() => handleScenarioClick(sc)}
-                      className="w-full text-left px-4 py-3.5 bg-white rounded-xl border border-gray-100 shadow-sm text-sm text-gray-700 font-medium hover:border-[#F43397] hover:text-[#F43397] transition-all flex items-center gap-3"
-                    >
-                      {sc.label}
-                    </button>
-                  ))}
+                <div className="mt-2 z-10 mx-2 mb-4 pb-4">
+                  <p className="text-[11px] font-black text-gray-400 uppercase tracking-widest px-1 mb-4 flex items-center gap-2">
+                    <Sparkles className="w-3 h-3 text-prism-400" /> Try a scenario
+                  </p>
+                  <div className="flex flex-col sm:flex-row flex-wrap gap-3 px-1">
+                    {SCENARIOS.map((sc, idx) => (
+                      <button
+                        key={idx}
+                        onClick={() => handleScenarioClick(sc)}
+                        className="text-left px-4 py-3 bg-white/80 backdrop-blur-xl rounded-xl border border-gray-200/60 shadow-sm text-xs text-gray-700 font-semibold hover:border-[#F43397]/30 hover:bg-gradient-to-br hover:from-pink-50/80 hover:to-white hover:text-[#F43397] hover:shadow-[0_4px_20px_rgba(244,51,151,0.1)] transition-all active:scale-95 flex items-center gap-3 group flex-1 min-w-[200px]"
+                      >
+                        <span className="text-2xl group-hover:scale-110 transition-transform origin-left">{sc.label.split(' ')[0]}</span>
+                        <span className="leading-tight text-gray-600 group-hover:text-gray-900">{sc.label.split(' ').slice(1).join(' ')}</span>
+                      </button>
+                    ))}
+                  </div>
                 </div>
               </div>
             )}
@@ -379,10 +388,33 @@ export default function Home() {
                     <div className="w-8 h-8 rounded-full bg-[#F43397] flex flex-shrink-0 items-center justify-center shadow-sm">
                       <Sparkles className="w-4 h-4 text-white" />
                     </div>
-                    <div className="bg-gray-50 p-4 rounded-2xl rounded-tl-sm border border-gray-100 shadow-sm">
+                    <div className="bg-gray-50 p-4 rounded-2xl rounded-tl-sm border border-gray-100 shadow-sm w-full">
                       <p className="text-sm text-gray-800 leading-relaxed font-medium">
                         {result.emotional_message}
                       </p>
+                      
+                      {/* Try another scenario directly from results */}
+                      <div className="mt-4 pt-3 border-t border-gray-200/60">
+                        <p className="text-[9px] font-bold text-gray-400 uppercase tracking-widest mb-2">Try another scenario:</p>
+                        <div className="flex flex-wrap gap-2">
+                          {SCENARIOS.map((sc, idx) => (
+                            <button
+                              key={idx}
+                              onClick={() => {
+                                setUserInput(sc.query);
+                                setPincode(sc.pincode);
+                                setBudget(sc.budget.toString());
+                                setTargetDate('');
+                                handleAnalyze(sc.query, sc.pincode, sc.budget, null);
+                              }}
+                              className="text-[10px] px-3 py-1.5 bg-white border border-gray-200 rounded-full hover:border-[#F43397] hover:text-[#F43397] shadow-sm transition-colors flex items-center gap-1 font-semibold text-gray-600"
+                            >
+                              <span>{sc.label.split(' ')[0]}</span>
+                              <span className="truncate max-w-[120px]">{sc.label.split(' ').slice(1).join(' ')}</span>
+                            </button>
+                          ))}
+                        </div>
+                      </div>
                     </div>
                   </div>
                 </div>
@@ -782,7 +814,7 @@ export default function Home() {
               initial={{ opacity: 0, scale: 0.95, height: 0 }}
               animate={{ opacity: 1, scale: 1, height: 'auto', width: '100%', maxWidth: '800px' }}
               exit={{ opacity: 0, scale: 0.95, height: 0 }}
-              className="w-full h-[85vh] lg:h-full bg-[#0f0a1e] rounded-3xl shadow-2xl border border-white/10 overflow-hidden flex flex-col relative shrink-0"
+              className="w-full h-[85vh] lg:h-full bg-[#0f0a1e] rounded-3xl shadow-[0_0_60px_rgba(108,43,217,0.15)] border border-white/10 ring-1 ring-white/5 overflow-hidden flex flex-col relative shrink-0 z-20"
             >
               {/* Background Glow */}
               <div className="absolute inset-0 pointer-events-none" style={{ background: 'radial-gradient(circle at 50% 0%, rgba(108,43,217,0.15) 0%, transparent 60%)' }} />
@@ -888,22 +920,27 @@ export default function Home() {
               </div>
 
               {/* Tab bar */}
-              <div className="flex border-b border-gray-100 shrink-0 bg-gray-50">
+              <div className="flex border-b border-gray-100 shrink-0 bg-gray-50 overflow-x-auto scrollbar-hide">
                 {[
-                  { key: 'howto', icon: <FlaskConical className="w-3.5 h-3.5" />, label: 'How to Test' },
-                  { key: 'scope', icon: <AlertCircle className="w-3.5 h-3.5" />, label: 'Scope & Constraints' },
-                  { key: 'vision', icon: <Rocket className="w-3.5 h-3.5" />, label: 'Production Vision' },
+                  { key: 'howto', icon: <FlaskConical className="w-4 h-4" />, label: 'Run Test Scenarios', highlight: true },
+                  { key: 'vision', icon: <Rocket className="w-3.5 h-3.5" />, label: 'Vision' },
+                  { key: 'architecture', icon: <Brain className="w-3.5 h-3.5" />, label: 'Tech & Agents' },
+                  { key: 'scope', icon: <AlertCircle className="w-3.5 h-3.5" />, label: 'Constraints' },
                 ].map(tab => (
                   <button
                     key={tab.key}
                     onClick={() => setJudgeTab(tab.key)}
-                    className={`flex-1 flex items-center justify-center gap-1.5 py-3 text-xs font-bold transition-all border-b-2 ${
+                    className={`flex-1 min-w-[120px] flex items-center justify-center gap-1.5 py-3 text-xs font-bold transition-all border-b-2 relative ${
                       judgeTab === tab.key
-                        ? 'border-[#F43397] text-[#F43397] bg-white'
-                        : 'border-transparent text-gray-500 hover:text-gray-700'
+                        ? (tab.highlight ? 'border-[#F43397] text-[#F43397] bg-pink-50/50 scale-[1.02]' : 'border-[#F43397] text-[#F43397] bg-white')
+                        : (tab.highlight ? 'border-pink-200 text-pink-500 hover:text-pink-600 bg-pink-50/20' : 'border-transparent text-gray-500 hover:text-gray-700')
                     }`}
                   >
                     {tab.icon} {tab.label}
+                    {tab.highlight && <span className="absolute top-1.5 right-3 flex h-2 w-2">
+                      <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-pink-400 opacity-75"></span>
+                      <span className="relative inline-flex rounded-full h-2 w-2 bg-[#F43397]"></span>
+                    </span>}
                   </button>
                 ))}
               </div>
@@ -911,142 +948,29 @@ export default function Home() {
               {/* Tab content */}
               <div className="flex-1 overflow-y-auto p-6">
 
-                {/* ── Tab 1: How to Test ──────────────────────────────── */}
-                {judgeTab === 'howto' && (
-                  <div className="space-y-4">
-                    <p className="text-sm text-gray-600 leading-relaxed">
-                      PRISM understands <strong>natural language life events</strong> — no keywords needed. Just speak naturally, like you'd tell a friend. Here's how to evaluate it:
-                    </p>
-
-                    <div className="space-y-2">
-                      <p className="text-xs font-bold text-gray-500 uppercase tracking-widest mb-1">Step-by-step evaluation</p>
-                      {[
-                        { step: '1', text: 'Type a life-event query (or use the pre-loaded scenarios)', detail: 'Click any scenario chip to auto-fill and run instantly' },
-                        { step: '2', text: 'Watch the 3-phase purchase timeline generate', detail: 'Phases are dynamically built by the LLM, not hardcoded' },
-                        { step: '3', text: 'Toggle the 🧠 Brain X-Ray button (top right)', detail: 'See the 4 named agents debating internally in real-time' },
-                        { step: '4', text: 'Click any product card to see PRISM Smart Timing', detail: 'Buy Now / Wait / Split strategies with real pricing' },
-                        { step: '5', text: 'Run a second query — watch PRISM remember you', detail: 'The 🧠 memory chip will appear showing your profile' },
-                      ].map(item => (
-                        <div key={item.step} className="flex gap-3 p-3 bg-gray-50 rounded-xl border border-gray-100">
-                          <div className="w-6 h-6 rounded-full bg-[#F43397] text-white text-xs font-black flex items-center justify-center shrink-0 mt-0.5">{item.step}</div>
-                          <div>
-                            <p className="text-sm font-semibold text-gray-800">{item.text}</p>
-                            <p className="text-xs text-gray-500 mt-0.5">{item.detail}</p>
-                          </div>
-                        </div>
-                      ))}
-                    </div>
-
-                    <div>
-                      <p className="text-xs font-bold text-gray-500 uppercase tracking-widest mb-2">📋 Copy-paste test queries</p>
-                      <div className="space-y-2">
-                        {[
-                          { q: 'My daughter got into NIT Trichy starting August.', tag: 'Hostel Move + Institution constraints' },
-                          { q: 'Going trekking to Kashmir next month. Need gear.', tag: 'Travel + Cultural + Climate context' },
-                          { q: 'Starting my first corporate job in Bangalore next week at Infosys.', tag: 'First Job + Memory Mining' },
-                          { q: 'My daughter\'s wedding is next month in Jaipur.', tag: 'Wedding + Rajasthan cultural context' },
-                          { q: 'I want to buy a car.', tag: 'Graceful rejection (non-retail)' },
-                        ].map((item, i) => (
-                          <div key={i} className="flex items-start gap-2 p-3 bg-white border border-gray-200 rounded-xl group hover:border-[#F43397]/40 transition-all">
-                            <div className="flex-1 min-w-0">
-                              <p className="text-xs font-semibold text-gray-800 leading-relaxed">"{item.q}"</p>
-                              <span className="text-[10px] text-purple-600 font-bold bg-purple-50 px-1.5 py-0.5 rounded-full mt-1 inline-block">{item.tag}</span>
-                            </div>
-                            <button
-                              onClick={() => { navigator.clipboard.writeText(item.q); setCopiedQuery(i); setTimeout(() => setCopiedQuery(null), 2000) }}
-                              className="shrink-0 p-1.5 rounded-lg text-gray-400 hover:text-[#F43397] hover:bg-pink-50 transition-all"
-                              title="Copy query"
-                            >
-                              {copiedQuery === i ? <Check className="w-3.5 h-3.5 text-emerald-500" /> : <Copy className="w-3.5 h-3.5" />}
-                            </button>
-                          </div>
-                        ))}
-                      </div>
-                    </div>
-                  </div>
-                )}
-
-                {/* ── Tab 2: Scope & Constraints ──────────────────────── */}
-                {judgeTab === 'scope' && (
-                  <div className="space-y-5">
-                    <div className="p-4 bg-amber-50 border border-amber-200 rounded-xl flex gap-3">
-                      <AlertCircle className="w-5 h-5 text-amber-600 shrink-0 mt-0.5" />
-                      <div>
-                        <p className="text-sm font-bold text-amber-800 mb-1">Limited Demo Dataset</p>
-                        <p className="text-xs text-amber-700 leading-relaxed">
-                          This demo uses a curated mock product catalog (~80 products) to simulate Meesho's catalog. Some queries may show placeholder images or "Out of Stock" cards — this is expected and demonstrates PRISM's product gap detection, not a bug.
-                        </p>
-                      </div>
-                    </div>
-
-                    <div>
-                      <p className="text-xs font-bold text-gray-500 uppercase tracking-widest mb-2">✅ Covered Product Categories</p>
-                      <div className="flex flex-wrap gap-1.5">
-                        {['Bedding', 'Formal Wear', 'Bags & Luggage', 'Study Accessories', 'Kitchen Essentials', 'Personal Care', 'Festival Decor', 'Baby Products', 'Electronics', 'Home Decor', 'Wedding Apparel', 'Stationery', 'Security', 'Home Improvement'].map(cat => (
-                          <span key={cat} className="text-[10px] font-semibold text-emerald-700 bg-emerald-50 border border-emerald-200 px-2 py-1 rounded-full">{cat}</span>
-                        ))}
-                      </div>
-                    </div>
-
-                    <div>
-                      <p className="text-xs font-bold text-gray-500 uppercase tracking-widest mb-2">🤖 The 4 PRISM Agents</p>
-                      <div className="space-y-2">
-                        {[
-                          { name: 'Kismat', role: 'Trust Agent', desc: 'Evaluates seller ratings, return rates, and review credibility. Adds trust confidence to the score.', color: 'purple' },
-                          { name: 'Paisa', role: 'Budget Agent', desc: 'Checks if the product fits the user\'s budget. Flags overpriced items, rewards good value.', color: 'emerald' },
-                          { name: 'Samay', role: 'Time Agent', desc: 'Checks delivery feasibility vs. event date. Validates timing strategy.', color: 'blue' },
-                          { name: 'Soch', role: 'Synthesis Agent (LLM)', desc: 'Weighs all 3 agents\' verdicts with cultural + Bharat context to produce the final recommendation.', color: 'pink' },
-                        ].map(agent => (
-                          <div key={agent.name} className="flex gap-3 p-3 bg-gray-50 rounded-xl border border-gray-100">
-                            <div className={`w-8 h-8 rounded-full flex items-center justify-center shrink-0 text-xs font-black ${
-                              agent.color === 'purple' ? 'bg-purple-100 text-purple-700' :
-                              agent.color === 'emerald' ? 'bg-emerald-100 text-emerald-700' :
-                              agent.color === 'blue' ? 'bg-blue-100 text-blue-700' :
-                              'bg-pink-100 text-pink-700'
-                            }`}>{agent.name[0]}</div>
-                            <div>
-                              <p className="text-xs font-bold text-gray-800">{agent.name} <span className="text-gray-500 font-normal">— {agent.role}</span></p>
-                              <p className="text-[11px] text-gray-600 mt-0.5 leading-relaxed">{agent.desc}</p>
-                            </div>
-                          </div>
-                        ))}
-                      </div>
-                    </div>
-
-                    <div className="p-3 bg-gray-50 border border-gray-200 rounded-xl">
-                      <p className="text-xs font-bold text-gray-700 mb-1">💡 For best demo results, give context like:</p>
-                      <ul className="text-xs text-gray-600 space-y-1 list-disc pl-4">
-                        <li>Mention a city or institution name (NIT, IIT, Bangalore, Kashmir…)</li>
-                        <li>Include an event (wedding, hostel move, first job, Diwali…)</li>
-                        <li>Optionally set a budget and date in the input fields</li>
-                      </ul>
-                    </div>
-                  </div>
-                )}
-
-                {/* ── Tab 3: Production Vision ────────────────────────── */}
+                {/* ── Tab 1: Vision (Why this matters) ────────────────────────── */}
                 {judgeTab === 'vision' && (
                   <div className="space-y-5">
-                    <div className="p-4 bg-gradient-to-br from-[#F43397]/10 to-purple-50 border border-pink-200 rounded-xl">
-                      <p className="text-sm font-bold text-gray-900 mb-1 flex items-center gap-2">
-                        <Rocket className="w-4 h-4 text-[#F43397]" /> What PRISM becomes with real Meesho data
+                    <div className="p-5 bg-gradient-to-br from-gray-900 to-[#1a1025] rounded-2xl shadow-xl relative overflow-hidden">
+                      <div className="absolute -top-10 -right-10 w-32 h-32 bg-[#F43397]/30 blur-[40px] rounded-full pointer-events-none"></div>
+                      <p className="text-sm font-black text-white mb-2 flex items-center gap-2">
+                        <Rocket className="w-5 h-5 text-[#F43397]" /> Intent-Based Commerce
                       </p>
-                      <p className="text-xs text-gray-600 leading-relaxed">
-                        Every component of PRISM is production-ready and API-first. The moment it connects to Meesho's live catalog, it transforms from a powerful demo into India's most intelligent shopping brain.
+                      <p className="text-xs text-gray-300 leading-relaxed font-medium">
+                        Current e-commerce relies on users knowing exactly what they want via keyword searches (e.g., "winter jacket"). 
+                        <span className="text-white font-bold"> PRISM</span> shifts this paradigm entirely. Users simply express their life events, and PRISM's agentic brain builds a highly personalized, intelligent shopping timeline.
                       </p>
                     </div>
 
                     <div className="space-y-3">
                       {[
-                        { icon: '🛒', title: 'Live Inventory Intelligence', desc: 'Real-time product availability, actual pricing, and live seller ratings from Meesho\'s 15M+ product catalog. PRISM\'s confidence scores become genuinely actionable.' },
-                        { icon: '🧠', title: 'Deep Personalisation at Scale', desc: 'The Memory Mining system (active in this demo) scales to millions of users. PRISM learns purchase patterns, owned categories, and life stage — becoming smarter with every interaction.' },
-                        { icon: '🌍', title: 'Hyperlocal Bharat Intelligence', desc: 'Pincode-level delivery routing, regional language queries (Hindi, Tamil, Telugu), and festival calendars for every state — making PRISM the first truly Bharat-first commerce brain.' },
-                        { icon: '📱', title: 'WhatsApp & Voice Integration', desc: 'PRISM\'s API-first design plugs directly into WhatsApp Business — India\'s primary communication channel for tier-2/3 users — enabling voice-first shopping assistance.' },
-                        { icon: '⚡', title: 'Predictive Pre-Purchase', desc: 'With historical data, PRISM predicts purchase intent days before users search. Proactive notifications: "Your son\'s semester starts in 3 weeks — shall we prepare his hostel list?"' },
-                        { icon: '🤝', title: 'Seller Empowerment', desc: 'PRISM\'s demand signals feed back to Meesho sellers — telling them which products will spike demand for upcoming life events in their region. Supply meets demand before it happens.' },
+                        { icon: '💰', title: 'Increases Average Order Value (AOV)', desc: 'Instead of buying one product, users are presented with a complete contextual timeline, encouraging multi-category purchases.' },
+                        { icon: '🧠', title: 'Deep Personalisation & User Retention', desc: 'The Memory Mining system scales to millions. PRISM learns purchase patterns and life stages — becoming an indispensable assistant that users return to.' },
+                        { icon: '📈', title: 'Higher Conversion via Trust & Transparency', desc: 'By visibly exposing the AI\'s reasoning (showing Trust, Budget, and Delivery constraints), users feel extremely confident making high-value purchases.' },
+                        { icon: '🔮', title: 'Predictive Pre-Purchase', desc: 'With historical data, PRISM predicts purchase intent days before users search. Proactive notifications: "Your son\'s semester starts in 3 weeks — shall we prepare his hostel list?"' },
                       ].map((item, i) => (
-                        <div key={i} className="flex gap-3 p-3.5 bg-white border border-gray-100 rounded-xl shadow-sm hover:border-pink-200 transition-all">
-                          <span className="text-xl shrink-0">{item.icon}</span>
+                        <div key={i} className="flex gap-3 p-4 bg-white border border-gray-100 rounded-xl shadow-sm hover:border-[#F43397]/30 transition-all group">
+                          <div className="w-10 h-10 bg-gray-50 rounded-full flex items-center justify-center shrink-0 text-xl group-hover:scale-110 transition-transform">{item.icon}</div>
                           <div>
                             <p className="text-sm font-bold text-gray-900 mb-0.5">{item.title}</p>
                             <p className="text-xs text-gray-600 leading-relaxed">{item.desc}</p>
@@ -1054,10 +978,187 @@ export default function Home() {
                         </div>
                       ))}
                     </div>
+                  </div>
+                )}
 
-                    <div className="p-4 bg-gray-900 rounded-xl text-center">
-                      <p className="text-sm font-black text-white mb-1">Built for India's next 500 million users</p>
-                      <p className="text-xs text-gray-400">PRISM doesn't just predict what people buy — it understands <em>why</em> they buy, <em>when</em> they need it, and <em>what they'll need next</em>.</p>
+                {/* ── Tab 2: Architecture & Tech ────────────────────────── */}
+                {judgeTab === 'architecture' && (
+                  <div className="space-y-5">
+                    <div className="p-4 bg-prism-50/50 border border-prism-100 rounded-xl text-center">
+                      <Brain className="w-8 h-8 text-prism-600 mx-auto mb-2" />
+                      <p className="text-sm font-black text-prism-900 mb-1">Multi-Agent System architecture</p>
+                      <p className="text-xs text-prism-700">PRISM utilizes a 4-agent consensus framework powered by Gemini/OpenAI.</p>
+                    </div>
+
+                    <div>
+                      <p className="text-xs font-bold text-gray-500 uppercase tracking-widest mb-3">🤖 The 4 PRISM Agents</p>
+                      <div className="space-y-3">
+                        {[
+                          { name: 'Kismat', role: 'Trust & Quality Agent', desc: 'Evaluates seller ratings, return rates, and review credibility. Vetoes sketchy listings.', color: 'purple' },
+                          { name: 'Paisa', role: 'Budget Agent', desc: 'Checks if the product fits the user\'s budget constraint. Flags overpriced items.', color: 'emerald' },
+                          { name: 'Samay', role: 'Time Agent', desc: 'Checks delivery feasibility vs. event date. Validates the Buy Now / Wait / Split temporal strategy.', color: 'blue' },
+                          { name: 'Soch', role: 'Synthesis Agent (LLM)', desc: 'Weighs all 3 agents\' verdicts with cultural + Bharat context to produce the final recommendation.', color: 'pink' },
+                        ].map(agent => (
+                          <div key={agent.name} className="flex gap-3 p-3 bg-white shadow-[0_2px_10px_rgb(0,0,0,0.02)] rounded-xl border border-gray-100 hover:border-gray-300 transition-colors">
+                            <div className={`w-10 h-10 rounded-full flex items-center justify-center shrink-0 text-sm font-black shadow-sm ${
+                              agent.color === 'purple' ? 'bg-purple-100 text-purple-700 border border-purple-200' :
+                              agent.color === 'emerald' ? 'bg-emerald-100 text-emerald-700 border border-emerald-200' :
+                              agent.color === 'blue' ? 'bg-blue-100 text-blue-700 border border-blue-200' :
+                              'bg-pink-100 text-[#F43397] border border-pink-200'
+                            }`}>{agent.name[0]}</div>
+                            <div>
+                              <p className="text-sm font-bold text-gray-900">{agent.name} <span className="text-xs text-gray-500 font-medium">— {agent.role}</span></p>
+                              <p className="text-[11px] text-gray-600 mt-1 leading-relaxed">{agent.desc}</p>
+                            </div>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  </div>
+                )}
+
+                {/* ── Tab 3: How to Test ──────────────────────────────── */}
+                {judgeTab === 'howto' && (
+                  <div className="space-y-4">
+                    <p className="text-sm text-gray-600 leading-relaxed font-medium">
+                      PRISM understands <strong>natural language life events</strong> — no keywords needed. Just speak naturally. Here's how to evaluate it:
+                    </p>
+
+                    <div className="space-y-2">
+                      <p className="text-[10px] font-black text-gray-400 uppercase tracking-widest mb-2">Step-by-step evaluation</p>
+                      {[
+                        { step: '1', text: 'Type a life-event query (or use the pre-loaded scenarios)', detail: 'Click any scenario chip to auto-fill and run instantly' },
+                        { step: '2', text: 'Watch the 3-phase purchase timeline generate', detail: 'Phases are dynamically built by the LLM, not hardcoded' },
+                        { step: '3', text: 'Toggle the 🧠 Brain X-Ray button (top right)', detail: 'See the 4 named agents debating internally in real-time' },
+                        { step: '4', text: 'Click any product card to see PRISM Smart Timing', detail: 'Buy Now / Wait / Split strategies with real pricing' },
+                        { step: '5', text: 'Run a second query — watch PRISM remember you', detail: 'The 🧠 memory chip will appear showing your profile' },
+                      ].map(item => (
+                        <div key={item.step} className="flex gap-3 p-3 bg-white shadow-[0_2px_10px_rgb(0,0,0,0.02)] rounded-xl border border-gray-100">
+                          <div className="w-6 h-6 rounded-full bg-gray-900 text-white text-xs font-black flex items-center justify-center shrink-0 mt-0.5">{item.step}</div>
+                          <div>
+                            <p className="text-sm font-bold text-gray-800">{item.text}</p>
+                            <p className="text-[11px] text-gray-500 mt-0.5">{item.detail}</p>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                    <div className="mt-8">
+                      <p className="text-[10px] font-black text-[#F43397] uppercase tracking-widest mb-4">📋 Copy-paste Test Scenarios</p>
+                      <div className="space-y-6">
+                        {[
+                          {
+                            title: "🔥 The Most Important Tests (Run First)",
+                            desc: "These 5 expose every gap in the system immediately.",
+                            items: [
+                              { q: 'Going trekking to Kashmir next month, staying 10 days, first time in extreme cold', tag: 'Travel + Extreme Climate' },
+                              { q: 'I need scuba diving gear for Andaman trip next week', tag: 'Product Gap (Generates OOS)' },
+                              { q: 'First child going to IIT, daily wage worker family, budget 3000 rupees', tag: 'Deep Emotional Shift + Budget Constraint' },
+                              { q: 'Best possible seller, product exactly at budget, delivers in 2 days, price falling — recommend', tag: 'Confidence Genome (Best Case)' },
+                              { q: 'Worst possible seller, 22 percent return rate, delivers in 12 days, over budget — what does Soch say', tag: 'Confidence Genome (Worst Case)' }
+                            ]
+                          },
+                          {
+                            title: "🌍 Places & Culture (Context Depth)",
+                            desc: "Tests geographic, cultural, and environmental awareness.",
+                            items: [
+                              { q: 'I am going to work in Leh Ladakh for 6 months, government posting', tag: 'High Altitude + Govt Profile' },
+                              { q: 'Moving to Cherrapunji in Meghalaya, rainiest place on earth', tag: 'Extreme Weather (Monsoon)' },
+                              { q: 'Daughter is going to study in Shillong, North East, hilly area', tag: 'Hilly Terrain + Education' }
+                            ]
+                          },
+                          {
+                            title: "🧩 Events System Has Never Seen",
+                            desc: "Tests LLM fallback and dynamic reasoning.",
+                            items: [
+                              { q: 'First time doing Vaishno Devi trek, 60 year old father is coming', tag: 'Pilgrimage + Elderly Care' },
+                              { q: 'Going for Hajj next month from our village in UP', tag: 'Religious Context + Int. Travel' },
+                              { q: 'Retired and planning solo India travel for 6 months by train', tag: 'Retirement + Train Travel' }
+                            ]
+                          },
+                          {
+                            title: "⚔️ Agent Conflict & Temporal Simulator",
+                            desc: "Forces the 4 agents into debate and uses time strategies.",
+                            items: [
+                              { q: 'Found a product for Rs 200, extremely cheap, no reviews, new seller, wedding is in 2 days', tag: 'Kismat vs Samay vs Paisa' },
+                              { q: 'Diwali is in 4 days and I need decorations, no time to wait', tag: 'Time Urgency (Buy Now)' },
+                              { q: 'No income this month, very tight cash flow, need to split purchases', tag: 'Split Purchase Strategy' }
+                            ]
+                          },
+                          {
+                            title: "🎭 Emotional Register Shifts",
+                            desc: "Tests how the system adjusts its tone and recommendations.",
+                            items: [
+                              { q: 'Opening first shop after losing job during COVID, starting over completely', tag: 'High Emotion / Rebuilding' },
+                              { q: 'Son clearing UPSC after 4 failed attempts, this is the 5th year', tag: 'Celebratory / Family Pride' }
+                            ]
+                          },
+                          {
+                            title: "🚧 Edge Cases & Hallucination Checks",
+                            desc: "Tests graceful degradation and intent pivots.",
+                            items: [
+                              { q: 'I want to buy a car', tag: 'Intent Pivot to Accessories' },
+                              { q: 'I need to book a flight to Delhi', tag: 'Graceful Rejection (Non-retail)' },
+                              { q: 'My life is very complicated right now', tag: 'Graceful Degradation' }
+                            ]
+                          }
+                        ].map((group, gIdx) => (
+                          <div key={gIdx} className="bg-gray-50/50 p-4 rounded-2xl border border-gray-100">
+                            <p className="text-xs font-black text-gray-800 mb-1">{group.title}</p>
+                            <p className="text-[10px] text-gray-500 mb-3 font-medium">{group.desc}</p>
+                            <div className="space-y-2">
+                              {group.items.map((item, i) => {
+                                const globalIdx = `${gIdx}-${i}`;
+                                return (
+                                  <div key={globalIdx} className="flex items-start gap-2 p-3 bg-white border border-gray-100 shadow-sm rounded-xl group hover:border-[#F43397]/40 transition-all">
+                                    <div className="flex-1 min-w-0">
+                                      <p className="text-xs font-bold text-gray-800 leading-relaxed">"{item.q}"</p>
+                                      <span className="text-[9px] text-indigo-600 font-bold bg-indigo-50 px-2 py-0.5 rounded-full mt-1.5 inline-block">{item.tag}</span>
+                                    </div>
+                                    <button
+                                      onClick={() => { navigator.clipboard.writeText(item.q); setCopiedQuery(globalIdx); setTimeout(() => setCopiedQuery(null), 2000) }}
+                                      className="shrink-0 p-1.5 rounded-lg text-gray-400 hover:text-[#F43397] hover:bg-pink-50 transition-all"
+                                      title="Copy query"
+                                    >
+                                      {copiedQuery === globalIdx ? <Check className="w-4 h-4 text-emerald-500" /> : <Copy className="w-4 h-4" />}
+                                    </button>
+                                  </div>
+                                );
+                              })}
+                            </div>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  </div>
+                )}
+
+                {/* ── Tab 4: Scope & Constraints ──────────────────────── */}
+                {judgeTab === 'scope' && (
+                  <div className="space-y-5">
+                    <div className="p-4 bg-amber-50 border border-amber-200 rounded-xl flex gap-3 shadow-sm">
+                      <AlertCircle className="w-6 h-6 text-amber-600 shrink-0" />
+                      <div>
+                        <p className="text-sm font-black text-amber-900 mb-1">Agent Logic is Real. DB is Mocked.</p>
+                        <p className="text-xs text-amber-800 leading-relaxed">
+                          This demo uses a curated mock product catalog (~80 products) to simulate Meesho's massive catalog, focusing entirely on demonstrating the <strong>AI's reasoning and agentic workflow.</strong>
+                        </p>
+                      </div>
+                    </div>
+
+                    <div className="p-4 bg-white border border-gray-100 rounded-xl shadow-sm">
+                      <p className="text-xs font-black text-gray-900 mb-2">Why am I seeing "Out of Stock"?</p>
+                      <p className="text-xs text-gray-600 leading-relaxed">
+                        If a highly recommended item shows as "Out of Stock," it means the LLM successfully identified a critical gap in our mock database for your specific life event. This proves the system is reasoning intelligently rather than just forcing available keywords!
+                      </p>
+                    </div>
+
+                    <div>
+                      <p className="text-[10px] font-black text-gray-400 uppercase tracking-widest mb-2">✅ Covered Product Categories in Mock DB</p>
+                      <div className="flex flex-wrap gap-1.5">
+                        {['Bedding', 'Formal Wear', 'Bags & Luggage', 'Study Accessories', 'Kitchen Essentials', 'Personal Care', 'Festival Decor', 'Baby Products', 'Electronics', 'Home Decor', 'Wedding Apparel', 'Stationery', 'Security', 'Home Improvement'].map(cat => (
+                          <span key={cat} className="text-[10px] font-bold text-gray-600 bg-gray-100 border border-gray-200 px-2 py-1 rounded-md">{cat}</span>
+                        ))}
+                      </div>
                     </div>
                   </div>
                 )}
@@ -1094,7 +1195,7 @@ export default function Home() {
                   src={(selectedProduct.image_url ? selectedProduct.image_url.replace(/\/images\/W\/IMAGERENDERING_[A-Z0-9-]+/, '') : null) || (selectedProduct.image_placeholder ? `/images/${selectedProduct.image_placeholder}.jpg` : `/images/placeholder.jpg`)}
                   onError={(e) => {
                     e.target.onerror = null; 
-                    e.target.src = `/images/placeholder.jpg`;
+                    e.target.src = `https://placehold.co/400x400/1e293b/94a3b8?text=Image\\nNot\\nAvailable`;
                   }}
                   alt={selectedProduct.name} 
                   className="w-full h-full object-cover"
