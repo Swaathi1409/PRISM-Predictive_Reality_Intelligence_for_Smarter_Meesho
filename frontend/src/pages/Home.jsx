@@ -181,7 +181,7 @@ export default function Home() {
   }
 
   return (
-    <div className="min-h-[100dvh] bg-[#ffe1ec] bg-gradient-to-br from-[#ffe1ec] via-[#fce7f3] to-[#ffecf4] flex flex-col items-center justify-center p-2 sm:p-4 lg:p-8 font-sans overflow-x-hidden relative selection:bg-[#F43397]/30 selection:text-[#F43397] scrollbar-hide">
+    <div className="min-h-[100dvh] bg-[#ffe1ec] bg-gradient-to-br from-[#ffe1ec] via-[#fce7f3] to-[#ffecf4] flex flex-col items-center justify-center p-2 sm:p-4 lg:p-8 font-sans overflow-x-hidden relative selection:bg-[#F43397]/30 selection:text-[#F43397]">
       
       {/* Pleasant Meesho Pink Background */}
       <div className="fixed inset-0 pointer-events-none z-0 overflow-hidden">
@@ -255,7 +255,7 @@ export default function Home() {
           </div>
 
           {/* App Content Area */}
-          <div className="flex-1 overflow-y-auto bg-slate-50/50 relative flex flex-col scrollbar-light">
+          <div className="flex-1 overflow-y-auto bg-slate-50/50 relative flex flex-col scrollbar-pink">
             {!isPending && !result && (
               <div className="p-5 flex-1 flex flex-col relative">
                 {/* Dynamic Background Element */}
