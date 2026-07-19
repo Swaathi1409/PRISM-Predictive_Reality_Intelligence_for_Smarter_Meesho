@@ -22,11 +22,11 @@
     min-height: 100vh;
   }
 
-  /* Custom scrollbar — dark panels */
-  ::-webkit-scrollbar { width: 6px; height: 6px; }
-  ::-webkit-scrollbar-track { background: #0f0a1e; }
-  ::-webkit-scrollbar-thumb { background: #2d2050; border-radius: 3px; }
-  ::-webkit-scrollbar-thumb:hover { background: #6C2BD9; }
+  /* Custom scrollbar — visible in front */
+  ::-webkit-scrollbar { width: 8px; height: 8px; }
+  ::-webkit-scrollbar-track { background: #ffffff; }
+  ::-webkit-scrollbar-thumb { background: #F43397; border-radius: 4px; }
+  ::-webkit-scrollbar-thumb:hover { background: #c5157a; }
 
   /* Selection */
   ::selection { background: rgba(108, 43, 217, 0.3); color: white; }
