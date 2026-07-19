@@ -5,6 +5,8 @@ __pycache__/
 node_modules/
 dist/
 *.db
+!backend/prism_dev.db
+!backend/app/data/prism_catalog.db
 .DS_Store
 *.egg-info/
 .venv/
