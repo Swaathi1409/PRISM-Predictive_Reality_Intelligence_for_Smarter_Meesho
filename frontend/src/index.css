@@ -7,7 +7,12 @@
 
 /* ── Base reset & body ──────────────────────────────────────────────────── */
 @layer base {
-  *, *::before, *::after { box-sizing: border-box; }
+
+  *,
+  *::before,
+  *::after {
+    box-sizing: border-box;
+  }
 
   html {
     scroll-behavior: smooth;
@@ -23,46 +28,84 @@
   }
 
   /* Custom scrollbar — dark panels (default global) */
-  ::-webkit-scrollbar { width: 6px; height: 6px; }
-  ::-webkit-scrollbar-track { background: #0f0a1e; }
-  ::-webkit-scrollbar-thumb { background: #2d2050; border-radius: 3px; }
-  ::-webkit-scrollbar-thumb:hover { background: #6C2BD9; }
+  ::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+  }
+
+  ::-webkit-scrollbar-track {
+    background: #0f0a1e;
+  }
+
+  ::-webkit-scrollbar-thumb {
+    background: #2d2050;
+    border-radius: 3px;
+  }
+
+  ::-webkit-scrollbar-thumb:hover {
+    background: #6C2BD9;
+  }
 
   /* Custom scrollbar — visible pink for light panels */
   .scrollbar-pink {
-    scrollbar-color: #F43397 transparent; /* Firefox */
+    scrollbar-color: #fa9bcc transparent;
+    /* Firefox */
   }
-  .scrollbar-pink::-webkit-scrollbar { width: 8px; height: 8px; }
-  .scrollbar-pink::-webkit-scrollbar-track { background: transparent; }
-  .scrollbar-pink::-webkit-scrollbar-thumb { background: #F43397; border-radius: 4px; border: 2px solid white; }
-  .scrollbar-pink::-webkit-scrollbar-thumb:hover { background: #c5157a; }
+
+  .scrollbar-pink::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+  }
+
+  .scrollbar-pink::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  .scrollbar-pink::-webkit-scrollbar-thumb {
+    background: #F43397;
+    border-radius: 4px;
+    border: 2px solid white;
+  }
+
+  .scrollbar-pink::-webkit-scrollbar-thumb:hover {
+    background: #c5157a;
+  }
 
   /* Selection */
-  ::selection { background: rgba(108, 43, 217, 0.3); color: white; }
+  ::selection {
+    background: rgba(108, 43, 217, 0.3);
+    color: white;
+  }
 }
 
 /* ── Animations ─────────────────────────────────────────────────────────── */
 @layer utilities {
-  .text-balance { text-wrap: balance; }
+  .text-balance {
+    text-wrap: balance;
+  }
 
   /* Visible, friendly scrollbar for horizontal product rows (white panel) */
   .scrollbar-product {
     scrollbar-width: thin;
     scrollbar-color: #F43397 #fce7f3;
   }
+
   .scrollbar-product::-webkit-scrollbar {
     height: 5px;
     border-radius: 999px;
   }
+
   .scrollbar-product::-webkit-scrollbar-track {
     background: #fce7f3;
     border-radius: 999px;
     margin: 0 8px;
   }
+
   .scrollbar-product::-webkit-scrollbar-thumb {
     background: #F43397;
     border-radius: 999px;
   }
+
   .scrollbar-product::-webkit-scrollbar-thumb:hover {
     background: #c5157a;
   }
@@ -70,17 +113,30 @@
   .animate-fade-in {
     animation: fadeIn 0.5s ease-out forwards;
   }
+
   .animate-slide-up {
     animation: slideUp 0.5s ease-out forwards;
   }
 
   @keyframes fadeIn {
-    from { opacity: 0; }
-    to { opacity: 1; }
+    from {
+      opacity: 0;
+    }
+
+    to {
+      opacity: 1;
+    }
   }
 
   @keyframes slideUp {
-    from { opacity: 0; transform: translateY(20px); }
-    to { opacity: 1; transform: translateY(0); }
+    from {
+      opacity: 0;
+      transform: translateY(20px);
+    }
+
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
   }
 }
