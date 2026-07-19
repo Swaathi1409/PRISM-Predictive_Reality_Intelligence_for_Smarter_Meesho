@@ -2,7 +2,7 @@ import { useState, useRef, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { Sparkles, Mic, Activity, CheckCircle, Code, Brain, Send, MicOff, Calendar, ShoppingCart, Check, X, Trash2, CreditCard, ShieldCheck, Loader2, Copy, ChevronRight, FlaskConical, Rocket, AlertCircle } from 'lucide-react'
 import { usePrismAnalysis } from '../hooks/usePrismAnalysis'
-import { useUserMemory } from '../hooks/useUserMemory'
+import { useAuth } from '../context/AuthContext'
 import LoadingOrchestrator from '../components/LoadingOrchestrator'
 import AgentDebateChamber from '../components/AgentDebateChamber'
 import ConfidenceGenome from '../components/ConfidenceGenome'
@@ -39,11 +39,23 @@ export default function Home() {
   const [selectedTemporalStrategy, setSelectedTemporalStrategy] = useState(null)
   const brainRef = useRef(null)
 
-  // ── Memory Mining hook ───────────────────────────────────────────────
-  const {
-    hasMemory, memoryTags, skippingCategories,
-    getAvoidCategories, getContextString, getAccessoryHints, addSessionResult, clearMemory
-  } = useUserMemory()
+  // ── Auth & Memory ───────────────────────────────────────────────
+  const { user, memory, logout } = useAuth()
+
+  // Construct context string to send to backend if memory exists
+  const getContextString = () => {
+    if (!memory || memory.session_count === 0) return null
+    let parts = []
+    if (memory.persona_tags?.length) parts.push(`Tags: ${memory.persona_tags.join(', ')}`)
+    if (memory.life_events_history?.length) parts.push(`Events: ${memory.life_events_history.join(', ')}`)
+    if (memory.location_hints?.length) parts.push(`Locations: ${memory.location_hints.join(', ')}`)
+    if (memory.preferred_price_range) parts.push(`Budget: < ${memory.preferred_price_range[1]}`)
+    return parts.join(' | ')
+  }
+
+  const getAvoidCategories = () => {
+    return memory?.disliked_categories || []
+  }
 
   const showToast = (msg) => {
     setToast(msg)
@@ -150,6 +162,7 @@ export default function Home() {
 
   const handleAnalyze = (query, pincode, budget, date) => {
     setResult(null) // reset
+    setIsXRayOpen(true) // Automatically open PRISM Brain X-Ray when thinking starts
     const payload = { user_input: query, user_pincode: pincode, budget }
     if (date) payload.target_date = date
 
@@ -162,9 +175,7 @@ export default function Home() {
     analyze(payload, {
       onSuccess: (data) => {
         setResult(data)
-        setIsXRayOpen(true) // auto-reveal the AI brain on first result so judges see the agent debate
-        // Mine the result to update behavioral profile for next session
-        addSessionResult(query, budget, data)
+        setIsXRayOpen(true)
       }
     })
   }
@@ -207,6 +218,15 @@ export default function Home() {
               >
                 <Sparkles className="w-3 h-3" /> Judge Mode
               </button>
+              <div className="flex items-center gap-2 border-l border-gray-200 pl-4">
+                <span className="text-xs font-semibold text-gray-700">{user?.name}</span>
+                <button 
+                  onClick={logout}
+                  className="text-gray-400 hover:text-red-500 text-xs font-semibold transition-colors"
+                >
+                  Logout
+                </button>
+              </div>
               <div className="relative cursor-pointer transition-transform hover:scale-105 active:scale-95" onClick={() => setIsCartOpen(true)}>
                 <ShoppingCart className="w-5 h-5 text-gray-700" />
                 {cartItems.length > 0 && (

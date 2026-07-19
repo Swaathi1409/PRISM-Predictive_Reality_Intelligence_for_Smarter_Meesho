@@ -18,9 +18,10 @@ export default function TopPickHero({ product, isXRayOpen, onView }) {
   const mrp = Math.floor(product.price / (1 - discountFraction))
   const pctOff = Math.round(((mrp - product.price) / mrp) * 100)
 
-  const imgSrc = product.image_url ? product.image_url.replace(/\/images\/W\/IMAGERENDERING_[A-Z0-9-]+/, '') : null
-    || (product.image_placeholder ? `/images/${product.image_placeholder}.jpg` : null)
-    || `https://ui-avatars.com/api/?name=${encodeURIComponent((product.name || 'Product').split(' ').slice(0, 2).join('+'))}&background=random&color=fff&size=256&font-size=0.33`
+  const hasValidAmazonUrl = product.image_url && !product.image_url.includes('placehold')
+  const initialImgSrc = hasValidAmazonUrl 
+    ? product.image_url.replace(/\/images\/W\/IMAGERENDERING_[A-Z0-9-]+/, '') 
+    : `/images/${product.id}.jpg`
 
   return (
     <motion.div
@@ -52,11 +53,15 @@ export default function TopPickHero({ product, isXRayOpen, onView }) {
           {/* Product image */}
           <div className={`relative shrink-0 rounded-xl overflow-hidden bg-gray-50 ${isXRayOpen ? 'w-full h-36' : 'w-28 h-28 sm:w-36 sm:h-36'}`}>
             <img
-              src={imgSrc || `/images/placeholder.jpg`}
+              src={initialImgSrc}
               referrerPolicy="no-referrer"
               onError={e => {
-                e.target.onerror = null
-                e.target.src = `/images/placeholder.jpg`
+                if (!e.target.src.includes(product.id)) {
+                  e.target.src = `/images/${product.id}.jpg`
+                } else {
+                  e.target.onerror = null
+                  e.target.src = `https://placehold.co/400x400/1e293b/94a3b8?text=Image\\nNot\\nAvailable`
+                }
               }}
               alt={product.name}
               className="w-full h-full object-cover hover:scale-105 transition-transform duration-500"

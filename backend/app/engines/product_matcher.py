@@ -101,6 +101,11 @@ EVENT_SUBCATEGORY_BLOCKLIST: Dict[str, set] = {
         "baby", "baby_products", "feeding_bottle", "diaper", "nappy",
         "wedding_apparel", "bridal", "exam_supplies", "toys_games",
     },
+    # Car purchase → automotive accessories only
+    "automotive": {
+        "baby", "baby_products", "diaper", "exam_supplies", "wedding_apparel",
+        "festival_decor", "bedding", "toys_games",
+    },
 }
 
 
@@ -143,6 +148,25 @@ EVENT_NAME_PHRASE_BLOCKLIST: Dict[str, set] = {
         "comprehension skills", "short passages",
         "shirt stays", "shirt garters",
     },
+    "automotive": {
+        "baby", "infant", "diaper", "harpic", "lizol", "toilet cleaner",
+        "comprehension skills", "shirt stays",
+    },
+}
+
+# ── Global always-block phrases (never show without explicit ask) ──────────────
+# Regardless of event, these product types should NOT appear unless the user
+# explicitly requests them.
+GLOBAL_ALWAYS_BLOCK_PHRASES = {
+    # Intimate apparel — only show if user explicitly asks
+    "bikini", "lingerie", "bra", "panty", "panties", "underwear", "innerwear",
+    "thong", "g-string", "boxers", "briefs",  # these are kept behind explicit request
+}
+
+# These are shown only when the user explicitly mentions these terms
+EXPLICIT_REQUEST_TERMS = {
+    "bikini", "lingerie", "bra", "panty", "underwear", "innerwear",
+    "boxers", "briefs", "thong",
 }
 
 
@@ -225,7 +249,12 @@ ACCESSORY_NAME_KEYWORDS: Dict[str, set] = {
                    "phone cover", "back cover", "phone case", "screen protector",
                    "tempered glass", "phone holder", "phone stand", "selfie stick",
                    "tripod", "gorilla tripod", "phone grip", "pop socket",
-                   "microsd", "micro sd", "memory card", "sandisk", "samsung evo"},
+                   "microsd", "micro sd", "memory card", "sandisk", "samsung evo",
+                   "extension board", "socket extension", "junction box", "power strip",
+                   "extension cord", "multi plug", "surge protection board",
+                   "cleaning kit", "lens cleaning", "microphone", "handheld mic",
+                   "singing mike", "dynamic mic", "wireless mic", "bluetooth speaker",
+                   "portable speaker",},
     "laptop":     {"laptop bag", "laptop sleeve", "cooling pad", "laptop stand",
                    "laptop mouse", "laptop keyboard", "usb hub", "laptop charger",
                    "screen cleaner", "laptop skin"},
@@ -624,7 +653,8 @@ def match_products(
     suggested_items_with_categories: Optional[Dict[str, str]] = None,
     product_search_context: Optional[Dict] = None,
     avoid_categories: Optional[List[str]] = None,
-    user_intent_type: Optional[str] = None,  # NEW: from LLM detection
+    user_intent_type: Optional[str] = None,
+    personalisation: Optional[Dict] = None,
 ) -> List[Dict[str, Any]]:
     """
     Returns up to `limit` products relevant to the given life event.
@@ -783,6 +813,15 @@ def match_products(
             return False
         relevant = [p for p in relevant if not _is_blocked(p)]
 
+    # ── Global always-block: intimate apparel (unless user explicitly asked) ──
+    user_input_lower = (product_search_context or {}).get("user_input", "").lower()
+    _user_asked_intimate = any(term in user_input_lower for term in EXPLICIT_REQUEST_TERMS)
+    if not _user_asked_intimate:
+        def _is_globally_blocked(p: Dict[str, Any]) -> bool:
+            name_lower = (p.get("name") or "").lower()
+            return any(phrase in name_lower for phrase in GLOBAL_ALWAYS_BLOCK_PHRASES)
+        relevant = [p for p in relevant if not _is_globally_blocked(p)]
+
     # ── Stage 3: Institution constraints ─────────────────────────────────
     if institution_data:
         wattage_limit = institution_data.get("appliance_wattage_limit")
@@ -841,6 +880,17 @@ def match_products(
             cat = product.get("category", "").lower()
             if any(avoided in cat or cat in avoided for avoided in avoid_set):
                 score -= 0.3 if rag_used else 500.0
+
+        # Memory Personalisation Bonus
+        if personalisation:
+            cat = product.get("category", "").lower()
+            liked = personalisation.get("liked_product_ids", [])
+            disliked = personalisation.get("disliked_categories", [])
+            
+            if pid in liked:
+                score += 0.2 if rag_used else 300.0
+            if any(d in cat for d in disliked):
+                score -= 0.2 if rag_used else 300.0
 
         return score
 

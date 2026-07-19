@@ -14,7 +14,8 @@ for different inputs. This proves no hardcoding.
 Library: SQLAlchemy (MIT License). Chosen for database-agnostic ORM capability.
 """
 
-from sqlalchemy import Column, String, Integer, Float, Text, DateTime, JSON, func
+from sqlalchemy import Column, String, Integer, Float, Text, DateTime, JSON, func, Boolean, ForeignKey
+from datetime import datetime
 from app.models.database import Base
 
 
@@ -62,3 +63,49 @@ class AgentLog(Base):
     score_contribution = Column(Float, nullable=False)
     input_snapshot = Column(JSON, nullable=True)
     created_at = Column(DateTime, server_default=func.now(), nullable=False)
+
+
+class User(Base):
+    __tablename__ = "users"
+
+    id = Column(String, primary_key=True, index=True)
+    email = Column(String, unique=True, index=True, nullable=False)
+    name = Column(String, nullable=False)
+    hashed_password = Column(String, nullable=False)
+    created_at = Column(DateTime, default=datetime.utcnow)
+    last_login = Column(DateTime, nullable=True)
+    is_active = Column(Boolean, default=True)
+
+
+class UserMemory(Base):
+    __tablename__ = "user_memory"
+
+    id = Column(Integer, primary_key=True, autoincrement=True)
+    user_id = Column(String, ForeignKey("users.id"), unique=True, index=True)
+
+    searched_categories = Column(JSON, default=list)
+    preferred_price_range = Column(JSON, default=lambda: [0, 50000])
+    life_events_history = Column(JSON, default=list)
+    liked_product_ids = Column(JSON, default=list)
+    disliked_categories = Column(JSON, default=list)
+    location_hints = Column(JSON, default=list)
+    persona_tags = Column(JSON, default=list)
+
+    session_count = Column(Integer, default=0)
+    last_intent = Column(String, nullable=True)
+    last_event_key = Column(String, nullable=True)
+    last_location = Column(String, nullable=True)
+
+    stated_budget = Column(Integer, nullable=True)
+    stated_name = Column(String, nullable=True)
+
+    updated_at = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
+
+
+class UserSession(Base):
+    __tablename__ = "user_sessions"
+
+    id = Column(String, primary_key=True)
+    user_id = Column(String, ForeignKey("users.id"), index=True)
+    analysis_session_id = Column(String, index=True)
+    created_at = Column(DateTime, default=datetime.utcnow)

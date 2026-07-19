@@ -8,8 +8,11 @@
 import { BrowserRouter, Routes, Route } from 'react-router-dom'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { PrismProvider } from './context/PrismContext'
+import { AuthProvider } from './context/AuthContext'
 import ErrorBoundary from './components/ErrorBoundary'
 import Navbar from './components/Navbar'
+import AuthPage from './pages/AuthPage'
+import ProtectedRoute from './components/ProtectedRoute'
 import Home from './pages/Home'
 import Demo from './pages/Demo'
 import About from './pages/About'
@@ -26,17 +29,26 @@ export default function App() {
   return (
     <ErrorBoundary>
       <QueryClientProvider client={queryClient}>
-        <PrismProvider>
-          <BrowserRouter>
-            <Routes>
-              <Route path="/" element={<Home />} />
-              <Route path="/demo" element={<Demo />} />
-              <Route path="/about" element={<About />} />
-              {/* Catch-all → home */}
-              <Route path="*" element={<Home />} />
-            </Routes>
-          </BrowserRouter>
-        </PrismProvider>
+        <AuthProvider>
+          <PrismProvider>
+            <BrowserRouter>
+              <Routes>
+                <Route path="/" element={<AuthPage />} />
+                <Route 
+                  path="/chat" 
+                  element={
+                    <ProtectedRoute>
+                      <Home />
+                    </ProtectedRoute>
+                  } 
+                />
+                <Route path="/about" element={<About />} />
+                {/* Catch-all */}
+                <Route path="*" element={<AuthPage />} />
+              </Routes>
+            </BrowserRouter>
+          </PrismProvider>
+        </AuthProvider>
       </QueryClientProvider>
     </ErrorBoundary>
   )

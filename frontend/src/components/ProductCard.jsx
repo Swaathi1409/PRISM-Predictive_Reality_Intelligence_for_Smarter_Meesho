@@ -39,9 +39,22 @@ export default function ProductCard({ product, finalVerdict }) {
 
         {/* Product main info */}
         <div className="flex items-start gap-4">
-          {/* Image placeholder */}
-          <div className="w-20 h-20 rounded-xl bg-surface-elevated border border-surface-border flex-shrink-0 flex items-center justify-center">
-            <Package className="w-8 h-8 text-gray-600" />
+          {/* Image */}
+          <div className="w-20 h-20 rounded-xl bg-surface-elevated border border-surface-border flex-shrink-0 flex items-center justify-center overflow-hidden">
+            <img
+              src={product.image_url && !product.image_url.includes('placehold') ? product.image_url.replace(/\/images\/W\/IMAGERENDERING_[A-Z0-9-]+/, '') : `/images/${product.id}.jpg`}
+              alt={product.name}
+              referrerPolicy="no-referrer"
+              className="w-full h-full object-cover"
+              onError={(e) => {
+                if (!e.target.src.includes(product.id)) {
+                  e.target.src = `/images/${product.id}.jpg`;
+                } else {
+                  e.target.onerror = null;
+                  e.target.src = `https://placehold.co/400x400/1e293b/94a3b8?text=Image\\nNot\\nAvailable`;
+                }
+              }}
+            />
           </div>
 
           <div className="flex-1 min-w-0">

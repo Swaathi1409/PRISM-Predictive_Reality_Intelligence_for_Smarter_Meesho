@@ -24,6 +24,11 @@ class Settings(BaseSettings):
     frontend_url: str = "http://localhost:5173"
     backend_url: str = "http://localhost:8000"
 
+    # JWT Auth
+    jwt_secret_key: str = "prism_hackathon_secret_key_change_in_production_2026"
+    jwt_algorithm: str = "HS256"
+    jwt_expire_minutes: int = 10080  # 7 days
+
     # LLM
     llm_model: str = "llama-3.1-8b-instant"
     llm_max_tokens_orchestrator: int = 250

@@ -20,8 +20,12 @@ export const api = axios.create({
   },
 })
 
-// ── Request interceptor: log outgoing requests in dev ─────────────────────
+// ── Request interceptor: attach token & log outgoing requests in dev ──────
 api.interceptors.request.use((config) => {
+  const token = localStorage.getItem('prism_token')
+  if (token) {
+    config.headers.Authorization = `Bearer ${token}`
+  }
   if (import.meta.env.DEV) {
     console.log(`[PRISM API] ${config.method?.toUpperCase()} ${config.url}`)
   }
@@ -75,4 +79,33 @@ export async function getSessionHistory(limit = 5) {
 export async function getHealth() {
   const response = await api.get('/api/health')
   return response.data
+}
+
+// ── Auth Endpoints ─────────────────────────────────────────────────────────
+
+export const authApi = {
+  login: async (email, password) => {
+    const response = await api.post('/api/auth/login', { email, password })
+    return response.data
+  },
+  
+  register: async (name, email, password) => {
+    const response = await api.post('/api/auth/register', { name, email, password })
+    return response.data
+  },
+  
+  getProfile: async () => {
+    const response = await api.get('/api/auth/me')
+    return response.data
+  },
+  
+  getMemory: async () => {
+    const response = await api.get('/api/auth/memory')
+    return response.data
+  },
+  
+  chooseProduct: async (productId) => {
+    const response = await api.post('/api/auth/choose-product', { product_id: productId })
+    return response.data
+  }
 }

@@ -149,17 +149,20 @@ function TopPickCard({ product, index }) {
         display: 'flex', alignItems: 'center', justifyContent: 'center',
         overflow: 'hidden',
       }}>
-        {product.image_url && !product.image_url.includes('placehold') ? (
-          <img
-            src={product.image_url.replace(/\/images\/W\/IMAGERENDERING_[A-Z0-9-]+/, '')}
-            alt={product.name}
-            referrerPolicy="no-referrer"
-            style={{ width: '100%', height: '100%', objectFit: 'cover', borderRadius: 10 }}
-            onError={(e) => { e.target.style.display = 'none' }}
-          />
-        ) : (
-          <Package size={32} color={isOOS ? '#4b5563' : '#6b7280'} />
-        )}
+        <img
+          src={product.image_url && (product.image_url.startsWith('http') || product.image_url.startsWith('//')) ? product.image_url.replace(/\/images\/W\/IMAGERENDERING_[A-Z0-9-]+/, '') : `/images/${product.id}.jpg`}
+          alt={product.name}
+          referrerPolicy="no-referrer"
+          style={{ width: '100%', height: '100%', objectFit: 'cover', borderRadius: 10, display: isOOS ? 'none' : 'block' }}
+          onError={(e) => {
+            if (!e.target.src.includes(product.id)) {
+              e.target.src = `/images/${product.id}.jpg`;
+            } else {
+              e.target.onerror = null;
+              e.target.src = `https://placehold.co/400x400/1e293b/94a3b8?text=Image\\nNot\\nAvailable`;
+            }
+          }}
+        />
       </div>
 
       {/* Category chip */}
@@ -277,17 +280,20 @@ function OtherProductCard({ product, index }) {
         background: 'rgba(15,10,30,0.5)', border: '1px solid rgba(255,255,255,0.05)',
         display: 'flex', alignItems: 'center', justifyContent: 'center', overflow: 'hidden',
       }}>
-        {product.image_url && !product.image_url.includes('placehold') ? (
-          <img
-            src={product.image_url.replace(/\/images\/W\/IMAGERENDERING_[A-Z0-9-]+/, '')}
-            alt={product.name}
-            referrerPolicy="no-referrer"
-            style={{ width: '100%', height: '100%', objectFit: 'cover', borderRadius: 8 }}
-            onError={(e) => { e.target.style.display = 'none' }}
-          />
-        ) : (
-          <Package size={22} color="#4b5563" />
-        )}
+        <img
+          src={product.image_url && (product.image_url.startsWith('http') || product.image_url.startsWith('//')) ? product.image_url.replace(/\/images\/W\/IMAGERENDERING_[A-Z0-9-]+/, '') : `/images/${product.id}.jpg`}
+          alt={product.name}
+          referrerPolicy="no-referrer"
+          style={{ width: '100%', height: '100%', objectFit: 'cover', borderRadius: 8 }}
+          onError={(e) => {
+            if (!e.target.src.includes(product.id)) {
+              e.target.src = `/images/${product.id}.jpg`;
+            } else {
+              e.target.onerror = null;
+              e.target.src = `https://placehold.co/400x400/1e293b/94a3b8?text=Image\\nNot\\nAvailable`;
+            }
+          }}
+        />
       </div>
 
       {/* Name */}

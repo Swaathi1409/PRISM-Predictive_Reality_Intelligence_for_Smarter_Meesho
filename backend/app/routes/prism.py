@@ -13,6 +13,7 @@ from sqlalchemy.orm import Session
 from app.models.database import get_db
 from app.models.schemas import PrismRequest, PrismResponse
 from app.services.prism_service import PrismService
+from app.middleware.auth_middleware import get_current_user_id
 from app.utils.logger import get_logger
 
 router = APIRouter(tags=["prism"])
@@ -20,7 +21,11 @@ logger = get_logger(__name__)
 
 
 @router.post("/prism/analyze", response_model=PrismResponse)
-async def analyze(request: PrismRequest, db: Session = Depends(get_db)):
+async def analyze(
+    request: PrismRequest,
+    user_id: str = Depends(get_current_user_id),
+    db: Session = Depends(get_db)
+):
     """
     Run the full PRISM analysis for a user's purchase context.
 
@@ -40,7 +45,7 @@ async def analyze(request: PrismRequest, db: Session = Depends(get_db)):
     logger.info(f"Analysis request received: '{request.user_input[:50]}...'")
     try:
         service = PrismService(db)
-        result = await service.analyze(request)
+        result = await service.analyze(request, user_id=user_id)
         logger.info(
             f"Analysis complete: event={result.event_key}, "
             f"score={result.confidence.total_score}"

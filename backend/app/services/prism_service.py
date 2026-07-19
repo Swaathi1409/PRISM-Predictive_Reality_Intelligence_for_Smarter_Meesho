@@ -42,6 +42,11 @@ from app.engines.product_matcher import match_products, select_top_picks, split_
 from app.engines.temporal_simulator import generate as temporal_generate
 from app.models.orm_models import AgentLog, Recommendation, Session as SessionORM
 from app.models.schemas import PrismRequest, PrismResponse
+from app.services.memory_service import (
+    get_user_memory,
+    build_personalisation_context,
+    update_memory_after_analysis,
+)
 from app.utils.cache import cache_key, get_cached, set_cached
 from app.utils.logger import get_logger
 
@@ -61,7 +66,7 @@ class PrismService:
     def __init__(self, db: DBSession):
         self.db = db
 
-    async def analyze(self, request: PrismRequest) -> PrismResponse:
+    async def analyze(self, request: PrismRequest, user_id: str = None) -> PrismResponse:
         session_id = str(uuid.uuid4())
         user_input = request.user_input
         user_pincode = request.user_pincode
@@ -73,6 +78,12 @@ class PrismService:
         logger.info(f"[{session_id}] Starting analysis: input='{user_input[:80]}'")
         if user_context:
             logger.info(f"[{session_id}] Memory context received ({len(user_context)} chars), avoid_categories={avoid_categories}")
+
+        user_memory = {}
+        personalisation = {}
+        if user_id:
+            user_memory = get_user_memory(self.db, user_id)
+            personalisation = build_personalisation_context(user_memory, request.model_dump())
 
         # ── Step 1: Cache check ────────────────────────────────────────────
         ck = cache_key(user_input, user_pincode, str(budget), str(request.target_date or ""))
@@ -277,6 +288,26 @@ class PrismService:
         # Deduplicate
         all_categories = list(dict.fromkeys(all_categories))
 
+        # ── Step 4.5: Handle urgency_override ────────────────────────────
+        # When user says "Diwali in 4 days" etc., collapse to 1-phase immediate purchase
+        urgency_override = llm_detection.get("urgency_override", False) if llm_detection else False
+        if urgency_override or (event_data.get("timeline_days", 30) <= 4):
+            urgency_override = True
+            # Flatten all phases into one "Buy Now" phase
+            all_phase_cats = list(dict.fromkeys(all_categories))
+            enriched_phases = [
+                {
+                    "phase_name": "Buy Now — Don't Wait",
+                    "days_from_now": 0,
+                    "categories": all_phase_cats[:8],
+                    "priority": "must_have",
+                    "note": "Your event is very close! Buy everything today for timely delivery.",
+                    "suggested_items": [item for item in suggested_items_with_categories.keys()][:6],
+                }
+            ]
+            event_data["timeline_days"] = max(1, event_data.get("timeline_days", 3))
+            logger.info(f"[{session_id}] Urgency override active — collapsed to single Buy Now phase")
+
         # ── Step 7: Product matching ──────────────────────────────────────
         logger.info(f"[{session_id}] Matching products... exact_items: {exact_items}, suggested: {list(suggested_items_with_categories.keys())}, categories: {all_categories}")
 
@@ -302,6 +333,7 @@ class PrismService:
             product_search_context=product_search_context,
             avoid_categories=avoid_categories,
             user_intent_type=user_intent_type,
+            personalisation=personalisation,
         )
 
         # ── Step 7.4: Deterministic pre-filter — obvious mismatches ─────────
@@ -639,6 +671,23 @@ class PrismService:
             is_specific_product_ask=is_specific_product_ask,
             primary_item_label=primary_item_label,
         )
+
+        # ── Step 14.8: Update Memory ──────────────────────────────────────
+        if user_id:
+            update_memory_after_analysis(
+                db=self.db,
+                user_id=user_id,
+                analysis_result={
+                    "top_recommendation": top_product,
+                    "event_key": event_data.get("event_key"),
+                    "state_detected": state_key,
+                    "detected_event": event_data.get("label", ""),
+                },
+                request_data={
+                    "budget": request.budget,
+                    "extracted_location": llm_detection.get("detected_location", {}).get("place_name") if llm_detection else None,
+                }
+            )
 
         # ── Step 15: Cache the response ───────────────────────────────────
         set_cached(ck, response_data.model_dump())

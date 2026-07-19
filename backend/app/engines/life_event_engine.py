@@ -634,25 +634,14 @@ class LifeEventEngine:
 
     def detect_event_with_llm(self, user_input: str, user_context: Optional[str] = None) -> Optional[Dict[str, Any]]:
         """
-        PRIMARY detection method. Single LLM call that understands ANY input:
-        - Trek to Kashmir, cultural travel, religious pilgrimage, seasonal prep
-        - All 8 original events (hostel, wedding, baby, etc.)
-        - Completely novel contexts not in any template
-
-        Args:
-            user_input: The raw natural language query from the user.
-            user_context: Optional PRISM Memory Intelligence string assembled by the frontend.
-                          Contains prior session signals (city, employer, owned categories, budget
-                          affinity) so the LLM can personalise this session's recommendations.
-
+        PRIMARY detection method. Single LLM call that understands ANY input.
         Returns a comprehensive dict with event, location, cultural context,
         product needs, purchase phases, and emotional message — all in one call.
-        Replaces: detect_event() + detect_location() + generate_llm_roadmap().
         """
         # Prepend memory intelligence block if available
         memory_block = ""
         if user_context and user_context.strip():
-            memory_block = f"""\n[PRISM Memory Intelligence — from user's prior sessions]\n{user_context.strip()}\n\nUSE THIS CONTEXT: Avoid re-recommending categories the user already owns. Prioritise accessories/complements for those categories and fresh categories they haven\'t seen yet. Let their budget affinity and city/employer inform tone and product range.\n\n"""
+            memory_block = f"""\n[PRISM Memory Intelligence — from user's prior sessions]\n{user_context.strip()}\n\nUSE THIS CONTEXT: Avoid re-recommending categories the user already owns. Prioritise accessories/complements for those categories and fresh categories they haven't seen yet. Let their budget affinity and city/employer inform tone and product range.\n\n"""
 
         prompt = f"""You are PRISM, India's smartest shopping assistant.{memory_block}
 User said: "{user_input}"
@@ -660,27 +649,31 @@ User said: "{user_input}"
 Understand the life event, location, cultural context, and exact products needed. Think like a smart Indian friend.
 
 EXAMPLES:
-- "Going trekking to Kashmir" → travel_adventure, cold mountain, modest dress, thermal wear, trek bag, woolen shawls
+- "Going trekking to Kashmir" → travel_adventure, cold mountain, thermal wear, trek bag, woolen shawls
 - "Son got into IIT Bombay hostel" → hostel_move, humid coastal, cotton bedding, study lamp, personal care
 - "Navratri coming up" → festival_prep, festive dress, decor
 - "I need a phone" → generic, direct_purchase_ask, exact_items_requested=["phone"], 1 phase (electronics only)
 - "I bought a phone, need accessories" → generic, owns_and_wants_accessories, exact_items_requested=["phone"]
-- "Setting up music studio" → generic, electronics (mic, speakers, audio interface, headphones), home_decor (acoustic panels)
-- "Book a flight" or "Buy a car" or "Invest in stocks" → unsupported, purchase_phases=[], apology in emotional_message
+- "I bought a car / new car / got a car" → generic, event_label="New Car Accessories", category_mapping=["automotive"], exact_items_requested=["car seat cover","dash cam","car air freshener"], user_intent_type="owns_and_wants_accessories"
+- "Setting up music studio" → generic, electronics (mic, speakers, headphones), home_decor (acoustic panels)
+- "Mother going Kashi Vishwanath, knee problems, needs support gear" → religious_travel, direct_purchase_ask, exact_items_requested=["knee support brace","walking stick"], categories=["sports_fitness","bags_luggage","personal_care"]
+- "Diwali in 4 days, need decorations urgently" → festival_prep, urgency_override=true, timeline_days=3, 1 phase only, categories=["festival_decor","home_decor"]
+- "Book a flight" or "Invest in stocks" → unsupported, purchase_phases=[], apology in emotional_message
 
 Event keys: hostel_move, wedding, new_baby, first_job, festival_prep, new_home, government_exam, shop_opening, travel_adventure, religious_travel, cultural_event, seasonal_prep, generic, unsupported
 
 Categories: bedding, study_accessories, personal_care, bags_luggage, kitchen_essentials, formal_wear, festival_decor, baby_products, electronics, kitchen_appliances, shop_supplies, food, security, home_decor, jewellery, stationery, exam_supplies, wedding_apparel, home_improvement, fashion_men, fashion_women, fashion_kids, beauty_grooming, home_kitchen, appliances, sports_fitness, sportswear, shoes, watches, toys_games, pet_supplies, garden_outdoor, automotive
 
 RULES:
-1. ALWAYS return exactly 3 purchase_phases (unless unsupported)
+1. ALWAYS return exactly 3 purchase_phases UNLESS urgency_override=true (then 1 phase only titled "Buy Now — Don't Wait")
 2. Phase naming: timeline>=21 days → "Week 1/2/3-4" style; timeline<21 → "Days 1-2/3-5/5-7" style
 3. hostel/first_job/exam: never use baby_products, wedding_apparel, kitchen_appliances
-4. religious_travel: only formal_wear, personal_care, festival_decor, food, shoes, bags_luggage
-5. studio setup: only electronics, home_decor, bags_luggage, stationery — never bedding/clothing
+4. religious_travel: use formal_wear, personal_care, festival_decor, food, shoes, bags_luggage — ALSO add sports_fitness if user mentions gear/support/health items needed
+5. studio setup: only electronics, home_decor, bags_luggage — never bedding/clothing
 6. user_intent_type: "direct_purchase_ask" (wants to BUY item now) | "owns_and_wants_accessories" (already HAS item) | "context_event" (life situation)
-7. If user says "I need X" → direct_purchase_ask. If "I bought X" → owns_and_wants_accessories
-8. budget_guardrail: if budget stated, exclude categories whose min price exceeds budget
+7. "I need X" → direct_purchase_ask. "I bought X / got X / new X" → owns_and_wants_accessories
+8. urgency_override: set true if user says event is in ≤4 days AND they need to buy immediately
+9. "I bought a car / got a vehicle / new car" → automotive accessories only — NEVER fashion/food/bedding
 
 Return ONLY valid JSON:
 {{
@@ -709,6 +702,7 @@ Return ONLY valid JSON:
   "user_intent_type": "context_event"
 }}
 """
+
 
         try:
             response = groq_chat(

@@ -24,7 +24,7 @@ from fastapi.middleware.cors import CORSMiddleware
 
 from app.config import settings
 from app.models.database import init_db
-from app.routes import health, prism, sessions
+from app.routes import health, prism, sessions, auth, image_matcher
 from app.utils.logger import get_logger
 
 logger = get_logger(__name__)
@@ -151,8 +151,10 @@ app.add_middleware(
 
 # ── Routers ───────────────────────────────────────────────────────────────────
 app.include_router(health.router, prefix="/api")
+app.include_router(auth.router, prefix="/api")
 app.include_router(prism.router, prefix="/api")
 app.include_router(sessions.router, prefix="/api")
+app.include_router(image_matcher.router, prefix="/api/images")
 
 @app.get("/", tags=["root"])
 def root():
