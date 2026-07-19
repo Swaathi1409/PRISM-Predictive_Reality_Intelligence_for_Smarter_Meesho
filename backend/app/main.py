@@ -144,7 +144,7 @@ app.add_middleware(
         "http://localhost:3000",
         "http://127.0.0.1:5173",
         # Production — Vercel (set FRONTEND_URL secret on Fly.io to override)
-        "https://prism-meesho.vercel.app",
+        "https://prism-alpha-gray.vercel.app",
     ],
     allow_origin_regex=r"https://.*\.vercel\.app",
     allow_credentials=True,
