@@ -181,7 +181,7 @@ export default function Home() {
   }
 
   return (
-    <div className="min-h-[100dvh] bg-[#ffe1ec] bg-gradient-to-br from-[#ffe1ec] via-[#fce7f3] to-[#ffecf4] flex flex-col items-center justify-center p-2 sm:p-4 lg:p-8 font-sans overflow-x-hidden relative selection:bg-[#F43397]/30 selection:text-[#F43397]">
+    <div className="min-h-[100dvh] bg-[#ffe1ec] bg-gradient-to-br from-[#ffe1ec] via-[#fce7f3] to-[#ffecf4] flex flex-col items-center justify-center p-2 sm:p-4 lg:p-8 font-sans overflow-x-hidden relative selection:bg-[#F43397]/30 selection:text-[#F43397] scrollbar-hide">
       
       {/* Pleasant Meesho Pink Background */}
       <div className="fixed inset-0 pointer-events-none z-0 overflow-hidden">
