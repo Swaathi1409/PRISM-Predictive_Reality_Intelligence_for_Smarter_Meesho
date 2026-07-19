@@ -109,7 +109,7 @@ export default function About() {
         {/* Links */}
         <div className="mt-10 flex gap-3 flex-wrap">
           <a
-            href="http://localhost:8000/docs"
+            href={`${import.meta.env.VITE_BACKEND_URL || 'http://localhost:8000'}/docs`}
             target="_blank"
             rel="noopener noreferrer"
             className="flex items-center gap-2 px-4 py-2.5 rounded-xl border border-surface-border text-sm text-gray-400 hover:text-white hover:border-prism-500/50 transition-all"
