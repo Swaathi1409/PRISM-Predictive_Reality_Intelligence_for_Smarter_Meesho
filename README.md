@@ -192,6 +192,6 @@ Full attribution table visible in the app at **/about**.
 
 ## Built by
 
-Developed by **Swaathi B** as part of the **Meesho ScriptedBy{Her} 2.0 Hackathon**.
+Developed by **Swaathi B** (GitHub: [@Swaathi1409](https://github.com/Swaathi1409)) as part of the **Meesho ScriptedBy{Her} 2.0 Hackathon**.
 
 PRISM is built with the conviction that Indian commerce deserves AI that understands India — its institutions, its festivals, its family dynamics, its government schemes, and the emotional weight of every major purchase decision.
