@@ -255,7 +255,7 @@ export default function Home() {
           </div>
 
           {/* App Content Area */}
-          <div className="flex-1 overflow-y-auto bg-slate-50/50 relative flex flex-col scrollbar-hide">
+          <div className="flex-1 overflow-y-auto bg-slate-50/50 relative flex flex-col scrollbar-light">
             {!isPending && !result && (
               <div className="p-5 flex-1 flex flex-col relative">
                 {/* Dynamic Background Element */}

@@ -22,14 +22,22 @@
     min-height: 100vh;
   }
 
-  /* Custom scrollbar — visible in front (for all elements) */
+  /* Global scrollbar for dark backgrounds (violet) */
   * {
-    scrollbar-color: #F43397 #ffffff; /* Firefox */
+    scrollbar-color: #8b45ff #1a1230; /* Firefox */
   }
-  *::-webkit-scrollbar { width: 8px; height: 8px; }
-  *::-webkit-scrollbar-track { background: #ffffff; }
-  *::-webkit-scrollbar-thumb { background: #F43397; border-radius: 4px; }
-  *::-webkit-scrollbar-thumb:hover { background: #c5157a; }
+  *::-webkit-scrollbar { width: 10px; height: 10px; }
+  *::-webkit-scrollbar-track { background: #1a1230; }
+  *::-webkit-scrollbar-thumb { background: #6C2BD9; border-radius: 6px; border: 2px solid #1a1230; }
+  *::-webkit-scrollbar-thumb:hover { background: #8b45ff; }
+
+  /* Scrollbar for light backgrounds (pink) */
+  .scrollbar-light {
+    scrollbar-color: #F43397 #ffffff;
+  }
+  .scrollbar-light::-webkit-scrollbar-track { background: #ffffff; }
+  .scrollbar-light::-webkit-scrollbar-thumb { background: #F43397; border-radius: 6px; border: 2px solid #ffffff; }
+  .scrollbar-light::-webkit-scrollbar-thumb:hover { background: #c5157a; }
 
   /* Selection */
   ::selection { background: rgba(108, 43, 217, 0.3); color: white; }
