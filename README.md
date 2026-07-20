@@ -17,7 +17,7 @@ PRISM detects the life event behind every purchase (hostel move, wedding, new ba
 | **Multi-Agent Debate** | Kismat (trust) · Paisa (budget) · Samay (time) · Soch (synthesis) |
 | **Confidence Genome** | Decomposes the score into per-agent, per-signal factors |
 | **Temporal Simulator** | Buy Now / Wait / Split with government scheme detection |
-| **Emotional Layer** | Register-switched warm opening message (Claude LLM) |
+| **Emotional Layer** | Register-switched warm opening message (Groq LLM) |
 | **Bharat Context** | Institution wattage limits, state climate, PM Kisan timing |
 
 ---
@@ -27,7 +27,7 @@ PRISM detects the life event behind every purchase (hostel move, wedding, new ba
 ### Prerequisites
 - Python 3.11+
 - Node.js 18+
-- An Anthropic API key (`sk-ant-...`)
+- A Groq API key (`sk-ant-...`)
 
 ### 1. Clone and configure
 
@@ -35,8 +35,8 @@ PRISM detects the life event behind every purchase (hostel move, wedding, new ba
 git clone https://github.com/Swaathi1409/PRISM-Predictive_Reality_Intelligence_for_Smarter_Meesho
 cd PRISM-Predictive_Reality_Intelligence_for_Smarter_Meesho
 
-# Fill in your Anthropic API key
-# Open .env and set: ANTHROPIC_API_KEY=sk-ant-...
+# Fill in your Groq API key
+# Open .env and set: GROQ_API_KEY=sk-ant-...
 ```
 
 ### 2. Start the backend
@@ -78,7 +78,7 @@ Frontend runs at **http://localhost:5173**
 ## Quick Start — Docker (Production)
 
 ```bash
-# 1. Fill in .env with your ANTHROPIC_API_KEY
+# 1. Fill in .env with your GROQ_API_KEY
 
 # 2. Build the frontend (Nginx serves static files)
 cd frontend && npm install && npm run build && cd ..
@@ -160,8 +160,8 @@ All configurable values are in `.env`. See `.env.example` for the full list.
 
 | Variable | Description | Default |
 |----------|-------------|---------|
-| `ANTHROPIC_API_KEY` | **Required.** Your Anthropic API key | — |
-| `LLM_MODEL` | Claude model to use | `claude-sonnet-4-5` |
+| `GROQ_API_KEY` | **Required.** Your Groq API key | — |
+| `LLM_MODEL` | Groq model to use | `llama-3.3-70b-versatile` |
 | `DATABASE_URL` | SQLAlchemy connection string | SQLite (dev) |
 | `REDIS_HOST` | Redis host for caching | `localhost` |
 | `TRUST_GOOD_RATING_MIN` | Min seller rating for approval | `4.0` |
@@ -176,7 +176,7 @@ Full list in [.env.example](.env.example).
 | Library | License | Why |
 |---------|---------|-----|
 | FastAPI | MIT | Native async, auto OpenAPI docs |
-| Anthropic SDK | Anthropic Terms | Claude LLM for Soch + EmotionalLayer |
+| Groq Python SDK | Groq Terms | Groq LLM for Soch + EmotionalLayer |
 | SQLAlchemy | MIT | Database-agnostic ORM |
 | Pydantic v2 | MIT | Strict API boundary validation |
 | Redis-py | BSD | Result caching for demo |
