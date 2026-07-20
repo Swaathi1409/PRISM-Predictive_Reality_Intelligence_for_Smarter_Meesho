@@ -784,7 +784,7 @@ export default function Home() {
                 </div>
                 
                 <div className="p-4 bg-white border-t border-gray-100 text-center shadow-[0_-4px_6px_-1px_rgba(0,0,0,0.05)] z-10">
-                   <button onClick={() => setResult(null)} className="text-sm font-bold text-[#F43397] py-2 px-6 rounded-full hover:bg-pink-50 transition-colors">Start Over</button>
+                   <button onClick={() => { setResult(null); setIsXRayOpen(false); setUserInput(''); }} className="text-sm font-bold text-[#F43397] py-2 px-6 rounded-full hover:bg-pink-50 transition-colors">Start Over</button>
                 </div>
               </div>
             )}
